@@ -1,0 +1,5 @@
+Today is the {day}{day_suffix} of {month_name}.
+It is {day}/{month}/{year_short}.
+It's the {day}{day_suffix} of {month_name}.
+Today is {month_name} {day}{day_suffix}.
+It's {month_name} {day}{day_suffix}.
