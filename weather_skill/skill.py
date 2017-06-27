@@ -1,5 +1,6 @@
 import math
 from multi_key_dict import multi_key_dict
+from requests import HTTPError
 
 from mycroft.api import Api
 from pyowm import OWM
@@ -114,9 +115,9 @@ class WeatherSkill(MycroftSkill):
                     state['country']['name'], self.location_pretty
 
             return None
-        except:
+        except HTTPError:
             self.add_action('location.not.found')
-            LOG.warn('No location found')
+            LOG.warning('No location found')
 
     def __build_results(
             self, is_local, location_pretty, weather, temp='temp', temp_min='temp_min',

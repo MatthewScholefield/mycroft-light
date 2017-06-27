@@ -1,20 +1,26 @@
-# Copyright 2017 Mycroft AI, Inc.
 #
-# This file is part of Mycroft Core.
+# Copyright (c) 2017 Mycroft AI, Inc.
 #
-# Mycroft Core is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# This file is part of Mycroft Simple
+# (see https://github.com/MatthewScholefield/mycroft-simple).
 #
-# Mycroft Core is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# 'License'); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
 #
-# You should have received a copy of the GNU General Public License
-# along with Mycroft Core.  If not, see <http://www.gnu.org/licenses/>.
-
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
 import time
 from threading import Timer
 from uuid import uuid4
@@ -36,19 +42,35 @@ class PairingSkill(MycroftSkill):
         self.data = None
         self.last_request = None
         self.state = str(uuid4())
-        self.register_intent('pair', self.pair_device)
-        self.pair_device()
+        self.register_intent('pair', self.on_pair_intent)
+        self.check_paired()
 
-    def pair_device(self, intent_data=None):
+    def check_paired(self):
+        if not is_paired():
+            self.create_new_code()
+            self.add_action('code', self.data.get('code'))
+            self.send_results('pair')
+
+    def is_paired(self):
+        try:
+            device = self.api.get()
+        except:
+            device = None
+        return device is not None
+
+    def on_pair_intent(self, intent_data):
         if is_paired():
-            self.add_action('pair.complete')
+            self.set_action('pair.complete')
         elif self.data and self.last_request < time.time():
-            self.add_result('code', self.data.get("code"))
+            self.add_result('code', self.data.get('code'))
         else:
-            self.last_request = time.time() + self.EXPIRATION
-            self.data = self.api.get_code(self.state)
-            self.add_result('code', self.data.get("code"))
+            self.create_new_code()
+            self.add_result('code', self.data.get('code'))
             self._create_activator()
+
+    def create_new_code(self):
+        self.last_request = time.time() + self.EXPIRATION
+        self.data = self.api.get_code(self.state)
 
     def on_activate(self):
         try:
@@ -62,7 +84,7 @@ class PairingSkill(MycroftSkill):
         except HTTPError:
             if self.last_request < time.time():
                 self.data = None
-                self.pair_device()
+                self.on_pair_intent()
             else:
                 self._create_activator()
 
