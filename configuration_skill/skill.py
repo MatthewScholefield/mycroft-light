@@ -2,7 +2,7 @@ from requests import HTTPError
 
 from mycroft.api import DeviceApi
 from mycroft.configuration import ConfigurationManager
-from mycroft.mycroft_skill import ScheduledSkill
+from mycroft.skill import ScheduledSkill
 
 
 class ConfigurationSkill(ScheduledSkill):

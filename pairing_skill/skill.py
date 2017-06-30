@@ -29,7 +29,7 @@ from requests import HTTPError
 
 from mycroft.api import DeviceApi, is_paired
 from mycroft.identity import IdentityManager
-from mycroft.mycroft_skill import MycroftSkill
+from mycroft.skill import MycroftSkill
 
 
 class PairingSkill(MycroftSkill):

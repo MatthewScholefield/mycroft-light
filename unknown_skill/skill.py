@@ -21,7 +21,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-from mycroft.mycroft_skill import MycroftSkill
+from mycroft.skill import MycroftSkill
 
 
 class UnknownSkill(MycroftSkill):

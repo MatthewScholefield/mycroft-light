@@ -8,7 +8,7 @@ from pyowm.webapi25.forecaster import Forecaster
 from pyowm.webapi25.forecastparser import ForecastParser
 from pyowm.webapi25.observationparser import ObservationParser
 
-from mycroft.mycroft_skill import MycroftSkill
+from mycroft.skill import MycroftSkill
 from mycroft.util import logger
 
 

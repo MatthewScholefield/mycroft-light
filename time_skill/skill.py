@@ -24,7 +24,7 @@
 import time
 from datetime import datetime
 
-from mycroft.mycroft_skill import MycroftSkill
+from mycroft.skill import MycroftSkill
 
 
 class TimeSkill(MycroftSkill):

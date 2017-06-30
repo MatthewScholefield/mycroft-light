@@ -21,8 +21,8 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-from mycroft import mycroft_thread
-from mycroft.mycroft_skill import MycroftSkill
+from mycroft import main_thread
+from mycroft.skill import MycroftSkill
 
 
 class QuitSkill(MycroftSkill):
@@ -30,6 +30,6 @@ class QuitSkill(MycroftSkill):
         super().__init__(*args, **kwargs)
 
         def do_quit(_):
-            mycroft_thread.quit()
+            main_thread.quit()
 
         self.register_intent('quit', do_quit)

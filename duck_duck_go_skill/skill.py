@@ -23,7 +23,7 @@
 #
 import ddg3
 
-from mycroft.mycroft_skill import MycroftSkill
+from mycroft.skill import MycroftSkill
 from mycroft.util import split_sentences, logger
 
 
