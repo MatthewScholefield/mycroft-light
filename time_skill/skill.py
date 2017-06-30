@@ -41,10 +41,10 @@ class TimeSkill(MycroftSkill):
             return 'th'
         return self.suffixes[n % 10]
 
-    def time(self, intent_data):
+    def time(self, intent_match):
         self.add_result('time', time.strftime('%l:%M %p'))
 
-    def date(self, intent_data):
+    def date(self, intent_match):
         date = datetime.today()
         self.add_result('day', date.day)
         self.add_result('day_suffix', self._get_suffix(date.day))

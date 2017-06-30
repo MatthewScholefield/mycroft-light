@@ -24,7 +24,7 @@
 import ddg3
 
 from mycroft.mycroft_skill import MycroftSkill
-from mycroft.util import split_sentences
+from mycroft.util import split_sentences, logger
 
 
 class DuckDuckGoSkill(MycroftSkill):
@@ -32,56 +32,47 @@ class DuckDuckGoSkill(MycroftSkill):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register_fallback(self.fallback)
-        self.register_fallback(self.fallback_no_question)
+        self.register_fallback(self.fallback_parse_question)
 
     def fallback(self, query):
+        if len(query) == 0:
+            return 0.0
+
         r = ddg3.query(query)
 
         conf = 1.0
 
-        if r.type == 'answer':
-            if len(r.abstract.text) > 0:
-                sents = split_sentences(r.abstract.text)
-                self.add_result('abstract', sents[0])
-                if len(sents) > 1:
-                    self.add_result('abstract_full', r.abstract.text)
-            else:
-                conf *= 0.0
-        elif r.type == 'exclusive':  # Like answer to 1 + 1
-            if len(r.answer.text) == 0 or "HASH" in r.answer.text:
-                conf *= 0
-            else:
-                self.add_result('answer', r.answer.text)
-        elif r.type == 'disambiguation':
-            conf *= 0.7
-            if len(r.related) == 0 or len(r.related[0].text) == 0:
-                conf *= 0.0
-            else:
-                abstract = split_sentences(r.related[0].text)[0]
-                if abstract[-3:] == '...':
-                    conf *= 0.8
+        logger.debug('Query: ' + query)
+        logger.debug('Type: ' + r.type)
 
-                num_words = len(abstract.split(' '))
-                if num_words < 5:
-                    conf *= num_words / 5.0
-                self.add_result('abstract', abstract)
+        if r.answer is not None and "HASH" not in r.answer.text:
+            self.add_result('answer', r.answer.text)
+        elif len(r.abstract.text) > 0:
+            sents = split_sentences(r.abstract.text)
+            self.add_result('abstract', sents[0])
+            if len(sents) > 1:
+                self.add_result('abstract_full', r.abstract.text)
+        elif len(r.related) > 0 and len(r.related[0].text) > 0:
+            abstract = split_sentences(r.related[0].text)[0]
+            if abstract[-3:] == '...':
+                conf *= 0.8
+
+            num_words = len(abstract.split(' '))
+            if num_words < 5:
+                conf *= num_words / 5.0
+            self.add_result('abstract', abstract)
         else:
             conf *= 0.0
 
         self.add_result('query', query)
         self.add_result('type', r.type)
-        self.add_result('confidence', conf)
+        return conf
 
-    def fallback_no_question(self, query):
-        orig_query = query
+    def fallback_parse_question(self, query):
         for noun in ['what', 'who', 'when']:
             for verb in [' is', '\'s', 's', ' are', '\'re', 're', ' did', ' was', ' were']:
-                test = noun + verb
-                if query[:len(test)] == test:
-                    query = query[len(test):]
-
-        if query != orig_query:
-            self.fallback(query)
-        else:
-            self.add_result('confidence', 0.0)
+                for article in [' a ', ' the ', ' ']:
+                    test = noun + verb + article
+                    if query[:len(test)] == test:
+                        return self.fallback(query[len(test):])
+        return 0.0

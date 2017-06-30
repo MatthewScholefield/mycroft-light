@@ -58,15 +58,18 @@ class PairingSkill(MycroftSkill):
             device = None
         return device is not None
 
-    def on_pair_intent(self, intent_data):
+    def on_pair_intent(self, intent_match):
         if is_paired():
             self.set_action('pair.complete')
+            return 0.6
         elif self.data and self.last_request < time.time():
             self.add_result('code', self.data.get('code'))
+            return 0.85
         else:
             self.create_new_code()
             self.add_result('code', self.data.get('code'))
             self._create_activator()
+            return 0.8
 
     def create_new_code(self):
         self.last_request = time.time() + self.EXPIRATION
@@ -80,13 +83,14 @@ class PairingSkill(MycroftSkill):
 
             IdentityManager.save(login)
             IdentityManager.update(login)
-            self.add_action('pair.complete')
+            self.set_action('pair.complete')
         except HTTPError:
             if self.last_request < time.time():
                 self.data = None
                 self.on_pair_intent()
             else:
                 self._create_activator()
+        self.send_results('pair')
 
     def _create_activator(self):
         activator = Timer(self.DELAY, self.on_activate)

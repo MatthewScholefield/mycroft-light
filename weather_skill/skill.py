@@ -9,9 +9,7 @@ from pyowm.webapi25.forecastparser import ForecastParser
 from pyowm.webapi25.observationparser import ObservationParser
 
 from mycroft.mycroft_skill import MycroftSkill
-from mycroft.util import get_logger
-
-LOG = get_logger()
+from mycroft.util import logger
 
 
 class OWMApi(Api):
@@ -86,25 +84,25 @@ class WeatherSkill(MycroftSkill):
         else:
             self.owm = OWMApi()
 
-    def handle_weather(self, get_weather, intent_data, temp='temp', temp_min='temp_min',
+    def handle_weather(self, get_weather, intent_match, temp='temp', temp_min='temp_min',
                        temp_max='temp_max'):
-        location, pretty_location = self.get_location(intent_data)
+        location, pretty_location = self.get_location(intent_match)
         self.__build_results(pretty_location == self.location_pretty, pretty_location, get_weather(location), temp, temp_min, temp_max)
 
-    def handle_current_intent(self, intent_data):
-        self.handle_weather(lambda l: self.owm.weather_at_place(l).get_weather(), intent_data)
+    def handle_current_intent(self, intent_match):
+        self.handle_weather(lambda l: self.owm.weather_at_place(l).get_weather(), intent_match)
 
-    def handle_next_hour_intent(self, intent_data):
-        self.handle_weather(lambda l: self.owm.three_hours_forecast(l).get_forecast().get_weathers()[0], intent_data)
+    def handle_next_hour_intent(self, intent_match):
+        self.handle_weather(lambda l: self.owm.three_hours_forecast(l).get_forecast().get_weathers()[0], intent_match)
 
-    def handle_next_day_intent(self, intent_data):
-        self.handle_weather(lambda l: self.owm.daily_forecast(l).get_forecast().get_weathers()[1], intent_data,
+    def handle_next_day_intent(self, intent_match):
+        self.handle_weather(lambda l: self.owm.daily_forecast(l).get_forecast().get_weathers()[1], intent_match,
                             'day', 'min', 'max')
 
-    def get_location(self, message):
+    def get_location(self, intent_match):
         try:
-            location = message['matches'].get('location', None)
-            if location:
+            location = intent_match.matches.get('location')
+            if location is not None:
                 return location, location
 
             location = self.location
@@ -117,7 +115,7 @@ class WeatherSkill(MycroftSkill):
             return None
         except HTTPError:
             self.add_action('location.not.found')
-            LOG.warning('No location found')
+            logger.warning('No location found')
 
     def __build_results(
             self, is_local, location_pretty, weather, temp='temp', temp_min='temp_min',
