@@ -48,15 +48,9 @@ class PairingSkill(MycroftSkill):
     def check_paired(self):
         if not is_paired():
             self.create_new_code()
-            self.add_action('code', self.data.get('code'))
+            self.add_result('code', self.data.get('code'))
             self.send_results('pair')
-
-    def is_paired(self):
-        try:
-            device = self.api.get()
-        except:
-            device = None
-        return device is not None
+            self._create_activator()
 
     def on_pair_intent(self, intent_match):
         if is_paired():
