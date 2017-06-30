@@ -34,39 +34,37 @@ from mycroft.mycroft_skill import MycroftSkill
 
 class PairingSkill(MycroftSkill):
     DELAY = 10
-    EXPIRATION = 72000  # 20 hours
+    EXPIRATION = 20 * 60 * 60  # 20 hours
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.api = DeviceApi()
         self.data = None
-        self.last_request = None
+        self.expire_time = None
         self.state = str(uuid4())
-        self.register_intent('pair', self.on_pair_intent)
+        self.register_intent('pair', self.pair_device)
         self.check_paired()
 
     def check_paired(self):
         if not is_paired():
-            self.create_new_code()
-            self.add_result('code', self.data.get('code'))
+            self.pair_device()
             self.send_results('pair')
-            self._create_activator()
+            self.create_activator()
 
-    def on_pair_intent(self, intent_match):
+    def pair_device(self, intent_match=None):
         if is_paired():
             self.set_action('pair.complete')
             return 0.6
-        elif self.data and self.last_request < time.time():
+        elif self.data and self.expire_time > time.time():
             self.add_result('code', self.data.get('code'))
             return 0.85
         else:
             self.create_new_code()
             self.add_result('code', self.data.get('code'))
-            self._create_activator()
             return 0.8
 
     def create_new_code(self):
-        self.last_request = time.time() + self.EXPIRATION
+        self.expire_time = time.time() + self.EXPIRATION
         self.data = self.api.get_code(self.state)
 
     def on_activate(self):
@@ -79,14 +77,11 @@ class PairingSkill(MycroftSkill):
             IdentityManager.update(login)
             self.set_action('pair.complete')
         except HTTPError:
-            if self.last_request < time.time():
-                self.data = None
-                self.on_pair_intent()
-            else:
-                self._create_activator()
+            self.pair_device()
+            self.create_activator()
         self.send_results('pair')
 
-    def _create_activator(self):
+    def create_activator(self):
         activator = Timer(self.DELAY, self.on_activate)
         activator.daemon = True
         activator.start()
