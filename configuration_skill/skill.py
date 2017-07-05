@@ -11,29 +11,22 @@ class ConfigurationSkill(ScheduledSkill):
         self.set_delay(self.config.get('max_delay'))
         self.api = DeviceApi()
         self.config_hash = ''
-        self.register_intent('update.config', self.handle_update)
-
-    def handle_update(self, intent_match):
-        if self.update():
-            self.set_action('config.updated')
-        else:
-            self.set_action('config.no_change')
+        self.register_intent('update.config', self.update)
 
     def on_triggered(self):
         self.update()
 
     def update(self):
-        try:
-            config = self.api.get_settings()
-            location = self.api.get_location()
-            if location:
-                config["location"] = location
+        config = self.api.get_settings()
+        location = self.api.get_location()
+        if location:
+            config["location"] = location
 
-            if self.config_hash != hash(str(config)):
+        if self.config_hash != hash(str(config)):
+            def callback():
                 ConfigurationManager.load_defaults()
                 self.config_hash = hash(str(config))
-                return True
-            else:
-                return False
-        except HTTPError:
-            return False
+            self.set_callback(callback)
+            self.set_action('config.updated')
+        else:
+            self.set_action('config.no_change')

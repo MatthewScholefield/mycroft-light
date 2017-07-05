@@ -114,7 +114,7 @@ class WeatherSkill(MycroftSkill):
 
             return None
         except HTTPError:
-            self.add_action('location.not.found')
+            self.set_action('location.not.found')
             logger.warning('No location found')
 
     def __build_results(

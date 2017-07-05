@@ -71,7 +71,7 @@ class DuckDuckGoSkill(MycroftSkill):
     def fallback_parse_question(self, query):
         for noun in ['what', 'who', 'when']:
             for verb in [' is', '\'s', 's', ' are', '\'re', 're', ' did', ' was', ' were']:
-                for article in [' a ', ' the ', ' ']:
+                for article in [' a ', ' an ', ' the ', ' ']:
                     test = noun + verb + article
                     if query[:len(test)] == test:
                         return self.fallback(query[len(test):])

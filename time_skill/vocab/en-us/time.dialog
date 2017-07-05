@@ -1,3 +1,7 @@
 It is currently {time}.
 Right now, it is {time}.
 It's {time}.
+
+It is currently {time} in {place}.
+Right now, it is {time} in {place}.
+It's {time} in {place}.

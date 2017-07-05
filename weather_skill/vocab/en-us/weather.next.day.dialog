@@ -2,4 +2,4 @@ Tomorrow, it will be {condition} in {diff_location}, with a high of {temp_max} a
 Tomorrow, {diff_location} will have a high of {temp_max} and a low of {temp_min}, with {condition} conditions
 
 Tomorrow it will be {condition}, with a high of {temp_max} and a low of {temp_min}
-Tomorrow there will have a high of {temp_max} and a low of {temp_min}, with {condition} conditions
+Tomorrow there will be a high of {temp_max} and a low of {temp_min}, with {condition} conditions

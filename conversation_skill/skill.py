@@ -27,5 +27,8 @@ from mycroft.skill import MycroftSkill
 class ConversationSkill(MycroftSkill):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for i in ['greet', 'how.are.you', 'hows.it.going', 'whats.up']:
+        for i in [
+            'greet', 'how.are.you', 'hows.it.going', 'whats.up', 'whats.your.name',
+            'who.are.you'
+        ]:
             self.register_intent(i)

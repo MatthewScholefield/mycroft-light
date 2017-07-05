@@ -27,7 +27,4 @@ from mycroft.skill import MycroftSkill
 class UnknownSkill(MycroftSkill):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register_fallback(self.fallback)
-
-    def fallback(self, query):
-        return 0.5
+        self.register_fallback(lambda: 0.5)

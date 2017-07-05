@@ -48,10 +48,10 @@ class PairingSkill(MycroftSkill):
     def check_paired(self):
         if not is_paired():
             self.pair_device()
-            self.send_results('pair')
+            self.trigger_action('pair')
             self.create_activator()
 
-    def pair_device(self, intent_match=None):
+    def pair_device(self):
         if is_paired():
             self.set_action('pair.complete')
             return 0.6
@@ -79,7 +79,7 @@ class PairingSkill(MycroftSkill):
         except HTTPError:
             self.pair_device()
             self.create_activator()
-        self.send_results('pair')
+        self.trigger_action('pair')
 
     def create_activator(self):
         activator = Timer(self.DELAY, self.on_activate)

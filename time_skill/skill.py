@@ -21,19 +21,21 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import time
+import pytz
 from datetime import datetime
+
+from geopy import geocoders
 
 from mycroft.skill import MycroftSkill
 
 
 class TimeSkill(MycroftSkill):
+    fmt = '%l:%M %p'
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.register_intent('time', self.time)
         self.register_intent('date', self.date)
-        self.months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
-                       'November', 'December']
         self.suffixes = ['th', 'st', 'nd', 'rd'] + ['th'] * 6
 
     def _get_suffix(self, n):
@@ -41,14 +43,28 @@ class TimeSkill(MycroftSkill):
             return 'th'
         return self.suffixes[n % 10]
 
-    def time(self, intent_match):
-        self.add_result('time', time.strftime('%l:%M %p'))
+    def get_cur_time(self, tz):
+        return datetime.now(pytz.timezone(tz)).strftime(self.fmt)
 
-    def date(self, intent_match):
+    def get_tz(self, location_str):
+        g = geocoders.GoogleV3()
+        return str(g.timezone(g.geocode(location_str).point))
+
+    def time(self, intent_match):
+        try:
+            place = intent_match.matches['place']
+            tz = self.get_tz(place)
+            self.add_result('place', place)
+        except KeyError:
+            tz = self.global_config['location']['timezone']['code']
+
+        self.add_result('time', self.get_cur_time(tz))
+
+    def date(self):
         date = datetime.today()
         self.add_result('day', date.day)
         self.add_result('day_suffix', self._get_suffix(date.day))
         self.add_result('month', date.month)
-        self.add_result('month_name', self.months[date.month - 1])
+        self.add_result('month_name', date.strftime('%B'))
         self.add_result('year', date.year)
         self.add_result('year_short', str(date.year)[2:])
