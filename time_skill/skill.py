@@ -62,9 +62,9 @@ class TimeSkill(MycroftSkill):
 
     def date(self):
         date = datetime.today()
+
         self.add_result('day', date.day)
         self.add_result('day_suffix', self._get_suffix(date.day))
-        self.add_result('month', date.month)
-        self.add_result('month_name', date.strftime('%B'))
+        self.add_result('month', date.strftime('%B'))
         self.add_result('year', date.year)
-        self.add_result('year_short', str(date.year)[2:])
+        self.add_result('date_dot', str(date.day) + '.' + str(date.month) + '.' + str(date.year)[2:])

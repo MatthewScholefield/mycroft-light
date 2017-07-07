@@ -1,4 +1,4 @@
-Today is the {day}{day_suffix} of {month_name}.
-It's the {day}{day_suffix} of {month_name}.
-Today is {month_name} {day}{day_suffix}.
-It's {month_name} {day}{day_suffix}.
+Today is the {day}{day_suffix} of {month}.
+It's the {day}{day_suffix} of {month}.
+Today is {month} {day}{day_suffix}.
+It's {month} {day}{day_suffix}.
