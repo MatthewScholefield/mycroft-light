@@ -32,8 +32,8 @@ from mycroft.skill import MycroftSkill
 class TimeSkill(MycroftSkill):
     fmt = '%l:%M %p'
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
         self.register_intent('time', self.time)
         self.register_intent('date', self.date)
         self.suffixes = ['th', 'st', 'nd', 'rd'] + ['th'] * 6

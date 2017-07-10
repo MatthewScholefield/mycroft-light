@@ -6,8 +6,8 @@ from mycroft.skill import ScheduledSkill
 
 
 class ConfigurationSkill(ScheduledSkill):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
         self.set_delay(self.config.get('max_delay'))
         self.api = DeviceApi()
         self.config_hash = ''

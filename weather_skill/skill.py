@@ -60,8 +60,8 @@ class OWMApi(Api):
 
 
 class WeatherSkill(MycroftSkill):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
         self.__create_owm()
         self.CODES = multi_key_dict()
         self.CODES['01d', '01n'] = 0

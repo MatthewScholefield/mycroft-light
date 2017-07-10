@@ -25,8 +25,8 @@ from mycroft.skill import MycroftSkill
 
 
 class EmotionSkill(MycroftSkill):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
         for i in ['piss.off.harsh', 'piss.off.mild']:
             self.register_intent(i, self.handler)
 

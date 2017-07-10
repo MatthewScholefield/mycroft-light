@@ -25,8 +25,8 @@ from mycroft.skill import MycroftSkill
 
 
 class SpellSkill(MycroftSkill):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
         self.register_intent('spell', self.spell)
 
     def spell(self, intent_match):

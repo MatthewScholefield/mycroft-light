@@ -27,8 +27,8 @@ from mycroft.skill import MycroftSkill
 
 
 class JokeSkill(MycroftSkill):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
         self.register_intent('joke', self.joke)
 
     def joke(self):

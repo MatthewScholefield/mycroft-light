@@ -28,8 +28,8 @@ from mycroft.skill import MycroftSkill
 
 
 class IpSkill(MycroftSkill):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
         self.register_intent('ip', self.ip)
 
     def _get_suffix(self, n):

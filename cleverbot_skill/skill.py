@@ -27,8 +27,8 @@ from mycroft.skill import MycroftSkill
 
 
 class CleverbotSkill(MycroftSkill):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
         key = self.config['api_key']
         if key is None:
             raise ValueError

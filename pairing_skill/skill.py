@@ -36,8 +36,8 @@ class PairingSkill(MycroftSkill):
     DELAY = 10
     EXPIRATION = 20 * 60 * 60  # 20 hours
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
         self.api = DeviceApi()
         self.data = None
         self.expire_time = None

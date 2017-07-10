@@ -30,8 +30,8 @@ from mycroft.util import split_sentences, logger
 class DuckDuckGoSkill(MycroftSkill):
     """Fallback skill that queries DuckDuckGo's instant answer API"""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
         self.register_fallback(self.fallback_parse_question)
 
     def fallback(self, query):

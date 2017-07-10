@@ -34,8 +34,8 @@ from mycroft.util import logger
 
 
 class AlarmSkill(MycroftSkill):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
         self.register_intent('alarm.list', self.list_alarms)
         self.register_intent('alarm.set', self.set_alarm)
         self.register_intent('alarm.remove', self.remove_alarm)
