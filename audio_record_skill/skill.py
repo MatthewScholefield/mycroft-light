@@ -46,19 +46,24 @@ class AudioRecordSkill(MycroftSkill):
         self.channels = self.config['channels']
         self.file_path = self.config['filename']
 
-    def end_process(self, process):
+    def end_process(self, process_attr):
+        process = getattr(self, process_attr)
         if process.poll() is None:
             self.manually_terminated = True
             process.terminate()
             process.wait()
+        setattr(self, process_attr, None)
+        self.stop_running()
 
     def notify_end(self, process_att, name):
         def notify():
             self.manually_terminated = False
+
             getattr(self, process_att).wait()
+            self.end_process(process_att)
+
             if not self.manually_terminated:
                 self.trigger_action(name)
-            setattr(self, process_att, None)
 
         Thread(target=notify, daemon=True).start()
 
@@ -71,12 +76,6 @@ class AudioRecordSkill(MycroftSkill):
             return True
         return False
 
-    def add_end_process_callback(self, name):
-        def callback():
-            self.end_process(getattr(self, name))
-            setattr(self, name, None)
-        self.set_callback(callback)
-
     def record_begin(self, intent_match):
         if self.check_already_started():
             return 0.6
@@ -85,12 +84,14 @@ class AudioRecordSkill(MycroftSkill):
             duration = self.parser.duration(intent_match.matches.get('duration', ''))
             dur_flag = ['-d', str(duration)]
             self.add_result('duration', self.parser.duration_to_str(duration))
+            self.add_result('duration_s', duration)
         except ValueError:
             dur_flag = []
 
         def callback():
             self.record_process = Popen(['arecord', '-q', '-r', str(self.rate), '-c', str(self.channels), self.file_path] + dur_flag)
             self.notify_end('record_process', 'record.end')
+            self.start_running()
 
         self.set_callback(callback)
 
@@ -99,7 +100,7 @@ class AudioRecordSkill(MycroftSkill):
             self.set_action('no.recording.to.end')
             return 0.6
 
-        self.add_end_process_callback('record_process')
+        self.set_callback(lambda: self.end_process('record_process'))
         return 0.88
 
     def playback_begin(self):
@@ -109,6 +110,7 @@ class AudioRecordSkill(MycroftSkill):
         def callback():
             self.playback_process = play_wav(self.file_path)
             self.notify_end('playback_process', 'playback.end')
+            self.start_running()
         self.set_callback(callback)
 
     def playback_end(self):
@@ -116,5 +118,5 @@ class AudioRecordSkill(MycroftSkill):
             self.set_action('no.playback.to.end')
             return 0.6
 
-        self.add_end_process_callback('playback_process')
+        self.set_callback(lambda: self.end_process('playback_process'))
         return 0.8
