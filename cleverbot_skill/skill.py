@@ -36,5 +36,7 @@ class CleverbotSkill(MycroftSkill):
         self.register_fallback(self.fallback)
 
     def fallback(self, query):
+        if len(query) == 0:
+            return 0.0
         self.set_callback(lambda: self.add_result('response', self.cw.say(query)))
         return 0.6
