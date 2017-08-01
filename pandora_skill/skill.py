@@ -22,15 +22,18 @@
 # under the License.
 #
 import os
-import sys
+from builtins import StopIteration
+from io import StringIO
 
-import pydora.player
 from pandora import clientbuilder
 from pydora.audio_backend import VLCPlayer, PlayerUnusable, MPG123Player, \
     UnsupportedEncoding
-from threading import Thread, Event
+from threading import Thread
+
+from pydora.utils import iterate_forever
 
 from mycroft.skill import MycroftSkill
+from mycroft.util import logger
 
 
 class PandoraSkill(MycroftSkill):
@@ -50,52 +53,63 @@ class PandoraSkill(MycroftSkill):
         self.create_alias('music.stop', 'pandora.stop')
         self.create_alias('music.next', 'pandora.next')
         self.create_alias('pause', 'pandora.pause')
+        self.create_alias('play', 'pandora.play')
         self.create_alias('stop', 'pandora.stop')
+        self.set_av_run_time(3 * 60)
+        self.must_stop = False
 
     def create_player(self):
+        dummy_stdin = StringIO()
+        dummy_stdin.fileno = lambda: 0
         try:
-            return VLCPlayer(self, sys.stdin)
+            return VLCPlayer(self, dummy_stdin)
         except PlayerUnusable:
-            return MPG123Player(self, sys.stdin)
+            logger.warning('Unable to find VLC. MPG123 won\'t work for most songs')
+            return MPG123Player(self, dummy_stdin)
 
-    def start_playing(self):
+    def start_playing(self, index):
         """Blocking"""
-        for song in self.stations[0].get_playlist():
+        for song in iterate_forever(self.stations[index].get_playlist):
             try:
                 self.player.play(song)
+            except UnsupportedEncoding:
+                logger.warning('Unsupported encoding')
             except StopIteration:
+                logger.info('Stopping Pandora...')
+                self.player.stop()
                 return
 
-    def play_forever(self):
-        while True:
-            try:
-                self.player.play_station(self.stations[0])
-            except UnsupportedEncoding:
-                pass
+    def play_forever(self, index):
+        self.start_playing(index)
 
-    def handle_play(self):
+    def handle_play(self, intent_match):
         def callback():
-            Thread(target=self.play_forever, daemon=True).start()
-            self.player.start()
-            self.start_running()
-            self.set_action('')
+            if self.is_running():
+                self.player.pause()
+            else:
+                self.player.start()
+                self.start_running()
+                Thread(target=self.play_forever, daemon=True, args=(int(intent_match.matches.get('id', 0)),)).start()
+
+        self.set_action('')
+        if 'id' in intent_match.matches:
+            self.set_action('pandora.start.station')
+            self.add_result('id', intent_match.matches['id'])
+
         self.set_callback(callback)
-        return 0.6 if self.is_running() else 0.9
+        if self.is_running():
+            return 0.6
 
     def handle_pause(self):
         self.set_callback(self.player.pause)
-        return 0.9 if self.is_running() else 0.6
 
     def handle_next(self):
         self.set_callback(self.player.stop)
-        return 0.9 if self.is_running() else 0.6
 
     def handle_stop(self):
         def callback():
-            self.player.end_station()
-            self.stop_running()
+            self.must_stop = True
         self.set_callback(callback)
-        return 0.9 if self.is_running() else 0.6
 
     # Pandora API Callbacks
     def play(self, song):
@@ -108,7 +122,10 @@ class PandoraSkill(MycroftSkill):
         self.trigger_action('pandora.play', callback)
 
     def pre_poll(self):
-        pass
+        if self.must_stop:
+            self.must_stop = False
+            self.stop_running()
+            raise StopIteration
 
     def post_poll(self):
         pass
