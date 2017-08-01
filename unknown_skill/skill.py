@@ -27,4 +27,8 @@ from mycroft.skill import MycroftSkill
 class UnknownSkill(MycroftSkill):
     def __init__(self):
         super().__init__()
-        self.register_fallback(lambda: 0.5)
+        def callback(query):
+            if len(query) == 0:
+                self.set_action('nothing')
+            return 0.5
+        self.register_fallback(callback)
