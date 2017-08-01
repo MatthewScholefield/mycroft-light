@@ -1,4 +1,4 @@
-from requests import HTTPError
+from threading import Thread
 
 from mycroft.api import DeviceApi
 from mycroft.configuration import ConfigurationManager
@@ -12,21 +12,18 @@ class ConfigurationSkill(ScheduledSkill):
         self.api = DeviceApi()
         self.config_hash = ''
         self.register_intent('update.config', self.update)
+        Thread(target=self.reload, daemon=True).start()
 
     def on_triggered(self):
         self.update()
 
-    def update(self):
-        config = self.api.get_settings()
-        location = self.api.get_location()
-        if location:
-            config["location"] = location
+    def reload(self):
+        ConfigurationManager.load_remote()
+        self.config_hash = hash(str(self.api.get_settings()))
 
-        if self.config_hash != hash(str(config)):
-            def callback():
-                ConfigurationManager.load_defaults()
-                self.config_hash = hash(str(config))
-            self.set_callback(callback)
+    def update(self):
+        if self.config_hash != hash(str(self.api.get_settings())):
+            self.set_callback(self.reload)
             self.set_action('config.updated')
         else:
             self.set_action('config.no_change')
