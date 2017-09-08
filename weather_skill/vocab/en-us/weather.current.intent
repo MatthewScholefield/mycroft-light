@@ -1,20 +1,7 @@
-Weather
-What's the weather?
-What's the weather like right now?
-What's the weather right now in {location}?
-What's the weather in {location}?
-Is it sunny outside?
+Weather (right now|) (in {location}|)
+What's the weather (like|) (right now|) (in {location}|)?
 What does it feel like outside?
-Is it raining in {location}?
-Is it raining?
-Is it sleeting?
-Is it hot outside?
-Is it rainy outside?
-Is it sleeting outside?
-Is it wet outside?
-What's the forecast for {location}?
-Is it currently raining?
-What's the temperature?
-What's the temperature in {location}?
-What's the forecast for {location}?
-What's the forecast in {location}?
+What's the temperature outside?
+Is it (currently|) (hot|sunny|rainy|raining|sleeting|wet) (outside|in {location}|)?
+What's the (forecast|temperature) (for|in) {location}?
+What's the (forecast|temperature)?

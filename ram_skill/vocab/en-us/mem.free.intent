@@ -1,25 +1,2 @@
-How much free memory?
-How much free memory is there?
-How much free memory do I have?
-How much free ram?
-How much free ram is there?
-How much free memory do I have?
-Free ram
-Free mem
-Free memory
-Amount of free ram
-Amount of free mem
-Amount of free memory
-
-How much unused memory?
-How much unused memory is there?
-How much unused memory do I have?
-How much unused ram?
-How much unused ram is there?
-How much unused memory do I have?
-Unused ram
-Unused mem
-Unused memory
-Amount of unused ram
-Amount of unused mem
-Amount of unused memory
+How much (free|unused) (ram|mem|memory) (is there|do I have|) ?
+(Amount of|) (free|unused|available) (ram|mem|memory)
