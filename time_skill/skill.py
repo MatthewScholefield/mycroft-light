@@ -22,10 +22,8 @@
 # under the License.
 #
 import pytz
-from datetime import datetime
-
 from geopy import geocoders
-
+from datetime import datetime
 from mycroft.skill import MycroftSkill
 
 
@@ -48,14 +46,20 @@ class TimeSkill(MycroftSkill):
 
     def get_tz(self, location_str):
         g = geocoders.GoogleV3()
-        return str(g.timezone(g.geocode(location_str).point))
+        code = g.geocode(location_str)
+        return code.address, str(g.timezone(code.point))
 
     def time(self, intent_match):
-        try:
+        if 'place' in intent_match.matches:
             place = intent_match.matches['place']
-            tz = self.get_tz(place)
-            self.add_result('place', place)
-        except KeyError:
+            try:
+                address, tz = self.get_tz(place)
+                self.add_result('place', place if place.lower() in address.lower() else address)
+            except AttributeError:
+                self.set_action('no.timezone')
+                self.add_result('place', place)
+                return 0.6
+        else:
             tz = self.global_config['location']['timezone']['code']
 
         self.add_result('time', self.get_cur_time(tz))
