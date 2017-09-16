@@ -23,7 +23,7 @@
 #
 from cleverwrap.cleverwrap import CleverWrap
 
-from mycroft.skill import MycroftSkill
+from mycroft import MycroftSkill
 
 
 class CleverbotSkill(MycroftSkill):

@@ -29,8 +29,8 @@ import json
 from parsedatetime import Calendar
 from threading import Timer
 
-from mycroft.skill import MycroftSkill
-from mycroft.util import logger
+from mycroft import MycroftSkill
+from mycroft.util import LOG
 
 
 class AlarmSkill(MycroftSkill):
@@ -136,7 +136,7 @@ class AlarmSkill(MycroftSkill):
         ]
 
         for key, fmt in formats:
-            logger.debug('Key: ' + key + ', value: ' + dt.strftime(fmt))
+            LOG.debug('Key: ' + key + ', value: ' + dt.strftime(fmt))
             self.add_result(key, dt.strftime(fmt))
 
         def callback():

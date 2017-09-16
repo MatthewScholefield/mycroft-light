@@ -25,7 +25,7 @@ from subprocess import Popen
 
 from threading import Thread
 
-from mycroft.skill import MycroftSkill
+from mycroft import MycroftSkill
 from mycroft.util.audio import play_wav
 
 

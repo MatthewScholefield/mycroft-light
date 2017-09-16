@@ -23,8 +23,9 @@
 #
 import ddg3
 
-from mycroft.skill import MycroftSkill
-from mycroft.util import split_sentences, logger
+from mycroft import MycroftSkill
+from mycroft.util import LOG
+from mycroft.util.text import split_sentences
 
 
 class DuckDuckGoSkill(MycroftSkill):
@@ -42,8 +43,8 @@ class DuckDuckGoSkill(MycroftSkill):
 
         conf = 1.0
 
-        logger.debug('Query: ' + query)
-        logger.debug('Type: ' + r.type)
+        LOG.debug('Query: ' + query)
+        LOG.debug('Type: ' + r.type)
 
         if r.answer is not None and "HASH" not in r.answer.text:
             self.add_result('answer', r.answer.text)

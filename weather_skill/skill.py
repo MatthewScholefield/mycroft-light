@@ -8,8 +8,8 @@ from pyowm.webapi25.forecaster import Forecaster
 from pyowm.webapi25.forecastparser import ForecastParser
 from pyowm.webapi25.observationparser import ObservationParser
 
-from mycroft.skill import MycroftSkill
-from mycroft.util import logger
+from mycroft import MycroftSkill
+from mycroft.util import LOG
 
 
 class OWMApi(Api):
@@ -115,7 +115,7 @@ class WeatherSkill(MycroftSkill):
             return None
         except HTTPError:
             self.set_action('location.not.found')
-            logger.warning('No location found')
+            LOG.warning('No location found')
 
     def __build_results(
             self, is_local, location_pretty, weather, temp='temp', temp_min='temp_min',

@@ -24,7 +24,7 @@
 from subprocess import Popen, PIPE
 import re
 
-from mycroft.skill import MycroftSkill
+from mycroft import MycroftSkill
 
 
 class IpSkill(MycroftSkill):

@@ -1,6 +1,6 @@
 import psutil
 
-from mycroft.skill import MycroftSkill
+from mycroft import MycroftSkill
 
 
 class RamSkill(MycroftSkill):

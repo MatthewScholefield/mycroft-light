@@ -23,7 +23,7 @@
 #
 import pyjokes
 
-from mycroft.skill import MycroftSkill
+from mycroft import MycroftSkill
 
 
 class JokeSkill(MycroftSkill):

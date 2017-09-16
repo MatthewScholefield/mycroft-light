@@ -21,7 +21,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-from mycroft.skill import MycroftSkill
+from mycroft import MycroftSkill
 
 
 class ConversationSkill(MycroftSkill):

@@ -24,7 +24,7 @@
 import pytz
 from geopy import geocoders
 from datetime import datetime
-from mycroft.skill import MycroftSkill
+from mycroft import MycroftSkill
 
 
 class TimeSkill(MycroftSkill):

@@ -22,7 +22,7 @@
 # under the License.
 #
 from mycroft import main_thread
-from mycroft.skill import MycroftSkill
+from mycroft import MycroftSkill
 
 
 class QuitSkill(MycroftSkill):
