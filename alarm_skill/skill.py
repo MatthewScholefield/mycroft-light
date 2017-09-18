@@ -75,10 +75,9 @@ class AlarmSkill(MycroftSkill):
             return
 
         self.alarm_is_active = True
-        def get_results():
-            if label != '':
-                self.add_result('label', label)
-        self.trigger_action('alarm.notify', get_results)
+        if label != '':
+            self.add_result('label', label)
+        self.trigger_action('alarm.notify')
         self.create_timer_thread(self.notify_delay, label)
 
     def create_timer(self, alarm):

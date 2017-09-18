@@ -27,9 +27,10 @@ from uuid import uuid4
 
 from requests import HTTPError
 
+from mycroft import MycroftSkill
 from mycroft.api import DeviceApi, is_paired
 from mycroft.identity import IdentityManager
-from mycroft import MycroftSkill
+from mycroft.util.log import LOG
 
 
 class PairingSkill(MycroftSkill):
@@ -56,11 +57,11 @@ class PairingSkill(MycroftSkill):
             self.set_action('pair.complete')
             return 0.6
         elif self.data and self.expire_time > time.time():
-            self.add_result('code', self.data.get('code'))
+            self.add_result('code', self.data['code'])
             return 0.85
         else:
             self.create_new_code()
-            self.add_result('code', self.data.get('code'))
+            self.add_result('code', self.data['code'])
             return 0.8
 
     def create_new_code(self):

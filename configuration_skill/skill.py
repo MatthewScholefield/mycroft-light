@@ -1,6 +1,4 @@
-from threading import Thread
-
-from mycroft.api import DeviceApi
+from mycroft.api import DeviceApi, is_paired
 from mycroft.configuration import ConfigurationManager
 from mycroft.skill import ScheduledSkill
 
@@ -12,16 +10,17 @@ class ConfigurationSkill(ScheduledSkill):
         self.api = DeviceApi()
         self.config_hash = ''
         self.register_intent('update.config', self.update)
-        Thread(target=self.reload, daemon=True).start()
 
     def on_triggered(self):
         self.update()
 
     def reload(self):
         ConfigurationManager.load_remote()
-        self.config_hash = hash(str(self.api.get_settings()))
+        self.config_hash = hash(str(ConfigurationManager.get()))
 
     def update(self):
+        if not is_paired():
+            return
         if self.config_hash != hash(str(self.api.get_settings())):
             self.set_callback(self.reload)
             self.set_action('config.updated')
