@@ -1,0 +1,8 @@
+{num} (+|-|*|/) {num}
+
+(log|log2|log10|logarithm)
+
+
+
+(what's|find) the answer (to|of) {equation}
+(answer|solution) (to|of|) {equation}
