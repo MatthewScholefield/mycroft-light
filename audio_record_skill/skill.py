@@ -81,12 +81,14 @@ class AudioRecordSkill(MycroftSkill):
             return 0.6
 
         try:
-            duration = self.parser.duration(intent_match.matches.get('duration', ''))
+            duration, conf = self.parser.duration(intent_match.matches.get('duration', ''))
+            conf = 0.6 + 0.4 * conf
             dur_flag = ['-d', str(duration)]
             self.add_result('duration', self.parser.duration_to_str(duration))
             self.add_result('duration_s', duration)
         except ValueError:
             dur_flag = []
+            conf = 0.6
 
         def callback():
             self.record_process = Popen(['arecord', '-q', '-r', str(self.rate), '-c', str(self.channels), self.file_path] + dur_flag)
@@ -94,6 +96,7 @@ class AudioRecordSkill(MycroftSkill):
             self.start_running()
 
         self.set_callback(callback)
+        return conf
 
     def record_end(self):
         if self.record_process is None:
