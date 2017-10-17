@@ -35,8 +35,14 @@ class CleverbotSkill(MycroftSkill):
         self.cw = CleverWrap(key)
         self.register_fallback(self.fallback)
 
+    def ask_api(self, query):
+        resp = self.cw.say(query)
+        self.add_result('response', resp)
+        if resp[-1] == '?':
+            self.set_action('fallback.question')
+
     def fallback(self, query):
         if len(query) == 0:
             return 0.0
-        self.set_callback(lambda: self.add_result('response', self.cw.say(query)))
+        self.set_callback(lambda: self.ask_api(query))
         return 0.6

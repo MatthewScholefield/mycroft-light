@@ -20,8 +20,9 @@ class OWMApi(Api):
         self.forecast = ForecastParser()
 
     def build_query(self, params):
-        params.get('query').update({'lang': self.lang})
-        return params.get('query')
+        LOG.info('Received params: ' + str(params))
+        params['query'].update({'lang': self.lang})
+        return params['query']
 
     def get_data(self, response):
         return response.text
@@ -62,7 +63,7 @@ class OWMApi(Api):
 class WeatherSkill(MycroftSkill):
     def __init__(self):
         super().__init__()
-        self.__create_owm()
+        self.owm = self.__create_owm()
         self.CODES = multi_key_dict()
         self.CODES['01d', '01n'] = 0
         self.CODES['02d', '02n', '03d', '03n'] = 1
@@ -80,9 +81,9 @@ class WeatherSkill(MycroftSkill):
     def __create_owm(self):
         key = self.config.get('api_key')
         if key and not self.config.get('proxy'):
-            self.owm = OWM(key)
+            return OWM(key)
         else:
-            self.owm = OWMApi()
+            return OWMApi()
 
     def handle_weather(self, get_weather, intent_match, temp='temp', temp_min='temp_min',
                        temp_max='temp_max'):

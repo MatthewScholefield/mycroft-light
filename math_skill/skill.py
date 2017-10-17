@@ -5,8 +5,8 @@ class MathSkill(MycroftSkill):
     def __init__(self):
         super().__init__()
         self.register_intent('math', self.handle_math)
-        self.register_entity('{num}')
-        self.register_entity('{equation}')
+        self.register_entity('num')
+        self.register_entity('equation')
 
         import ast
         import operator as op
@@ -38,7 +38,11 @@ class MathSkill(MycroftSkill):
                 raise TypeError(node)
 
     def handle_math(self, data):
+        for k, v in data.matches.items():
+            self.add_result(k, v)
         equation = data.matches.get('equation', data.query)
+        if '(' in equation or ')' in equation:
+            return 0.0
         answer, conf = self.parser.to_number(equation)
         self.add_result('equation', equation)
         self.add_result('answer', answer)
