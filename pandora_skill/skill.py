@@ -89,7 +89,7 @@ class PandoraSkill(MycroftSkill):
             else:
                 self.player.start()
                 self.start_running()
-                Thread(target=self.play_forever, daemon=True, args=(int(intent_match.matches.get('id', 0)),)).start()
+                self.create_thread(self.play_forever, args=(int(intent_match.matches.get('id', 0)),))
 
         self.set_action('')
         if 'id' in intent_match.matches:

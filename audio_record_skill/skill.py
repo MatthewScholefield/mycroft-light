@@ -65,7 +65,7 @@ class AudioRecordSkill(MycroftSkill):
             if not self.manually_terminated:
                 self.trigger_action(name)
 
-        Thread(target=notify, daemon=True).start()
+        self.create_thread(notify)
 
     def check_already_started(self):
         if self.playback_process is not None:
