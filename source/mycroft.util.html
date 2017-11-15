@@ -1,0 +1,423 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mycroft.util package &mdash; Mycroft Light 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Mycroft Light 0.1.0 documentation" href="../index.html"/>
+        <link rel="up" title="mycroft package" href="mycroft.html"/>
+        <link rel="prev" title="mycroft package" href="mycroft.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Mycroft Light
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="mycroft.html">mycroft package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="mycroft.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">mycroft.util package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mycroft.util.audio">mycroft.util.audio module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mycroft.util.git_repo">mycroft.util.git_repo module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mycroft.util.log">mycroft.util.log module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mycroft.util.misc">mycroft.util.misc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mycroft.util.text">mycroft.util.text module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mycroft.util">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.html#module-mycroft.api">mycroft.api module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.html#module-mycroft.configuration">mycroft.configuration module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.html#module-mycroft.filesystem">mycroft.filesystem module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.html#module-mycroft.identity">mycroft.identity module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.html#module-mycroft.intent_name">mycroft.intent_name module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.html#module-mycroft.main_thread">mycroft.main_thread module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.html#module-mycroft.result_package">mycroft.result_package module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.html#module-mycroft.skill">mycroft.skill module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.html#module-mycroft.version">mycroft.version module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.html#module-mycroft">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Mycroft Light</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="mycroft.html">mycroft package</a> &raquo;</li>
+        
+      <li>mycroft.util package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/mycroft.util.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mycroft-util-package">
+<h1>mycroft.util package<a class="headerlink" href="#mycroft-util-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mycroft.util.audio">
+<span id="mycroft-util-audio-module"></span><h2>mycroft.util.audio module<a class="headerlink" href="#module-mycroft.util.audio" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mycroft.util.audio.play_audio">
+<code class="descclassname">mycroft.util.audio.</code><code class="descname">play_audio</code><span class="sig-paren">(</span><em>file_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/util/audio.html#play_audio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.util.audio.play_audio" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="mycroft.util.audio.play_mp3">
+<code class="descclassname">mycroft.util.audio.</code><code class="descname">play_mp3</code><span class="sig-paren">(</span><em>file_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/util/audio.html#play_mp3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.util.audio.play_mp3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="mycroft.util.audio.play_wav">
+<code class="descclassname">mycroft.util.audio.</code><code class="descname">play_wav</code><span class="sig-paren">(</span><em>file_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/util/audio.html#play_wav"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.util.audio.play_wav" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.util.git_repo">
+<span id="mycroft-util-git-repo-module"></span><h2>mycroft.util.git_repo module<a class="headerlink" href="#module-mycroft.util.git_repo" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mycroft.util.git_repo.GitRepo">
+<em class="property">class </em><code class="descclassname">mycroft.util.git_repo.</code><code class="descname">GitRepo</code><span class="sig-paren">(</span><em>directory</em>, <em>url</em>, <em>branch</em>, <em>update_freq=1</em>, <em>tag=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/util/git_repo.html#GitRepo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.util.git_repo.GitRepo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="mycroft.util.git_repo.GitRepo.run_inside">
+<code class="descname">run_inside</code><span class="sig-paren">(</span><em>command</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/util/git_repo.html#GitRepo.run_inside"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.util.git_repo.GitRepo.run_inside" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.util.git_repo.GitRepo.try_pull">
+<code class="descname">try_pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/util/git_repo.html#GitRepo.try_pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.util.git_repo.GitRepo.try_pull" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.util.log">
+<span id="mycroft-util-log-module"></span><h2>mycroft.util.log module<a class="headerlink" href="#module-mycroft.util.log" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mycroft.util.log.LOG">
+<em class="property">class </em><code class="descclassname">mycroft.util.log.</code><code class="descname">LOG</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/util/log.html#LOG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.util.log.LOG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Custom logger class that acts like logging.Logger
+The logger name is automatically generated by the module of the caller</p>
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd>logger.debug(‘My message: %s’, debug_str)
+logger(‘custom_name’).debug(‘Another message’)</dd>
+</dl>
+<dl class="classmethod">
+<dt id="mycroft.util.log.LOG.create_logger">
+<em class="property">classmethod </em><code class="descname">create_logger</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/util/log.html#LOG.create_logger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.util.log.LOG.create_logger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="mycroft.util.log.LOG.debug">
+<em class="property">classmethod </em><code class="descname">debug</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mycroft.util.log.LOG.debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log ‘msg % args’ with severity ‘DEBUG’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.debug(“Houston, we have a %s”, “thorny problem”, exc_info=1)</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="mycroft.util.log.LOG.error">
+<em class="property">classmethod </em><code class="descname">error</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mycroft.util.log.LOG.error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log ‘msg % args’ with severity ‘ERROR’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.error(“Houston, we have a %s”, “major problem”, exc_info=1)</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="mycroft.util.log.LOG.exception">
+<em class="property">classmethod </em><code class="descname">exception</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mycroft.util.log.LOG.exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method for logging an ERROR with exception information.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="mycroft.util.log.LOG.info">
+<em class="property">classmethod </em><code class="descname">info</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mycroft.util.log.LOG.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log ‘msg % args’ with severity ‘INFO’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.info(“Houston, we have a %s”, “interesting problem”, exc_info=1)</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="mycroft.util.log.LOG.init">
+<em class="property">classmethod </em><code class="descname">init</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/util/log.html#LOG.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.util.log.LOG.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="mycroft.util.log.LOG.print_trace">
+<em class="property">classmethod </em><code class="descname">print_trace</code><span class="sig-paren">(</span><em>location=''</em>, <em>warn=False</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/util/log.html#LOG.print_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.util.log.LOG.print_trace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="mycroft.util.log.LOG.warning">
+<em class="property">classmethod </em><code class="descname">warning</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mycroft.util.log.LOG.warning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log ‘msg % args’ with severity ‘WARNING’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.warning(“Houston, we have a %s”, “bit of a problem”, exc_info=1)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.util.misc">
+<span id="mycroft-util-misc-module"></span><h2>mycroft.util.misc module<a class="headerlink" href="#module-mycroft.util.misc" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mycroft.util.misc.redirect_alsa_errors">
+<code class="descclassname">mycroft.util.misc.</code><code class="descname">redirect_alsa_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/util/misc.html#redirect_alsa_errors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.util.misc.redirect_alsa_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Redirects ALSA errors to logger rather than stdout
+Warning: This seems to crash on Raspbian Jessie</p>
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd><dl class="first last docutils">
+<dt>with redirect_alsa_errors():</dt>
+<dd>do_something_that_generates_alsa_errors()</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mycroft.util.misc.safe_run">
+<code class="descclassname">mycroft.util.misc.</code><code class="descname">safe_run</code><span class="sig-paren">(</span><em>callback</em>, <em>warn=True</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/util/misc.html#safe_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.util.misc.safe_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs code, logging exceptions rather than throwing them</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.util.text">
+<span id="mycroft-util-text-module"></span><h2>mycroft.util.text module<a class="headerlink" href="#module-mycroft.util.text" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mycroft.util.text.split_sentences">
+<code class="descclassname">mycroft.util.text.</code><code class="descname">split_sentences</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/util/text.html#split_sentences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.util.text.split_sentences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns a string of multiple sentences into a list of separate ones
+As a side effect, .?! at the end of a sentence are removed</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mycroft.util.text.to_camel">
+<code class="descclassname">mycroft.util.text.</code><code class="descname">to_camel</code><span class="sig-paren">(</span><em>snake</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/util/text.html#to_camel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.util.text.to_camel" title="Permalink to this definition">¶</a></dt>
+<dd><p>time_skill -&gt; TimeSkill</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mycroft.util.text.to_snake">
+<code class="descclassname">mycroft.util.text.</code><code class="descname">to_snake</code><span class="sig-paren">(</span><em>camel</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/util/text.html#to_snake"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.util.text.to_snake" title="Permalink to this definition">¶</a></dt>
+<dd><p>TimeSkill -&gt; time_skill</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.util">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mycroft.util" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="mycroft.html" class="btn btn-neutral" title="mycroft package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Matthew Scholefield.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

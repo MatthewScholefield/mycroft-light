@@ -1,0 +1,547 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>managers package &mdash; Mycroft Light 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Mycroft Light 0.1.0 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Mycroft Light
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="mycroft.html">mycroft package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Mycroft Light</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li><strong>managers package</strong></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/mycroft.managers.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="managers-package">
+<h1><strong>managers package</strong><a class="headerlink" href="#managers-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-mycroft.managers.api_manager">
+<span id="api-manager-module"></span><h2>api_manager module<a class="headerlink" href="#module-mycroft.managers.api_manager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mycroft.managers.api_manager.ApiManager">
+<em class="property">class </em><code class="descclassname">mycroft.managers.api_manager.</code><code class="descname">ApiManager</code><span class="sig-paren">(</span><em>configuration_manager</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/api_manager.html#ApiManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.api_manager.ApiManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.managers.client_manager">
+<span id="client-manager-module"></span><h2>client_manager module<a class="headerlink" href="#module-mycroft.managers.client_manager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mycroft.managers.client_manager.ClientManager">
+<em class="property">class </em><code class="descclassname">mycroft.managers.client_manager.</code><code class="descname">ClientManager</code><span class="sig-paren">(</span><em>client_classes</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/client_manager.html#ClientManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.client_manager.ClientManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Holds all clients to start and stop them</p>
+<dl class="method">
+<dt id="mycroft.managers.client_manager.ClientManager.on_exit">
+<code class="descname">on_exit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/client_manager.html#ClientManager.on_exit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.client_manager.ClientManager.on_exit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.client_manager.ClientManager.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/client_manager.html#ClientManager.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.client_manager.ClientManager.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts all clients in different threads (non blocking)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.managers.format_manager">
+<span id="format-manager-module"></span><h2>format_manager module<a class="headerlink" href="#module-mycroft.managers.format_manager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mycroft.managers.format_manager.Empty">
+<em class="property">class </em><code class="descclassname">mycroft.managers.format_manager.</code><code class="descname">Empty</code><a class="reference internal" href="../_modules/mycroft/managers/format_manager.html#Empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.format_manager.Empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Empty class used as placeholder when format not installed</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="mycroft.managers.format_manager.FormatManager">
+<em class="property">class </em><code class="descclassname">mycroft.managers.format_manager.</code><code class="descname">FormatManager</code><span class="sig-paren">(</span><em>path_manager</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/format_manager.html#FormatManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.format_manager.FormatManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Interface to access various formats. Surrently supported attributes:</p>
+<p>formats.dialog
+formats.client
+formats.faceplate</p>
+<dl class="method">
+<dt id="mycroft.managers.format_manager.FormatManager.generate">
+<code class="descname">generate</code><span class="sig-paren">(</span><em>name</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/format_manager.html#FormatManager.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.format_manager.FormatManager.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called to send the raw data to the formats to be generated</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.format_manager.FormatManager.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/format_manager.html#FormatManager.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.format_manager.FormatManager.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.format_manager.FormatManager.set_reset_event">
+<code class="descname">set_reset_event</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/format_manager.html#FormatManager.set_reset_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.format_manager.FormatManager.set_reset_event" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.managers.intent_manager">
+<span id="intent-manager-module"></span><h2>intent_manager module<a class="headerlink" href="#module-mycroft.managers.intent_manager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mycroft.managers.intent_manager.IntentManager">
+<em class="property">class </em><code class="descclassname">mycroft.managers.intent_manager.</code><code class="descname">IntentManager</code><span class="sig-paren">(</span><em>path_manager</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/intent_manager.html#IntentManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.intent_manager.IntentManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Used to handle creating both intents and intent engines</p>
+<dl class="method">
+<dt id="mycroft.managers.intent_manager.IntentManager.calc_result">
+<code class="descname">calc_result</code><span class="sig-paren">(</span><em>query</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/intent_manager.html#IntentManager.calc_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.intent_manager.IntentManager.calc_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the best intent and run the handler to find the result</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>query</strong> (<em>str</em>) – input sentence</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">object containing data from skill</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">result (SkillResult)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.intent_manager.IntentManager.create_alias">
+<code class="descname">create_alias</code><span class="sig-paren">(</span><em>skill_name</em>, <em>alias_intent</em>, <em>intent</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/intent_manager.html#IntentManager.create_alias"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.intent_manager.IntentManager.create_alias" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register an intent that uses the same handler as another intent
+:param skill_name:
+:type skill_name: str
+:param alias_intent: argument used to build intent; can be anything
+:type alias_intent: obj
+:param intent: Name of intent to copy from
+:type intent: str</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.intent_manager.IntentManager.on_intents_loaded">
+<code class="descname">on_intents_loaded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/intent_manager.html#IntentManager.on_intents_loaded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.intent_manager.IntentManager.on_intents_loaded" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.intent_manager.IntentManager.register_entity">
+<code class="descname">register_entity</code><span class="sig-paren">(</span><em>skill_name</em>, <em>entity</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/intent_manager.html#IntentManager.register_entity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.intent_manager.IntentManager.register_entity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.intent_manager.IntentManager.register_fallback">
+<code class="descname">register_fallback</code><span class="sig-paren">(</span><em>skill_name</em>, <em>calc_conf_fn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/intent_manager.html#IntentManager.register_fallback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.intent_manager.IntentManager.register_fallback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a function to be called as a general knowledge fallback</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>calc_conf_fn</strong> (<em>obj</em>) – function that receives query and returns a SkillResult
+note: register_fallback in the MycroftSkill base class automatically generates a SkillResult</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.intent_manager.IntentManager.register_intent">
+<code class="descname">register_intent</code><span class="sig-paren">(</span><em>skill_name</em>, <em>intent</em>, <em>calc_conf_fn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/intent_manager.html#IntentManager.register_intent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.intent_manager.IntentManager.register_intent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register an intent via the corresponding intent engine
+It tries passing the arguments to each engine until one can interpret it correctly</p>
+<p>Note: register_intent in the MycroftSkill base class automatically creates a SkillResult
+:param skill_name:
+:type skill_name: str
+:param intent: argument used to build intent; can be anything
+:type intent: obj
+:param calc_conf_fn: function that calculates the confidence
+:type calc_conf_fn: func</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.managers.path_manager">
+<span id="path-manager-module"></span><h2>path_manager module<a class="headerlink" href="#module-mycroft.managers.path_manager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mycroft.managers.path_manager.PathManager">
+<em class="property">class </em><code class="descclassname">mycroft.managers.path_manager.</code><code class="descname">PathManager</code><a class="reference internal" href="../_modules/mycroft/managers/path_manager.html#PathManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.path_manager.PathManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Retreives directories and files used by Mycroft</p>
+<dl class="attribute">
+<dt id="mycroft.managers.path_manager.PathManager.data_dir">
+<code class="descname">data_dir</code><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.data_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.path_manager.PathManager.dialog_dir">
+<code class="descname">dialog_dir</code><span class="sig-paren">(</span><em>skill_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/path_manager.html#PathManager.dialog_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.dialog_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.path_manager.PathManager.formats_dir">
+<code class="descname">formats_dir</code><span class="sig-paren">(</span><em>skill_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/path_manager.html#PathManager.formats_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.formats_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mycroft.managers.path_manager.PathManager.intent_cache">
+<code class="descname">intent_cache</code><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.intent_cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.path_manager.PathManager.intent_dir">
+<code class="descname">intent_dir</code><span class="sig-paren">(</span><em>skill_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/path_manager.html#PathManager.intent_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.intent_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mycroft.managers.path_manager.PathManager.mimic_dir">
+<code class="descname">mimic_dir</code><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.mimic_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mycroft.managers.path_manager.PathManager.mimic_exe">
+<code class="descname">mimic_exe</code><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.mimic_exe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mycroft.managers.path_manager.PathManager.model_dir">
+<code class="descname">model_dir</code><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.model_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mycroft.managers.path_manager.PathManager.model_dir_no_lang">
+<code class="descname">model_dir_no_lang</code><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.model_dir_no_lang" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mycroft.managers.path_manager.PathManager.padatious_dir">
+<code class="descname">padatious_dir</code><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.padatious_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mycroft.managers.path_manager.PathManager.padatious_exe">
+<code class="descname">padatious_exe</code><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.padatious_exe" title="Permalink to this definition">¶</a></dt>
+<dd><p>The locally compiled Padatious executable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.path_manager.PathManager.play_wav_cmd">
+<code class="descname">play_wav_cmd</code><span class="sig-paren">(</span><em>file</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/path_manager.html#PathManager.play_wav_cmd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.play_wav_cmd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.path_manager.PathManager.skill_conf">
+<code class="descname">skill_conf</code><span class="sig-paren">(</span><em>skill_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/path_manager.html#PathManager.skill_conf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.skill_conf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.path_manager.PathManager.skill_dir">
+<code class="descname">skill_dir</code><span class="sig-paren">(</span><em>skill_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/path_manager.html#PathManager.skill_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.skill_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.path_manager.PathManager.skill_vocab_dir">
+<code class="descname">skill_vocab_dir</code><span class="sig-paren">(</span><em>skill_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/path_manager.html#PathManager.skill_vocab_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.skill_vocab_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mycroft.managers.path_manager.PathManager.skills_dir">
+<code class="descname">skills_dir</code><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.skills_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mycroft.managers.path_manager.PathManager.sounds_dir">
+<code class="descname">sounds_dir</code><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.sounds_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mycroft.managers.path_manager.PathManager.tts_cache">
+<code class="descname">tts_cache</code><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.tts_cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mycroft.managers.path_manager.PathManager.user_dir">
+<code class="descname">user_dir</code><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.user_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mycroft.managers.path_manager.PathManager.vocab_dir">
+<code class="descname">vocab_dir</code><a class="headerlink" href="#mycroft.managers.path_manager.PathManager.vocab_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.managers.query_manager">
+<span id="query-manager-module"></span><h2>query_manager module<a class="headerlink" href="#module-mycroft.managers.query_manager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mycroft.managers.query_manager.QueryManager">
+<em class="property">class </em><code class="descclassname">mycroft.managers.query_manager.</code><code class="descname">QueryManager</code><span class="sig-paren">(</span><em>intent_manager</em>, <em>formats</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/query_manager.html#QueryManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.query_manager.QueryManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Launches queries in separate threads</p>
+<dl class="method">
+<dt id="mycroft.managers.query_manager.QueryManager.on_query">
+<code class="descname">on_query</code><span class="sig-paren">(</span><em>callback</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/query_manager.html#QueryManager.on_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.query_manager.QueryManager.on_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign a callback to be run whenever a new response comes in</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.query_manager.QueryManager.on_response">
+<code class="descname">on_response</code><span class="sig-paren">(</span><em>callback</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/query_manager.html#QueryManager.on_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.query_manager.QueryManager.on_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign a callback to be run whenever a new response comes in</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.query_manager.QueryManager.send_package">
+<code class="descname">send_package</code><span class="sig-paren">(</span><em>package</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/query_manager.html#QueryManager.send_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.query_manager.QueryManager.send_package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates data in all the formats and gives that formatted data to each callback</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.query_manager.QueryManager.send_query">
+<code class="descname">send_query</code><span class="sig-paren">(</span><em>query</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/query_manager.html#QueryManager.send_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.query_manager.QueryManager.send_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts calculating a query in a new thread</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.managers.skill_manager">
+<span id="skill-manager-module"></span><h2>skill_manager module<a class="headerlink" href="#module-mycroft.managers.skill_manager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mycroft.managers.skill_manager.SkillManager">
+<em class="property">class </em><code class="descclassname">mycroft.managers.skill_manager.</code><code class="descname">SkillManager</code><span class="sig-paren">(</span><em>path_manager</em>, <em>intent_manager</em>, <em>query_manager</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/skill_manager.html#SkillManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.skill_manager.SkillManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Dynamically loads skills</p>
+<dl class="method">
+<dt id="mycroft.managers.skill_manager.SkillManager.load_skill">
+<code class="descname">load_skill</code><span class="sig-paren">(</span><em>skill_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/skill_manager.html#SkillManager.load_skill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.skill_manager.SkillManager.load_skill" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.managers.skill_manager.SkillManager.load_skills">
+<code class="descname">load_skills</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/managers/skill_manager.html#SkillManager.load_skills"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.managers.skill_manager.SkillManager.load_skills" title="Permalink to this definition">¶</a></dt>
+<dd><p>Looks in the skill folder and loads the
+CamelCase equivalent class of the snake case folder
+This class should be inside the skill.py file. Example:</p>
+<dl class="docutils">
+<dt>skills/</dt>
+<dd><dl class="first last docutils">
+<dt>time_skill/</dt>
+<dd>skill.py - class TimeSkill(MycroftSkill):</dd>
+<dt>weather_skill/</dt>
+<dd>skill.py - class WeatherSkill(MycroftSkill):</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Matthew Scholefield.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

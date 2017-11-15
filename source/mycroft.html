@@ -1,0 +1,781 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mycroft package &mdash; Mycroft Light 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Mycroft Light 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="mycroft.util package" href="mycroft.util.html"/>
+        <link rel="prev" title="Mycroft Light" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Mycroft Light
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">mycroft package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="mycroft.util.html">mycroft.util package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-mycroft.api">mycroft.api module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-mycroft.configuration">mycroft.configuration module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-mycroft.filesystem">mycroft.filesystem module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-mycroft.identity">mycroft.identity module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-mycroft.intent_name">mycroft.intent_name module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-mycroft.main_thread">mycroft.main_thread module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-mycroft.result_package">mycroft.result_package module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-mycroft.skill">mycroft.skill module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-mycroft.version">mycroft.version module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-mycroft">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Mycroft Light</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>mycroft package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/mycroft.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mycroft-package">
+<h1>mycroft package<a class="headerlink" href="#mycroft-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="mycroft.util.html">mycroft.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.util.html#module-mycroft.util.audio">mycroft.util.audio module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.util.html#module-mycroft.util.git_repo">mycroft.util.git_repo module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.util.html#module-mycroft.util.log">mycroft.util.log module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.util.html#module-mycroft.util.misc">mycroft.util.misc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.util.html#module-mycroft.util.text">mycroft.util.text module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mycroft.util.html#module-mycroft.util">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mycroft.api">
+<span id="mycroft-api-module"></span><h2>mycroft.api module<a class="headerlink" href="#module-mycroft.api" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mycroft.api.Api">
+<em class="property">class </em><code class="descclassname">mycroft.api.</code><code class="descname">Api</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#Api"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.Api" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Generic object to wrap web APIs</p>
+<dl class="method">
+<dt id="mycroft.api.Api.add_authorization">
+<code class="descname">add_authorization</code><span class="sig-paren">(</span><em>headers</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#Api.add_authorization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.Api.add_authorization" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.api.Api.add_content_type">
+<code class="descname">add_content_type</code><span class="sig-paren">(</span><em>headers</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#Api.add_content_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.Api.add_content_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.api.Api.build_data">
+<code class="descname">build_data</code><span class="sig-paren">(</span><em>params</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#Api.build_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.Api.build_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.api.Api.build_headers">
+<code class="descname">build_headers</code><span class="sig-paren">(</span><em>params</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#Api.build_headers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.Api.build_headers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.api.Api.build_json">
+<code class="descname">build_json</code><span class="sig-paren">(</span><em>params</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#Api.build_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.Api.build_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.api.Api.build_path">
+<code class="descname">build_path</code><span class="sig-paren">(</span><em>params</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#Api.build_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.Api.build_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.api.Api.build_query">
+<code class="descname">build_query</code><span class="sig-paren">(</span><em>params</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#Api.build_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.Api.build_query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.api.Api.build_url">
+<code class="descname">build_url</code><span class="sig-paren">(</span><em>params</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#Api.build_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.Api.build_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.api.Api.check_token">
+<code class="descname">check_token</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#Api.check_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.Api.check_token" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.api.Api.get_data">
+<code class="descname">get_data</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#Api.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.Api.get_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.api.Api.get_response">
+<code class="descname">get_response</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#Api.get_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.Api.get_response" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.api.Api.refresh_token">
+<code class="descname">refresh_token</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#Api.refresh_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.Api.refresh_token" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.api.Api.request">
+<code class="descname">request</code><span class="sig-paren">(</span><em>params</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#Api.request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.Api.request" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.api.Api.send">
+<code class="descname">send</code><span class="sig-paren">(</span><em>params</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#Api.send"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.Api.send" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mycroft.api.DeviceApi">
+<em class="property">class </em><code class="descclassname">mycroft.api.</code><code class="descname">DeviceApi</code><a class="reference internal" href="../_modules/mycroft/api.html#DeviceApi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.DeviceApi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mycroft.api.Api" title="mycroft.api.Api"><code class="xref py py-class docutils literal"><span class="pre">mycroft.api.Api</span></code></a></p>
+<p>Web API wrapper for obtaining device-level information</p>
+<dl class="method">
+<dt id="mycroft.api.DeviceApi.activate">
+<code class="descname">activate</code><span class="sig-paren">(</span><em>state</em>, <em>token</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#DeviceApi.activate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.DeviceApi.activate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.api.DeviceApi.get">
+<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#DeviceApi.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.DeviceApi.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve all device information from the web backend</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.api.DeviceApi.get_code">
+<code class="descname">get_code</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#DeviceApi.get_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.DeviceApi.get_code" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.api.DeviceApi.get_settings">
+<code class="descname">get_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#DeviceApi.get_settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.DeviceApi.get_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve device settings information from the web backend</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">JSON with user configuration information.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mycroft.api.STTApi">
+<em class="property">class </em><code class="descclassname">mycroft.api.</code><code class="descname">STTApi</code><a class="reference internal" href="../_modules/mycroft/api.html#STTApi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.STTApi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mycroft.api.Api" title="mycroft.api.Api"><code class="xref py py-class docutils literal"><span class="pre">mycroft.api.Api</span></code></a></p>
+<p>Web API wrapper for performing Speech to Text (STT)</p>
+<dl class="method">
+<dt id="mycroft.api.STTApi.stt">
+<code class="descname">stt</code><span class="sig-paren">(</span><em>audio</em>, <em>language</em>, <em>limit</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#STTApi.stt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.STTApi.stt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Web API wrapper for performing Speech to Text (STT)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>audio</strong> (<em>bytes</em>) – The recorded audio, as in a FLAC file</li>
+<li><strong>language</strong> (<em>str</em>) – A BCP-47 language code, e.g. ‘en-US’</li>
+<li><strong>limit</strong> (<em>int</em>) – Maximum minutes to transcribe(?)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">JSON structure with transcription results</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="mycroft.api.is_paired">
+<code class="descclassname">mycroft.api.</code><code class="descname">is_paired</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#is_paired"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.is_paired" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if this device is actively paired with a web backend</p>
+<p>Determines if the installation of Mycroft has been paired by the user
+with the backend system, and if that pairing is still active.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if paired with backend</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mycroft.api.load_device_info">
+<code class="descclassname">mycroft.api.</code><code class="descname">load_device_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/api.html#load_device_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.api.load_device_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.configuration">
+<span id="mycroft-configuration-module"></span><h2>mycroft.configuration module<a class="headerlink" href="#module-mycroft.configuration" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mycroft.configuration.ConfigurationManager">
+<em class="property">class </em><code class="descclassname">mycroft.configuration.</code><code class="descname">ConfigurationManager</code><a class="reference internal" href="../_modules/mycroft/configuration.html#ConfigurationManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.configuration.ConfigurationManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="classmethod">
+<dt id="mycroft.configuration.ConfigurationManager.get">
+<em class="property">classmethod </em><code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/configuration.html#ConfigurationManager.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.configuration.ConfigurationManager.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="mycroft.configuration.ConfigurationManager.init">
+<em class="property">classmethod </em><code class="descname">init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/configuration.html#ConfigurationManager.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.configuration.ConfigurationManager.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="mycroft.configuration.ConfigurationManager.load_local">
+<em class="property">classmethod </em><code class="descname">load_local</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/configuration.html#ConfigurationManager.load_local"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.configuration.ConfigurationManager.load_local" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="mycroft.configuration.ConfigurationManager.load_remote">
+<em class="property">classmethod </em><code class="descname">load_remote</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/configuration.html#ConfigurationManager.load_remote"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.configuration.ConfigurationManager.load_remote" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="mycroft.configuration.ConfigurationManager.load_skill_config">
+<em class="property">static </em><code class="descname">load_skill_config</code><span class="sig-paren">(</span><em>conf_file</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/configuration.html#ConfigurationManager.load_skill_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.configuration.ConfigurationManager.load_skill_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.filesystem">
+<span id="mycroft-filesystem-module"></span><h2>mycroft.filesystem module<a class="headerlink" href="#module-mycroft.filesystem" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mycroft.filesystem.FileSystemAccess">
+<em class="property">class </em><code class="descclassname">mycroft.filesystem.</code><code class="descname">FileSystemAccess</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/filesystem.html#FileSystemAccess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.filesystem.FileSystemAccess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A class for providing access to the mycroft FS sandbox. Intended to be
+attached to skills
+at initialization time to provide a skill-specific namespace.</p>
+<dl class="method">
+<dt id="mycroft.filesystem.FileSystemAccess.exists">
+<code class="descname">exists</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/filesystem.html#FileSystemAccess.exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.filesystem.FileSystemAccess.exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.filesystem.FileSystemAccess.open">
+<code class="descname">open</code><span class="sig-paren">(</span><em>filename</em>, <em>mode</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/filesystem.html#FileSystemAccess.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.filesystem.FileSystemAccess.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a handle to a file (with the provided mode) within the
+skill-specific namespace.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<em>str</em>) – a str representing a path relative to the namespace.</li>
+<li><strong>not currently supported.</strong> (<em>subdirs</em>) – </li>
+<li><strong>mode</strong> (<em>str</em>) – a file handle mode</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">an open file handle.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">obj</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.identity">
+<span id="mycroft-identity-module"></span><h2>mycroft.identity module<a class="headerlink" href="#module-mycroft.identity" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mycroft.identity.DeviceIdentity">
+<em class="property">class </em><code class="descclassname">mycroft.identity.</code><code class="descname">DeviceIdentity</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/identity.html#DeviceIdentity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.identity.DeviceIdentity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="mycroft.identity.DeviceIdentity.is_expired">
+<code class="descname">is_expired</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/identity.html#DeviceIdentity.is_expired"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.identity.DeviceIdentity.is_expired" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mycroft.identity.IdentityManager">
+<em class="property">class </em><code class="descclassname">mycroft.identity.</code><code class="descname">IdentityManager</code><a class="reference internal" href="../_modules/mycroft/identity.html#IdentityManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.identity.IdentityManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="staticmethod">
+<dt id="mycroft.identity.IdentityManager.get">
+<em class="property">static </em><code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/identity.html#IdentityManager.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.identity.IdentityManager.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="mycroft.identity.IdentityManager.load">
+<em class="property">static </em><code class="descname">load</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/identity.html#IdentityManager.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.identity.IdentityManager.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="mycroft.identity.IdentityManager.save">
+<em class="property">static </em><code class="descname">save</code><span class="sig-paren">(</span><em>login=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/identity.html#IdentityManager.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.identity.IdentityManager.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="mycroft.identity.IdentityManager.update">
+<em class="property">static </em><code class="descname">update</code><span class="sig-paren">(</span><em>login=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/identity.html#IdentityManager.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.identity.IdentityManager.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.intent_name">
+<span id="mycroft-intent-name-module"></span><h2>mycroft.intent_name module<a class="headerlink" href="#module-mycroft.intent_name" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mycroft.intent_name.IntentName">
+<em class="property">class </em><code class="descclassname">mycroft.intent_name.</code><code class="descname">IntentName</code><span class="sig-paren">(</span><em>skill=''</em>, <em>intent=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/intent_name.html#IntentName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.intent_name.IntentName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="classmethod">
+<dt id="mycroft.intent_name.IntentName.from_str">
+<em class="property">classmethod </em><code class="descname">from_str</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/intent_name.html#IntentName.from_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.intent_name.IntentName.from_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.main_thread">
+<span id="mycroft-main-thread-module"></span><h2>mycroft.main_thread module<a class="headerlink" href="#module-mycroft.main_thread" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="mycroft.main_thread.quit">
+<code class="descclassname">mycroft.main_thread.</code><code class="descname">quit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/main_thread.html#quit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.main_thread.quit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="mycroft.main_thread.wait_for_quit">
+<code class="descclassname">mycroft.main_thread.</code><code class="descname">wait_for_quit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/main_thread.html#wait_for_quit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.main_thread.wait_for_quit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.result_package">
+<span id="mycroft-result-package-module"></span><h2>mycroft.result_package module<a class="headerlink" href="#module-mycroft.result_package" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mycroft.result_package.ResultPackage">
+<em class="property">class </em><code class="descclassname">mycroft.result_package.</code><code class="descname">ResultPackage</code><span class="sig-paren">(</span><em>name=None</em>, <em>data=None</em>, <em>action=None</em>, <em>reset_event=None</em>, <em>callback=&lt;function ResultPackage.&lt;lambda&gt;&gt;</em>, <em>confidence=0.0</em>, <em>prompt=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/result_package.html#ResultPackage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.result_package.ResultPackage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="mycroft.result_package.ResultPackage.set_name">
+<code class="descname">set_name</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/result_package.html#ResultPackage.set_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.result_package.ResultPackage.set_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.skill">
+<span id="mycroft-skill-module"></span><h2>mycroft.skill module<a class="headerlink" href="#module-mycroft.skill" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mycroft.skill.MycroftSkill">
+<em class="property">class </em><code class="descclassname">mycroft.skill.</code><code class="descname">MycroftSkill</code><a class="reference internal" href="../_modules/mycroft/skill.html#MycroftSkill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.MycroftSkill" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base class for all Mycroft skills</p>
+<dl class="method">
+<dt id="mycroft.skill.MycroftSkill.add_result">
+<code class="descname">add_result</code><span class="sig-paren">(</span><em>key</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#MycroftSkill.add_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.MycroftSkill.add_result" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Adds a result from the skill. For example:</dt>
+<dd><dl class="first last docutils">
+<dt>self.add_result(‘time’, ‘11:45 PM’)</dt>
+<dd>Except, of course, ‘11:45 PM’ would be something generated from an API</dd>
+</dl>
+</dd>
+<dt>Results can be both general and granular. Another example:</dt>
+<dd>self.add_result(‘time_seconds’, )</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.skill.MycroftSkill.create_alias">
+<code class="descname">create_alias</code><span class="sig-paren">(</span><em>alias_intent</em>, <em>source_intent</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#MycroftSkill.create_alias"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.MycroftSkill.create_alias" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add another intent that performs the same action as an existing intent</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.skill.MycroftSkill.create_thread">
+<code class="descname">create_thread</code><span class="sig-paren">(</span><em>target</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#MycroftSkill.create_thread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.MycroftSkill.create_thread" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="mycroft.skill.MycroftSkill.initialize_references">
+<em class="property">classmethod </em><code class="descname">initialize_references</code><span class="sig-paren">(</span><em>path_manager: mycroft.managers.path_manager.PathManager</em>, <em>intent_manager: mycroft.managers.intent_manager.IntentManager</em>, <em>query_manager: mycroft.managers.query_manager.QueryManager</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#MycroftSkill.initialize_references"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.MycroftSkill.initialize_references" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.skill.MycroftSkill.is_file">
+<code class="descname">is_file</code><span class="sig-paren">(</span><em>file</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#MycroftSkill.is_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.MycroftSkill.is_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.skill.MycroftSkill.is_running">
+<code class="descname">is_running</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#MycroftSkill.is_running"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.MycroftSkill.is_running" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mycroft.skill.MycroftSkill.lang">
+<code class="descname">lang</code><a class="headerlink" href="#mycroft.skill.MycroftSkill.lang" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mycroft.skill.MycroftSkill.location">
+<code class="descname">location</code><a class="headerlink" href="#mycroft.skill.MycroftSkill.location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the JSON data struction holding location information.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mycroft.skill.MycroftSkill.location_pretty">
+<code class="descname">location_pretty</code><a class="headerlink" href="#mycroft.skill.MycroftSkill.location_pretty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a more ‘human’ version of the location as a string.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mycroft.skill.MycroftSkill.location_timezone">
+<code class="descname">location_timezone</code><a class="headerlink" href="#mycroft.skill.MycroftSkill.location_timezone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the timezone code, such as ‘America/Los_Angeles’</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.skill.MycroftSkill.open_file">
+<code class="descname">open_file</code><span class="sig-paren">(</span><em>file</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#MycroftSkill.open_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.MycroftSkill.open_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.skill.MycroftSkill.register_entity">
+<code class="descname">register_entity</code><span class="sig-paren">(</span><em>entity</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#MycroftSkill.register_entity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.MycroftSkill.register_entity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a .entity file.
+For example, to register {place}.entity call self.register_entity(‘{place}’)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.skill.MycroftSkill.register_fallback">
+<code class="descname">register_fallback</code><span class="sig-paren">(</span><em>handler</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#MycroftSkill.register_fallback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.MycroftSkill.register_fallback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as register_intent except the handler only receives a query
+and is only activated when all other Mycroft intents fail</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.skill.MycroftSkill.register_intent">
+<code class="descname">register_intent</code><span class="sig-paren">(</span><em>intent</em>, <em>handler=&lt;function MycroftSkill.&lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#MycroftSkill.register_intent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.MycroftSkill.register_intent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a function to be called when the intent called ‘intent’ is activated
+In this handler the skill should receive a dict called intent_data
+and call self.add_result() to add output data. Nothing should be returned from the handler</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.skill.MycroftSkill.set_action">
+<code class="descname">set_action</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#MycroftSkill.set_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.MycroftSkill.set_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the only action to be executed. This can be used
+to change the outputted dialog under certain conditions</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.skill.MycroftSkill.set_av_run_time">
+<code class="descname">set_av_run_time</code><span class="sig-paren">(</span><em>time_s</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#MycroftSkill.set_av_run_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.MycroftSkill.set_av_run_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mycroft.skill.MycroftSkill.set_callback">
+<code class="descname">set_callback</code><span class="sig-paren">(</span><em>callback</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#MycroftSkill.set_callback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.MycroftSkill.set_callback" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="mycroft.skill.MycroftSkill.skill_name">
+<code class="descname">skill_name</code><a class="headerlink" href="#mycroft.skill.MycroftSkill.skill_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds name of skill using builtin python features</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.skill.MycroftSkill.start_running">
+<code class="descname">start_running</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#MycroftSkill.start_running"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.MycroftSkill.start_running" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicate that the skill has an ongoing process and should keep UI control</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.skill.MycroftSkill.stop_running">
+<code class="descname">stop_running</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#MycroftSkill.stop_running"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.MycroftSkill.stop_running" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicate that the ongoing job is complete</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.skill.MycroftSkill.trigger_action">
+<code class="descname">trigger_action</code><span class="sig-paren">(</span><em>default_intent</em>, <em>get_results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#MycroftSkill.trigger_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.MycroftSkill.trigger_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only call outside of a handler to output data</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mycroft.skill.ScheduledSkill">
+<em class="property">class </em><code class="descclassname">mycroft.skill.</code><code class="descname">ScheduledSkill</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#ScheduledSkill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.ScheduledSkill" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mycroft.skill.MycroftSkill" title="mycroft.skill.MycroftSkill"><code class="xref py py-class docutils literal"><span class="pre">mycroft.skill.MycroftSkill</span></code></a></p>
+<dl class="method">
+<dt id="mycroft.skill.ScheduledSkill.on_triggered">
+<code class="descname">on_triggered</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#ScheduledSkill.on_triggered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.ScheduledSkill.on_triggered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to add behavior ran every {delay_s} seconds</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mycroft.skill.ScheduledSkill.set_delay">
+<code class="descname">set_delay</code><span class="sig-paren">(</span><em>delay</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/skill.html#ScheduledSkill.set_delay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.skill.ScheduledSkill.set_delay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the delay in seconds</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mycroft.version">
+<span id="mycroft-version-module"></span><h2>mycroft.version module<a class="headerlink" href="#module-mycroft.version" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mycroft.version.VersionManager">
+<em class="property">class </em><code class="descclassname">mycroft.version.</code><code class="descname">VersionManager</code><a class="reference internal" href="../_modules/mycroft/version.html#VersionManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.version.VersionManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="staticmethod">
+<dt id="mycroft.version.VersionManager.get">
+<em class="property">static </em><code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mycroft/version.html#VersionManager.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mycroft.version.VersionManager.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mycroft">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mycroft" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="mycroft.util.html" class="btn btn-neutral float-right" title="mycroft.util package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral" title="Mycroft Light" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Matthew Scholefield.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
