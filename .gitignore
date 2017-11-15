@@ -1,0 +1,7 @@
+.idea/
+__pycache__/
+*.pyc
+padatious/
+mycroft_light.egg-info/
+.installed
+debian/

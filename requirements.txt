@@ -1,0 +1,30 @@
+# Core dependencies
+PyYAML
+requests
+pocketsphinx
+SpeechRecognition
+PyAudio
+pyserial
+pyalsaaudio
+tornado
+websocket-client
+padatious
+
+# Extra deps required for some installations
+urllib3
+certifi
+chardet
+idna
+
+# Skill dependencies
+multi-key-dict
+pyowm
+ddg3
+parsedatetime
+geopy
+pytz
+pyjokes
+cleverwrap
+pydora
+psutil
+py-stackexchange
