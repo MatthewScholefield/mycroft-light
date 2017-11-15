@@ -1,0 +1,10 @@
+[Unit]
+Description=Mycroft Simple
+
+[Service]
+User=mycroft
+ExecStart=/usr/bin/mycroft -wse
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

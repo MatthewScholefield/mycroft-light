@@ -1,0 +1,6 @@
+.debhelper/
+mycroft-simple/
+
+files
+debhelper-build-stamp
+mycroft-simple.*

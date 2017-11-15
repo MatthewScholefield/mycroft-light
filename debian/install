@@ -1,0 +1,2 @@
+debian/mycroft usr/bin
+debian/mycroft.service etc/systemd/system

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+echo 'Executing postinst...'
+
+#DEBHELPER#
+
+echo 'Creating mycroft user...'
+adduser --system mycroft
+usermod -aG audio,adm,input,dialout mycroft  # Allow logging
+
+echo 'Starting service...'
+systemctl enable mycroft.service
+systemctl start mycroft.service

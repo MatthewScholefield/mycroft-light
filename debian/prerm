@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+echo 'Stopping service...'
+systemctl stop mycroft.service
+systemctl disable mycroft.service
+
+#DEBHELPER#
+
