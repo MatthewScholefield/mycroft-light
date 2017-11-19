@@ -28,10 +28,10 @@ from mycroft.intent_name import IntentName
 class IntentMatch:
     """An object that describes the how a query fits into a particular intent"""
 
-    def __init__(self, name=IntentName(), confidence=0.0, matches={}, query=''):
+    def __init__(self, name=IntentName(), confidence=0.0, matches=None, query=''):
         self.name = name
         self.confidence = confidence
-        self.matches = matches
+        self.matches = matches or {}
         self.query = query
 
     @classmethod
