@@ -45,7 +45,7 @@ class DialogFormat(MycroftFormat):
     def _generate_format(self, file, results):
         lines = [(line, 0) for line in file.readlines()]
         for key, val in results.items():
-            lines = [(i.replace('{' + key + '}', val), c + 1 if '{' + key + '}' in i else 0) for i, c in lines]
+            lines = [(i.replace('{' + key + '}', str(val)), c + 1 if '{' + key + '}' in i else 0) for i, c in lines]
         best_lines = [i for i in lines if '{' not in i[0] and '}' not in i[0]]
         if len(best_lines) == 0:
             best_lines = [line for line, count in lines]

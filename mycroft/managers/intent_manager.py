@@ -160,4 +160,8 @@ class IntentManager:
             if package.confidence > best_package.confidence:
                 best_package = package
 
-        return best_package.callback(best_package)
+        try:
+            return best_package.callback(best_package)
+        except:
+            log.trace('error').info(str(best_package.name) + ' callback')
+            return ResultPackage(action=IntentName())

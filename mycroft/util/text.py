@@ -29,6 +29,8 @@ def to_camel(snake):
 
 def to_snake(camel):
     """TimeSkill -> time_skill"""
+    if not camel:
+        return camel
     return ''.join('_' + x if 'A' <= x <= 'Z' else x for x in camel).lower()[camel[0].isupper():]
 
 

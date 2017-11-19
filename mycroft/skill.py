@@ -27,6 +27,8 @@ from threading import Timer, Event, Thread
 import sys
 import math
 
+from mycroft import MatchData
+
 from mycroft.configuration import ConfigurationManager
 from mycroft.managers.intent_manager import IntentManager
 from mycroft.managers.path_manager import PathManager
@@ -167,8 +169,9 @@ class MycroftSkill:
 
         Results can be both general and granular. Another example:
             self.add_result('time_seconds', 10)
+        Results can also contain any valid json object
         """
-        self._package.data[str(key)] = str(value).strip()
+        self._package.data[str(key)] = value
 
     def set_action(self, action):
         """
@@ -186,16 +189,18 @@ class MycroftSkill:
         return ResultPackage(IntentName(self.skill_name))
 
     def _create_handler(self, handler):
-        def custom_handler(intent_match):
+        def custom_handler(data):
             """
             Runs the handler and generates SkillResult to return
             Returns:
                 confidence (float): confidence of data retrieved by API
             """
             self._package = self._default_package()
+            if isinstance(data, MatchData):
+                 self._package.data.update(data.matches)
             try:
                 if len(signature(handler).parameters) == 1:
-                    conf = handler(intent_match)
+                    conf = handler(data)
                 else:
                     conf = handler()
             except:
