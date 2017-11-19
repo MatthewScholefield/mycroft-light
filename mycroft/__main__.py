@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-#
 # Copyright (c) 2017 Mycroft AI, Inc.
 #
 # This file is part of Mycroft Light
@@ -21,7 +20,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-#
+
 import os
 import sys
 
