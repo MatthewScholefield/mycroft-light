@@ -20,23 +20,22 @@
 # specific language governing permissions and limitations
 # under the License.
 
+import math
+import sys
 from abc import abstractmethod, ABCMeta
+from inspect import signature
 from os.path import join, dirname, abspath, isfile
 from threading import Timer, Event, Thread
 
-import sys
-import math
+from twiggy import log
 
 from mycroft import MatchData
-
 from mycroft.configuration import ConfigurationManager
-from mycroft.managers.intent_manager import IntentManager
+from mycroft.engines.intent_manager import IntentManager
+from mycroft.intent_name import IntentName
 from mycroft.managers.path_manager import PathManager
 from mycroft.managers.query_manager import QueryManager
-from mycroft.intent_name import IntentName
 from mycroft.result_package import ResultPackage
-from twiggy import log
-from inspect import signature
 
 
 class MycroftSkill:

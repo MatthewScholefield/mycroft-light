@@ -35,12 +35,12 @@ from mycroft.api import load_device_info
 from mycroft.configuration import ConfigurationManager
 from mycroft.clients.speech_client import SpeechClient
 from mycroft.clients.text_client import TextClient
-from mycroft.managers.client_manager import ClientManager
-from mycroft.managers.format_manager import FormatManager
-from mycroft.managers.intent_manager import IntentManager
+from mycroft.clients.client_manager import ClientManager
+from mycroft.formats.format_manager import FormatManager
+from mycroft.engines.intent_manager import IntentManager
 from mycroft.managers.path_manager import PathManager
 from mycroft.managers.query_manager import QueryManager
-from mycroft.managers.skill_manager import SkillManager
+from mycroft.skill_loader import SkillManager
 
 from twiggy import log
 from mycroft import main_thread
@@ -86,17 +86,17 @@ def main():
     intent_manager = IntentManager(path_manager)
     formats = FormatManager(path_manager)
     query_manager = QueryManager(intent_manager, formats)
-    skill_manager = SkillManager(path_manager, intent_manager, query_manager)
+    skill_loader = SkillManager(path_manager, intent_manager, query_manager)
 
     if not config['use_server']:
-        skill_manager.blacklist += ['PairingSkill', 'ConfigurationSkill']
+        skill_loader.blacklist += ['PairingSkill', 'ConfigurationSkill']
 
     log.debug('Starting clients...')
     client_manager = ClientManager(clients, path_manager, query_manager, formats)
     log.debug('Started clients.')
 
     info('Loading skills...')
-    skill_manager.load_skills()
+    skill_loader.load_skills()
     info('Loaded skills.')
     intent_manager.on_intents_loaded()
     log.debug('Executed on intents loaded callback.')

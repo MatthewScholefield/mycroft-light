@@ -35,7 +35,7 @@ from mycroft.util.text import to_camel
 from mycroft.util.git_repo import GitRepo
 
 
-class SkillManager:
+class SkillLoader:
     """Dynamically loads skills"""
 
     def __init__(self, path_manager, intent_manager, query_manager):
