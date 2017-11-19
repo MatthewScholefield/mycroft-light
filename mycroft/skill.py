@@ -21,6 +21,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+from abc import abstractmethod, ABCMeta
 from os.path import join, dirname, abspath, isfile
 from threading import Timer, Event, Thread
 
@@ -41,15 +42,14 @@ class MycroftSkill:
     """Base class for all Mycroft skills"""
 
     def __init__(self):
-        self._package = self._default_package()
-
         from mycroft.parsing.en_us.parser import Parser
         self.parser = Parser()
-        self._reset_event = Event()
-        self._reset_event.set()
-
         self.global_config = ConfigurationManager.get()
         self.config = ConfigurationManager.load_skill_config(self.path_manager.skill_conf(self.skill_name))
+
+        self._package = self._default_package()
+        self._reset_event = Event()
+        self._reset_event.set()
         self._average_run_time = 60
 
     @classmethod
@@ -70,45 +70,12 @@ class MycroftSkill:
                 log.trace('error').info(self.skill_name + ' thread')
         Thread(target=wrapper, daemon=True, *args, **kwargs).start()
 
-    def _default_package(self):
-        return ResultPackage(IntentName(self.skill_name))
-
-    def _create_handler(self, handler):
-        def custom_handler(intent_match):
-            """
-            Runs the handler and generates SkillResult to return
-            Returns:
-                confidence (float): confidence of data retrieved by API
-            """
-            self._package = self._default_package()
-            try:
-                if len(signature(handler).parameters) == 1:
-                    conf = handler(intent_match)
-                else:
-                    conf = handler()
-            except:
-                log.trace('error').info(self.skill_name)
-                conf = 0
-            if conf is None:
-                if self.is_running():
-                    weight = 2 / (1 + math.exp(self._average_run_time / 50.0))
-                    conf = 0.75 + 0.25 * weight
-                else:
-                    conf = 0.75
-            self._package.confidence = conf
-            package = self._package
-            self._package = self._default_package()
-            return package
-
-        return custom_handler
-
-    def _file_name(self, file):
-        return join(dirname(abspath(sys.modules[self.__class__.__module__].__file__)), file)
-
     def open_file(self, file, *args, **kwargs):
+        """Open file in skill directory"""
         return open(self._file_name(file), *args, **kwargs)
 
     def is_file(self, file):
+        """Check for file in skill directory"""
         return isfile(self._file_name(file))
 
     def trigger_action(self, default_intent, get_results=None):
@@ -182,16 +149,16 @@ class MycroftSkill:
         """
         self._intent_manager.register_entity(self.skill_name, entity)
 
-    def create_alias(self, alias_intent, source_intent):
-        """Add another intent that performs the same action as an existing intent"""
-        self._intent_manager.create_alias(self.skill_name, alias_intent, source_intent)
-
     def register_fallback(self, handler):
         """
         Same as register_intent except the handler only receives a query
         and is only activated when all other Mycroft intents fail
         """
         self._intent_manager.register_fallback(self.skill_name, self._create_handler(handler))
+
+    def create_alias(self, alias_intent, source_intent):
+        """Add another intent that performs the same action as an existing intent"""
+        self._intent_manager.create_alias(self.skill_name, alias_intent, source_intent)
 
     def add_result(self, key, value):
         """
@@ -200,19 +167,9 @@ class MycroftSkill:
                 Except, of course, '11:45 PM' would be something generated from an API
 
         Results can be both general and granular. Another example:
-            self.add_result('time_seconds', )
+            self.add_result('time_seconds', 10)
         """
         self._package.data[str(key)] = str(value).strip()
-
-    def __make_callback(self, handler=lambda: None):
-        """Create a callback that packages and returns the skill result"""
-        def callback(package):
-            self._package = package
-            handler()
-            package = self._package
-            self._package = self._default_package()
-            return package
-        return callback
 
     def set_action(self, action):
         """
@@ -224,29 +181,77 @@ class MycroftSkill:
     def set_callback(self, callback):
         self._package.callback = self.__make_callback(callback)
 
+    ############################
+    # Private methods
+    def _default_package(self):
+        return ResultPackage(IntentName(self.skill_name))
 
-class ScheduledSkill(MycroftSkill):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def _create_handler(self, handler):
+        def custom_handler(intent_match):
+            """
+            Runs the handler and generates SkillResult to return
+            Returns:
+                confidence (float): confidence of data retrieved by API
+            """
+            self._package = self._default_package()
+            try:
+                if len(signature(handler).parameters) == 1:
+                    conf = handler(intent_match)
+                else:
+                    conf = handler()
+            except:
+                log.trace('error').info(self.skill_name)
+                conf = 0
+            if conf is None:
+                if self.is_running():
+                    weight = 2 / (1 + math.exp(self._average_run_time / 50.0))
+                    conf = 0.75 + 0.25 * weight
+                else:
+                    conf = 0.75
+            self._package.confidence = conf
+            package = self._package
+            self._package = self._default_package()
+            return package
+
+        return custom_handler
+
+    def _file_name(self, file):
+        return join(dirname(abspath(sys.modules[self.__class__.__module__].__file__)), file)
+
+    def __make_callback(self, handler=lambda: None):
+        """Create a callback that packages and returns the skill result"""
+        def callback(package):
+            self._package = package
+            handler()
+            package = self._package
+            self._package = self._default_package()
+            return package
+        return callback
+
+
+class ScheduledSkill(MycroftSkill, metaclass=ABCMeta):
+    def __init__(self):
+        super().__init__()
         self._delay_s = None  # Delay in seconds
-        self.thread = None
+        self._thread = None
 
     def set_delay(self, delay):
         """Set the delay in seconds"""
         self._delay_s = delay
         self._schedule()
 
+    @abstractmethod
     def on_triggered(self):
         """Override to add behavior ran every {delay_s} seconds"""
         pass
 
     def _schedule(self):
         """Create the self-sustaining thread that runs on_triggered()"""
-        if self.thread:
-            self.thread.cancel()
-        self.thread = Timer(self._delay_s, self.__make_callback())
-        self.thread.daemon = True
-        self.thread.start()
+        if self._thread:
+            self._thread.cancel()
+        self._thread = Timer(self._delay_s, self.__make_callback())
+        self._thread.daemon = True
+        self._thread.start()
 
     def __make_callback(self):
         def callback():
