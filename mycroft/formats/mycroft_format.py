@@ -48,11 +48,17 @@ class MycroftFormat(metaclass=ABCMeta):
         self.config = self.global_config.get(self.__class__.__name__, {})
 
     @abstractmethod
-    def _reset(self):
+    def reset(self):
         pass
 
     @abstractmethod
-    def _generate_format(self, file, data):
+    def generate_format(self, file, data):
+        """
+        Function to override to actually generate the format
+        Args:
+            file (file): Text file object of given extension
+            data (dict): dict containing all data from skill
+        """
         pass
 
     def generate(self, name, data):
@@ -67,7 +73,7 @@ class MycroftFormat(metaclass=ABCMeta):
             file_name = join(dir_fn(name.skill), name.intent + self._extension)
             if isfile(file_name):
                 with open(file_name, 'r') as file:
-                    self._generate_format(file, data)
+                    self.generate_format(file, data)
                 return True
         return False
 

@@ -35,10 +35,10 @@ class ClientFormat(MycroftFormat, dict):
         """
         super().__init__('.client', 'client', path_manager)
 
-    def _reset(self):
+    def reset(self):
         self.clear()
 
-    def _generate_format(self, file, results):
+    def generate_format(self, file, results):
         obj = yaml.safe_load(file)
         if not isinstance(obj, dict):
             raise ValueError

@@ -97,7 +97,7 @@ class FaceplateFormat(MycroftFormat):
         self.queue = Queue()
         self.timers = []
 
-    def _reset(self):
+    def reset(self):
         self.command('mouth.reset')
         self.command('eyes.reset')
         self.command('eyes.color=65535')
@@ -164,7 +164,7 @@ class FaceplateFormat(MycroftFormat):
         else:
             self.command(line)
 
-    def _generate_format(self, file, data):
+    def generate_format(self, file, data):
         for line in file.readlines():
             for key, val in data.items():
                 line = line.replace('{' + key + '}', val)

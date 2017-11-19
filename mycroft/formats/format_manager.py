@@ -97,7 +97,7 @@ class FormatManager:
     def _reset(self):
         log.info('Resetting formats...')
         for i in self.formats.values():
-            i._reset()
+            i.reset()
 
     def _wait_and_reset(self):
         self.reset_event.wait()
