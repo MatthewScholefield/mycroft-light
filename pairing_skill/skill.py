@@ -1,4 +1,3 @@
-#
 # Copyright (c) 2017 Mycroft AI, Inc.
 #
 # This file is part of Mycroft Simple
@@ -20,7 +19,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-#
+
 import time
 from threading import Timer
 from uuid import uuid4
