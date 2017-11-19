@@ -31,12 +31,11 @@ class UpdateIntentCacheSkill(MycroftSkill):
     def __init__(self):
         super().__init__()
         self.register_intent('update', self.update)
+        self.register_intent('update.all', self.update_all)
         self.register_entity('skill')
 
-    def update(self, data: MatchData):
-        skill = data.matches['skill'].title().replace(' ', '')
-        self.add_result('skill', skill)
-        files = glob.glob(os.path.join(self.path_manager.intent_cache, skill + ':*'))
+    def remove_intents(self, pattern):
+        files = glob.glob(os.path.join(self.path_manager.intent_cache, pattern))
         if len(files) == 0:
             self.set_action('none.found')
             return 0.6
@@ -44,5 +43,14 @@ class UpdateIntentCacheSkill(MycroftSkill):
             def callback():
                 for i in files:
                     os.remove(i)
+
             self.set_callback(callback)
             return 0.8
+
+    def update(self, data: MatchData):
+        skill = data.matches['skill'].title().replace(' ', '')
+        self.add_result('skill', skill)
+        return self.remove_intents(skill + ':*')
+
+    def update_all(self):
+        return self.remove_intents('*')

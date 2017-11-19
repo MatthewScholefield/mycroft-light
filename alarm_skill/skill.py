@@ -30,7 +30,7 @@ from parsedatetime import Calendar
 from threading import Timer
 
 from mycroft import MycroftSkill
-from mycroft.util import LOG
+from twiggy import log
 
 
 class AlarmSkill(MycroftSkill):
@@ -135,7 +135,7 @@ class AlarmSkill(MycroftSkill):
         ]
 
         for key, fmt in formats:
-            LOG.debug('Key: ' + key + ', value: ' + dt.strftime(fmt))
+            log.debug('Key: ' + key + ', value: ' + dt.strftime(fmt))
             self.add_result(key, dt.strftime(fmt))
 
         def callback():

@@ -1,11 +1,10 @@
 from difflib import SequenceMatcher
-from subprocess import call
 from time import sleep
 
 import psutil
 
 from mycroft import MycroftSkill
-from mycroft.util.log import LOG
+from twiggy import log
 
 
 class SystemStatusSkill(MycroftSkill):
@@ -55,7 +54,6 @@ class SystemStatusSkill(MycroftSkill):
         return 0.0, None
 
     def app_mem(self, data):
-        LOG.error(data.matches)
         conf, p = self.find_process(data.matches['application'])
         if p:
             self.add_result('name', p.name())

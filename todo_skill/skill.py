@@ -31,7 +31,7 @@ from parsedatetime import Calendar
 from threading import Timer
 
 from mycroft import MycroftSkill
-from mycroft.util import LOG
+from twiggy import log
 
 
 class TodoSkill(MycroftSkill):

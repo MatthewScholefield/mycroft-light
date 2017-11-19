@@ -1,1 +1,2 @@
-py-stackexchange==2.2.7
+py-stackexchange
+lxml

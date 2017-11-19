@@ -26,7 +26,7 @@ from stackexchange import StackOverflow, Site
 from lxml import html
 import re
 
-from mycroft.util import LOG
+from twiggy import log
 
 
 class StackoverflowSkill(MycroftSkill):
@@ -53,9 +53,9 @@ class StackoverflowSkill(MycroftSkill):
                 try:
                     short = re.sub('</?code>', '', max(re.findall('<code>[\s\S]*?</code>', answer.body), key=len))
                 except IndexError:
-                    LOG.debug("Couldn't find code")
+                    log.debug("Couldn't find code")
                     short = text_answer.split('\n')[0] if '\n' in text_answer else text_answer
-                LOG.debug('Answer Body: ' + answer.body)
+                log.debug('Answer Body: ' + answer.body)
                 self.add_result('answer_short', short)
                 return 0.8
         self.set_action('not.found')

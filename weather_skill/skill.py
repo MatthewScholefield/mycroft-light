@@ -9,7 +9,7 @@ from pyowm.webapi25.forecastparser import ForecastParser
 from pyowm.webapi25.observationparser import ObservationParser
 
 from mycroft import MycroftSkill
-from mycroft.util import LOG
+from twiggy import log
 
 
 class OWMApi(Api):
@@ -20,7 +20,6 @@ class OWMApi(Api):
         self.forecast = ForecastParser()
 
     def build_query(self, params):
-        LOG.info('Received params: ' + str(params))
         params['query'].update({'lang': self.lang})
         return params['query']
 
@@ -116,7 +115,7 @@ class WeatherSkill(MycroftSkill):
             return None
         except HTTPError:
             self.set_action('location.not.found')
-            LOG.warning('No location found')
+            log.warning('No location found')
 
     def __build_results(
             self, is_local, location_pretty, weather, temp='temp', temp_min='temp_min',

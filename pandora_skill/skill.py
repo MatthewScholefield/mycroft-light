@@ -33,7 +33,7 @@ from threading import Thread
 from pydora.utils import iterate_forever
 
 from mycroft import MycroftSkill
-from mycroft.util import LOG
+from twiggy import log
 
 
 class PandoraSkill(MycroftSkill):
@@ -64,7 +64,7 @@ class PandoraSkill(MycroftSkill):
         try:
             return VLCPlayer(self, dummy_stdin)
         except PlayerUnusable:
-            LOG.warning('Unable to find VLC. MPG123 won\'t work for most songs')
+            log.warning('Unable to find VLC. MPG123 won\'t work for most songs')
             return MPG123Player(self, dummy_stdin)
 
     def start_playing(self, index):
@@ -73,9 +73,9 @@ class PandoraSkill(MycroftSkill):
             try:
                 self.player.play(song)
             except UnsupportedEncoding:
-                LOG.warning('Unsupported encoding')
+                log.warning('Unsupported encoding')
             except StopIteration:
-                LOG.info('Stopping Pandora...')
+                log.info('Stopping Pandora...')
                 self.player.stop()
                 return
 
