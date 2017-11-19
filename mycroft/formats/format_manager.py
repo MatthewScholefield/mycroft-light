@@ -22,8 +22,6 @@
 
 from threading import Thread, Event
 
-import json
-
 from mycroft.formats.client_format import ClientFormat
 from mycroft.formats.dialog_format import DialogFormat
 from mycroft.formats.faceplate_format import FaceplateFormat
