@@ -27,7 +27,7 @@ from threading import Thread, Timer
 from queue import Queue
 
 from mycroft.formats.mycroft_format import MycroftFormat
-from mycroft.util import LOG
+from twiggy import log
 from time import sleep, time as get_time
 
 
@@ -127,7 +127,7 @@ class FaceplateFormat(MycroftFormat):
         while True:
             command = self.queue.get()
             if 'viseme' not in command:
-                LOG.debug('Sending message: ' + command)
+                log.debug('Sending message: ' + command)
             self.serial.write((command + '\n').encode())
             self.queue.task_done()
 

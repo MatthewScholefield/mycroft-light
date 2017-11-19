@@ -1,5 +1,6 @@
 # Core dependencies
 PyYAML
+Twiggy
 requests
 pocketsphinx
 SpeechRecognition

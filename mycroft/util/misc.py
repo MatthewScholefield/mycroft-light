@@ -24,15 +24,18 @@
 from contextlib import contextmanager
 from ctypes import CFUNCTYPE, c_char_p, c_int, cdll
 
-from mycroft.util.log import LOG
+from twiggy import log
 
 
 def safe_run(callback, warn=True, *args):
     """Runs code, logging exceptions rather than throwing them"""
     try:
         callback()
-    except:
-        LOG.print_trace(*args, warn=warn)
+    except Exception as e:
+        if not warn:
+            log.trace('error').error(*args)
+        else:
+            log.warning(e.__class__.__name__ + ': ' + str(e))
 
 
 @contextmanager
@@ -50,7 +53,7 @@ def redirect_alsa_errors():
     def alsa_err_handler(filename, line, function, err, fmt):
         del line
         del err
-        LOG('alsa').debug(
+        log('alsa').debug(
             filename.decode() + ':' + function.decode() + ', ' + fmt.decode())
 
     asound = cdll.LoadLibrary('libasound.so')

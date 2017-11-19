@@ -33,7 +33,7 @@ from mycroft.managers.path_manager import PathManager
 from mycroft.managers.query_manager import QueryManager
 from mycroft.intent_name import IntentName
 from mycroft.result_package import ResultPackage
-from mycroft.util import LOG
+from twiggy import log
 from inspect import signature
 
 
@@ -67,7 +67,7 @@ class MycroftSkill:
                 target(*args, **kwargs)
             except:
                 self.stop_running()
-                LOG.print_trace(self.skill_name + ' thread')
+                log.trace('error').info(self.skill_name + ' thread')
         Thread(target=wrapper, daemon=True, *args, **kwargs).start()
 
     def _default_package(self):
@@ -87,7 +87,7 @@ class MycroftSkill:
                 else:
                     conf = handler()
             except:
-                LOG.print_trace(self.skill_name)
+                log.trace('error').info(self.skill_name)
                 conf = 0
             if conf is None:
                 if self.is_running():
@@ -253,7 +253,7 @@ class ScheduledSkill(MycroftSkill):
             try:
                 self.on_triggered()
             except:
-                LOG.print_trace(self.skill_name)
+                log.trace('error').info(self.skill_name)
             finally:
                 self._schedule()
 

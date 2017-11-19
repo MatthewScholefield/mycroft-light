@@ -27,7 +27,7 @@ import sys
 
 sys.path.append(os.path.abspath('.'))
 
-from requests.exceptions import HTTPError
+from requests.exceptions import HTTPError, ConnectionError
 
 from mycroft.clients.enclosure_client import EnclosureClient
 from mycroft.clients.websocket_client import WebsocketClient
@@ -42,25 +42,31 @@ from mycroft.managers.intent_manager import IntentManager
 from mycroft.managers.path_manager import PathManager
 from mycroft.managers.query_manager import QueryManager
 from mycroft.managers.skill_manager import SkillManager
-from mycroft.util import LOG
+
+from twiggy import log
 from mycroft import main_thread
+from mycroft.util.log import setup_logging
+
+
+def info(message):
+    print(message)
+    log.info(message)
 
 
 def main():
     ConfigurationManager.init()
     config = ConfigurationManager.get()
-    LOG.init(config)
+    setup_logging(config)
 
     if config['use_server']:
         try:
-            print('Loading device info...')
+            info('Loading device info...')
             load_device_info()
 
-            print('Loading remote settings...')
+            info('Loading remote settings...')
             ConfigurationManager.load_remote()
-        except HTTPError:
-            print('Failed to authenticate.')
-            LOG.warning('Failed to authenticate with servers!')
+        except (HTTPError, ConnectionError):
+            info('Failed to authenticate.')
 
     if len(sys.argv) > 1:
         letters = ''.join(sys.argv[1:]).lower()
@@ -75,9 +81,7 @@ def main():
     ]:
         if c in letters:
             clients.append(cls)
-    msg = 'Starting clients: ' + ', '.join(cls.__name__ for cls in clients)
-    print(msg)
-    LOG.debug(msg)
+    info('Starting clients: ' + ', '.join(cls.__name__ for cls in clients))
 
     path_manager = PathManager()
     intent_manager = IntentManager(path_manager)
@@ -88,25 +92,25 @@ def main():
     if not config['use_server']:
         skill_manager.blacklist += ['PairingSkill', 'ConfigurationSkill']
 
-    LOG.debug('Starting clients...')
+    log.debug('Starting clients...')
     client_manager = ClientManager(clients, path_manager, query_manager, formats)
-    LOG.debug('Started clients.')
+    log.debug('Started clients.')
 
-    print('Loading skills...')
+    info('Loading skills...')
     skill_manager.load_skills()
-    LOG.debug('Loaded skills.')
+    info('Loaded skills.')
     intent_manager.on_intents_loaded()
-    LOG.debug('Executed on intents loaded callback.')
+    log.debug('Executed on intents loaded callback.')
 
     client_manager.start()
     try:
-        LOG.debug('Waiting to quit...')
         main_thread.wait_for_quit()
+    except KeyboardInterrupt:
+        pass
     finally:
-        LOG.debug('Quiting!')
+        log.debug('Quiting!')
         client_manager.on_exit()
-    print()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

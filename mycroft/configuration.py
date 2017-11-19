@@ -27,8 +27,7 @@ from os.path import join, expanduser
 
 import yaml
 from pkg_resources import Requirement, resource_filename
-
-from mycroft.util.log import LOG
+from twiggy import log
 from mycroft.util.text import to_snake
 
 SYSTEM_CONFIG = '/etc/mycroft/mycroft.conf'
@@ -72,11 +71,11 @@ class ConfigurationManager:
 
         for file_name in LOAD_ORDER:
             if isfile(file_name):
-                LOG.info('Loading ' + file_name + '...')
+                log.info('Loading ' + file_name + '...')
                 with open(file_name) as f:
                     cls._update(cls.__config, yaml.safe_load(f))
             else:
-                LOG.info('Skipping ' + file_name + '...')
+                log.info('Skipping ' + file_name + '...')
 
     @classmethod
     def get(cls):

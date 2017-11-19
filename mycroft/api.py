@@ -29,6 +29,7 @@ from requests import HTTPError
 
 from mycroft.configuration import ConfigurationManager
 from mycroft.identity import IdentityManager
+from twiggy import log
 from mycroft.version import VersionManager
 
 __device_info = {}
@@ -37,6 +38,7 @@ __device_info = {}
 def load_device_info():
     global __device_info
     __device_info = DeviceApi().get()
+    print(__device_info)
 
 
 class Api(metaclass=ABCMeta):
@@ -178,6 +180,9 @@ class DeviceApi(Api):
             dict: JSON with user configuration information.
         """
         settings = self.request({'path': '/' + self.identity.uuid + '/setting'})
+        if settings is None:
+            log.warning('Remote settings is None')
+            return {}
         loc = self.request({'path': '/' + self.identity.uuid + '/location'})
         if loc:
             settings['location'] = loc

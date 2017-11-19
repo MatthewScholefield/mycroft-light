@@ -31,7 +31,7 @@ from threading import Thread
 
 from mycroft import MycroftSkill
 from mycroft.configuration import ConfigurationManager
-from mycroft.util import LOG
+from twiggy import log
 from mycroft.util.text import to_camel
 from mycroft.util.git_repo import GitRepo
 
@@ -61,7 +61,7 @@ class SkillManager:
             self.skills.append(skill)
             print('Loaded ' + cls_name + '.')
         except:
-            LOG.print_trace('loading ' + cls_name)
+            log.trace('error').error('loading ' + cls_name)
             print('Failed to load ' + cls_name + '!')
 
     def load_skills(self):

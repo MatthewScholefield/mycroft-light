@@ -31,7 +31,7 @@ from os import listdir, mkdir
 from mycroft.clients.speech.recognizers.wake_word_recognizer import MycroftListener
 from mycroft.configuration import ConfigurationManager
 from mycroft.managers.path_manager import PathManager
-from mycroft.util import LOG
+from twiggy import log
 
 
 class PreciseListener(MycroftListener):
@@ -50,7 +50,7 @@ class PreciseListener(MycroftListener):
         model_path = join(model_folder, model_name)
 
         exe_file = self.find_download_exe()
-        LOG.info('Found precise executable: ' + exe_file)
+        log.info('Found precise executable: ' + exe_file)
         self.update_model(model_name, model_path)
 
         args = [exe_file, model_path, '1024']
@@ -94,7 +94,7 @@ class PreciseListener(MycroftListener):
     def download(url, filename):
         import shutil
         from urllib2 import urlopen
-        LOG.info('Downloading: ' + url)
+        log.info('Downloading: ' + url)
         req = urlopen(url)
         with open(filename, 'wb') as fp:
             shutil.copyfileobj(req, fp)

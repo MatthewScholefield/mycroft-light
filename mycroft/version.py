@@ -24,7 +24,7 @@
 import json
 from genericpath import exists, isfile
 
-from mycroft.util import LOG
+from twiggy import log
 
 # The following lines are replaced during the release process.
 # START_VERSION_BLOCK
@@ -49,6 +49,6 @@ class VersionManager:
                 with open(VersionManager.__location) as f:
                     return json.load(f)
             except:
-                LOG.error("Failed to load version from '%s'"
-                          % VersionManager.__location)
+                log.error("Failed to load version from '%s'"
+                         % VersionManager.__location)
         return {"coreVersion": None, "enclosureVersion": None}

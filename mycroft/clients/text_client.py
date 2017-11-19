@@ -41,11 +41,14 @@ class TextClient(MycroftClient):
 
     def run(self):
         print(self.prompt, end='', flush=True)
-        while not main_thread.exit_event.is_set():
-            query = input()
-            self.response_event.clear()
-            self.send_query(query)
-            self.response_event.wait()
+        try:
+            while not main_thread.exit_event.is_set():
+                query = input()
+                self.response_event.clear()
+                self.send_query(query)
+                self.response_event.wait()
+        except EOFError:
+            main_thread.quit()
 
     def on_query(self, query):
         if self.response_event.is_set():
@@ -64,3 +67,6 @@ class TextClient(MycroftClient):
                 print(self.prompt, end='', flush=True)
 
         self.response_event.set()
+
+    def on_exit(self):
+        print()

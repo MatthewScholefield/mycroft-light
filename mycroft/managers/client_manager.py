@@ -22,7 +22,7 @@
 # under the License.
 #
 from threading import Thread
-
+from twiggy import log
 
 class ClientManager:
     """Holds all clients to start and stop them"""
@@ -37,4 +37,5 @@ class ClientManager:
 
     def on_exit(self):
         for i in self.clients:
+            log.info('Running on_exit for: ' + i.__class__.__name__)
             i.on_exit()

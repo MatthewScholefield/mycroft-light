@@ -31,7 +31,7 @@ from mycroft.clients.mycroft_client import MycroftClient
 from mycroft.clients.speech.recognizers.pocketsphinx_recognizer import PocketsphinxListener
 from mycroft.clients.speech.stt import STT
 from mycroft.clients.speech.tts.mimic_tts import MimicTTS
-from mycroft.util import LOG
+from twiggy import log
 from mycroft.util.audio import play_audio
 
 
@@ -59,24 +59,24 @@ class SpeechClient(MycroftClient):
         try:
             while not main_thread.exit_event.is_set():
 
-                LOG.info('Waiting for wake word...')
+                log.info('Waiting for wake word...')
                 self.listener.wait_for_wake_word()
 
-                LOG.info('Recording...')
+                log.info('Recording...')
                 self.formats.faceplate.command('mouth.listen')
                 play_audio(self.start_listening_file)
                 recording = self.listener.record_phrase()
 
-                LOG.info('Done recording.')
+                log.info('Done recording.')
                 self.formats.faceplate.command('mouth.reset')
                 play_audio(self.stop_listening_file)
 
                 try:
                     utterance = self.stt.execute(recording)
                 except (HTTPError, ValueError, ReadTimeout):
-                    LOG.print_trace('Speech Client')
+                    log.trace('error').info('Speech Client')
                     utterance = ''
-                LOG.info('Utterance: ' + utterance)
+                log.info('Utterance: ' + utterance)
 
                 self.send_query(utterance)
                 self.response_event.wait()

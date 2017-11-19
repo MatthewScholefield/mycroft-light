@@ -28,7 +28,7 @@ import json
 from mycroft.formats.client_format import ClientFormat
 from mycroft.formats.dialog_format import DialogFormat
 from mycroft.formats.faceplate_format import FaceplateFormat
-from mycroft.util import LOG
+from twiggy import log
 from mycroft.util.misc import safe_run
 
 
@@ -71,13 +71,13 @@ class FormatManager:
         if item in self.formats:
             return self.formats[item]
         else:
-            LOG.warning(item + ' format not available')
+            log.warning(item + ' format not available')
             self.formats[item] = Empty()
             return getattr(self, item)
 
     def generate(self, name, data):
         """Called to send the raw data to the formats to be generated"""
-        LOG.debug('Package data:\n\n' + json.dumps(data, indent=2))
+        log.fields(**data).debug('Package data')
         self._reset()
         was_handled = False
 
@@ -85,7 +85,7 @@ class FormatManager:
             was_handled = i.generate(name, data) or was_handled
 
         if not was_handled:
-            LOG.warning('No format handled ' + str(name))
+            log.warning('No format handled ' + str(name))
 
     def reset(self):
         if self.reset_event.is_set():
@@ -96,7 +96,7 @@ class FormatManager:
         Thread(target=self._wait_and_reset, daemon=True).start()
 
     def _reset(self):
-        LOG.info('Resetting formats...')
+        log.info('Resetting formats...')
         for i in self.formats.values():
             i._reset()
 
