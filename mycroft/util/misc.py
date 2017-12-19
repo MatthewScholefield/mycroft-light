@@ -26,15 +26,18 @@ from ctypes import CFUNCTYPE, c_char_p, c_int, cdll
 from twiggy import log
 
 
-def safe_run(callback, warn=True, *args):
+def safe_run(callback, *args, **kwargs):
     """Runs code, logging exceptions rather than throwing them"""
+    should_warn = kwargs.pop('warn', True)
     try:
-        callback()
+        callback(*args, **kwargs)
+        return True
     except Exception as e:
-        if not warn:
-            log.trace('error').error(*args)
+        if not should_warn:
+            log.trace('error').error()
         else:
             log.warning(e.__class__.__name__ + ': ' + str(e))
+        return False
 
 
 @contextmanager

@@ -26,6 +26,7 @@ import sys
 
 sys.path.append(os.path.abspath('.'))
 
+from time import sleep
 from requests.exceptions import HTTPError, ConnectionError
 
 from mycroft.clients.enclosure_client import EnclosureClient
@@ -40,7 +41,7 @@ from mycroft.formats.format_manager import FormatManager
 from mycroft.engines.intent_manager import IntentManager
 from mycroft.managers.path_manager import PathManager
 from mycroft.managers.query_manager import QueryManager
-from mycroft.skill_loader import SkillManager
+from mycroft.skill_loader import SkillLoader
 
 from twiggy import log
 from mycroft import main_thread
@@ -80,27 +81,30 @@ def main():
     ]:
         if c in letters:
             clients.append(cls)
-    info('Starting clients: ' + ', '.join(cls.__name__ for cls in clients))
 
     path_manager = PathManager()
     intent_manager = IntentManager(path_manager)
     formats = FormatManager(path_manager)
     query_manager = QueryManager(intent_manager, formats)
-    skill_loader = SkillManager(path_manager, intent_manager, query_manager)
+    skill_loader = SkillLoader(path_manager, intent_manager, query_manager)
 
     if not config['use_server']:
         skill_loader.blacklist += ['PairingSkill', 'ConfigurationSkill']
 
-    log.debug('Starting clients...')
-    client_manager = ClientManager(clients, path_manager, query_manager, formats)
-    log.debug('Started clients.')
-
     info('Loading skills...')
-    skill_loader.load_skills()
-    info('Loaded skills.')
-    intent_manager.on_intents_loaded()
-    log.debug('Executed on intents loaded callback.')
+    skill_loader.load_skills(info)
+    info('All skills loaded.')
+    print()
 
+    info('Compiling intents...')
+    intent_manager.on_intents_loaded()
+    info('Done compiling intents.')
+    print()
+
+    info('Starting clients: ' + ', '.join(cls.__name__ for cls in clients) + '...')
+    print()
+
+    client_manager = ClientManager(clients, path_manager, query_manager, formats)
     client_manager.start()
     try:
         main_thread.wait_for_quit()
@@ -108,7 +112,10 @@ def main():
         pass
     finally:
         log.debug('Quiting!')
+        sleep(0.1)
         client_manager.on_exit()
+        sleep(0.1)
+        exit(0)
 
 
 if __name__ == '__main__':

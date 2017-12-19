@@ -46,6 +46,11 @@ class IntentManager:
             self.handlers_s[str_name] = [handler]
         return
 
+    def remove_skill(self, skill_name):
+        for key in list(self.handlers_s):
+            if key.split(':')[0] == skill_name:
+                del self.handlers_s[key]
+
     def register_intent(self, skill_name, intent, calc_conf_fn):
         """
         Register an intent via the corresponding intent engine

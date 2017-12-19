@@ -39,7 +39,7 @@ class QueryManager:
         """Function to run query in a separate thread"""
         for i in self.on_query_callbacks:
             safe_run(lambda: i(query))
-        self.send_package(self.intent_manager.calc_result(query))
+        safe_run(self.send_package, self.intent_manager.calc_result(query), warn=False)
 
     def send_package(self, package):
         """Generates data in all the formats and gives that formatted data to each callback"""

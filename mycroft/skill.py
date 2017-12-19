@@ -111,7 +111,7 @@ class MycroftSkill:
         """ Get the JSON data struction holding location information. """
         # TODO: Allow Enclosure to override this for devices that
         # contain a GPS.
-        return self.global_config.get('location')
+        return self.global_config['location']
 
     @property
     def location_pretty(self):

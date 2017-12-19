@@ -74,7 +74,7 @@ class ConfigurationManager:
                 with open(file_name) as f:
                     cls._update(cls.__config, yaml.safe_load(f))
             else:
-                log.info('Skipping ' + file_name + '...')
+                log.info('Missing ' + file_name + '.')
 
     @classmethod
     def get(cls):

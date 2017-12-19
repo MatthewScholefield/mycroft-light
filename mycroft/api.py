@@ -37,7 +37,6 @@ __device_info = {}
 def load_device_info():
     global __device_info
     __device_info = DeviceApi().get()
-    print(__device_info)
 
 
 class Api(metaclass=ABCMeta):
@@ -80,6 +79,8 @@ class Api(metaclass=ABCMeta):
         json = self.build_json(params)
         query = self.build_query(params)
         url = self.build_url(params)
+        log.name('api').fields(method=method, url=url, params=query,
+                                    data=data, json=json).debug()
         response = requests.request(method, url, headers=headers, params=query,
                                     data=data, json=json, timeout=(3.05, 15))
         return self.get_response(response)

@@ -21,7 +21,6 @@
 # under the License.
 
 from threading import Event
-
 from mycroft import main_thread
 from mycroft.clients.mycroft_client import MycroftClient
 
@@ -63,8 +62,7 @@ class TextClient(MycroftClient):
                     print()
                     print("    " + dialog)
                     print()
-                print(self.prompt, end='', flush=True)
-
+        print(self.prompt, end='', flush=True)
         self.response_event.set()
 
     def on_exit(self):

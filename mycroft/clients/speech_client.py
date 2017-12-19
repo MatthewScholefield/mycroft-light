@@ -28,6 +28,7 @@ from requests.exceptions import ReadTimeout, HTTPError
 from mycroft import main_thread
 from mycroft.clients.mycroft_client import MycroftClient
 from mycroft.clients.speech.recognizers.pocketsphinx_recognizer import PocketsphinxListener
+from mycroft.clients.speech.recognizers.precise_recognizer import PreciseListener
 from mycroft.clients.speech.stt import STT
 from mycroft.clients.speech.tts.mimic_tts import MimicTTS
 from twiggy import log
@@ -51,6 +52,8 @@ class SpeechClient(MycroftClient):
         t = self.config['listener_type']
         if t == 'PocketsphinxListener':
             return PocketsphinxListener(path_manager, self.global_config)
+        elif t == 'PreciseListener':
+            return PreciseListener(path_manager, self.global_config)
         else:
             raise ValueError
 

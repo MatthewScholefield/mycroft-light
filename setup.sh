@@ -7,6 +7,7 @@ show_usage() {
     echo "Sets up and updates both python and native dependencies"
     exit 0
 }
+
 found_exe() {
     hash "$1" 2>/dev/null
 }

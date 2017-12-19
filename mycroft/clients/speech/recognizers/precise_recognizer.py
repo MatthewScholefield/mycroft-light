@@ -20,12 +20,14 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from os.path import expanduser, isdir, join
+import os
+from os.path import expanduser, isdir, join, isfile
+from time import time as get_time
 from subprocess import call, PIPE, Popen
 
 from threading import Thread
 
-from os import listdir, mkdir
+from os import mkdir
 
 from mycroft.clients.speech.recognizers.wake_word_recognizer import MycroftListener
 from mycroft.configuration import ConfigurationManager
@@ -92,7 +94,7 @@ class PreciseListener(MycroftListener):
     @staticmethod
     def download(url, filename):
         import shutil
-        from urllib2 import urlopen
+        from urllib.request import urlopen
         log.info('Downloading: ' + url)
         req = urlopen(url)
         with open(filename, 'wb') as fp:

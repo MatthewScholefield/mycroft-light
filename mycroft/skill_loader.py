@@ -22,8 +22,9 @@
 
 import re
 import sys
+from importlib import import_module, reload
 from os import listdir
-from os.path import isdir, join, dirname
+from os.path import isdir, join, dirname, basename
 from subprocess import call
 
 from threading import Thread
@@ -33,6 +34,19 @@ from mycroft.configuration import ConfigurationManager
 from twiggy import log
 from mycroft.util.text import to_camel
 from mycroft.util.git_repo import GitRepo
+import pyinotify
+
+
+class EventHandler(pyinotify.ProcessEvent):
+    def __init__(self, skill_loader):
+        super().__init__()
+        self.skill_loader = skill_loader
+
+    def process_default(self, event):
+        skill_name = basename(event.path)
+        if event.name == 'skill.py' and skill_name.endswith('_skill'):
+            self.skill_loader.load_skill(skill_name)
+            log.info("Reloaded: {}", skill_name)
 
 
 class SkillLoader:
@@ -41,29 +55,46 @@ class SkillLoader:
     def __init__(self, path_manager, intent_manager, query_manager):
         MycroftSkill.initialize_references(path_manager, intent_manager, query_manager)
         self.path_manager = path_manager
-        self.skills = []
+        self.intent_manager = intent_manager
+        self.skills = {}
         self.git_repo = GitRepo(directory=self.path_manager.skills_dir,
                                 url='https://github.com/MatthewScholefield/mycroft-light.git',
                                 branch='skills',
                                 update_freq=1)
         self.blacklist = ConfigurationManager.get()['skills']['blacklist']
 
-    def load_skill(self, skill_name):
+
+        # The watch manager stores the watches and provides operations on watches
+        wm = pyinotify.WatchManager()
+        mask = pyinotify.IN_MODIFY | pyinotify.IN_CREATE | pyinotify.IN_DELETE | pyinotify.IN_MOVED_TO
+        skills_dir = self.path_manager.skills_dir
+
+        handler = EventHandler(self)
+        notifier = pyinotify.ThreadedNotifier(wm, handler)
+        notifier.daemon = True
+        wdd = wm.add_watch(skills_dir, mask, rec=True)
+        notifier.start()
+
+    def load_skill(self, skill_name, on_message=lambda _: None):
         cls_name = to_camel(skill_name)
         if cls_name in self.blacklist:
-            print('Skipping ' + cls_name + '.')
+            on_message('Skipping ' + cls_name + '.')
             return
+
+        if skill_name in self.skills:
+            self.intent_manager.remove_skill(cls_name)
+
         try:
-            skill = None
-            exec('from ' + skill_name + '.skill import ' + cls_name)
-            exec('skill = ' + cls_name + '()')
-            self.skills.append(skill)
-            print('Loaded ' + cls_name + '.')
+            mod = import_module(skill_name + '.skill')
+            mod = reload(mod)
+            cls = getattr(mod, cls_name)
+            self.skills[skill_name] = cls()
+            on_message('Loaded ' + cls_name + '.')
         except:
             log.trace('error').error('loading ' + cls_name)
-            print('Failed to load ' + cls_name + '!')
+            on_message('Failed to load ' + cls_name + '!')
 
-    def load_skills(self):
+    def load_skills(self, on_message):
         """
         Looks in the skill folder and loads the
         CamelCase equivalent class of the snake case folder
@@ -86,16 +117,16 @@ class SkillLoader:
 
         threads = []
         sys.path.append(self.path_manager.skills_dir)
-        skill_names = listdir(self.path_manager.skills_dir)
+        skill_names, invalid_names = listdir(self.path_manager.skills_dir), []
         for skill_name in skill_names:
             if not re.match('^[a-z][a-z_]*_skill$', skill_name):
+                invalid_names.append(skill_name)
                 continue
 
-            t = Thread(target=lambda: self.load_skill(skill_name),
-                   daemon=True)
+            t = Thread(target=lambda: self.load_skill(skill_name, on_message))
             t.start()
             threads.append(t)
         for i in threads:
             i.join()
-        print('All skills loaded.')
-        print()
+
+        log.debug('Skipped folders: {}', ', '.join(invalid_names))

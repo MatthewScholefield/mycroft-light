@@ -22,6 +22,7 @@
 
 from requests import HTTPError
 from speech_recognition import Recognizer, UnknownValueError, RequestError
+from twiggy import log
 
 from mycroft.api import STTApi
 from mycroft.configuration import ConfigurationManager
@@ -83,5 +84,8 @@ class STT:
     def execute(self, audio):
         try:
             return self.on_execute(self, audio)
-        except (UnknownValueError, RequestError):
+        except UnknownValueError:
+            return ''
+        except RequestError:
+            log.trace('error').warning('STT')
             return ''

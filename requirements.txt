@@ -10,6 +10,7 @@ pyalsaaudio
 tornado
 websocket-client
 padatious
+pyinotify
 
 # Extra deps required for some installations
 urllib3

@@ -20,7 +20,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from random import randint
+import random
+import re
 
 from mycroft.formats.mycroft_format import MycroftFormat
 
@@ -43,17 +44,24 @@ class DialogFormat(MycroftFormat):
         self.output = ""
 
     def generate_format(self, file, results):
-        lines = [(line, 0) for line in file.readlines()]
-        for key, val in results.items():
-            lines = [(i.replace('{' + key + '}', str(val)), c + 1 if '{' + key + '}' in i else 0) for i, c in lines]
-        best_lines = [i for i in lines if '{' not in i[0] and '}' not in i[0]]
-        if len(best_lines) == 0:
-            best_lines = [line for line, count in lines]
-        else:
-            index, max_count = max(best_lines, key=lambda item: item[1])
-            best_lines = [line for line, count in best_lines if count == max_count]
+        best_lines, best_score = [], 0
+        for line in file.read().split('\n'):
+            if line.isspace():
+                continue
 
-        # Remove lines of only whitespace
-        best_lines = [i for i in [i.strip() for i in best_lines] if i]
+            line_score = 0
+            for key in results:
+                token = '{' + key + '}'
+                if token in line:
+                    line = line.replace(token, results[key])
+                    line_score += 1
 
-        self.output = best_lines[randint(0, len(best_lines) - 1)]
+            if re.search('{[a-zA-Z_]*}', line):
+                line_score /= 100.
+            if line_score > best_score:
+                best_lines = [line]
+                best_score = line_score
+            elif line_score == best_score:
+                best_lines.append(line)
+
+        self.output = random.choice(best_lines)

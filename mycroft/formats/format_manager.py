@@ -19,7 +19,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
+import json
 from threading import Thread, Event
 
 from mycroft.formats.client_format import ClientFormat
@@ -74,12 +74,16 @@ class FormatManager:
 
     def generate(self, name, data):
         """Called to send the raw data to the formats to be generated"""
-        log.fields(**data).debug('Package data')
+        log.options(suppress_newlines=False) \
+            .debug('Package data: \n{}', json.dumps(data, indent=4))
         self._reset()
-        was_handled = False
 
+        was_handled = False
         for i in self.formats.values():
-            was_handled = i.generate(name, data) or was_handled
+            def generate():
+                nonlocal was_handled
+                was_handled = i.generate(name, data) or was_handled
+            safe_run(generate, warn=False)
 
         if not was_handled:
             log.warning('No format handled ' + str(name))

@@ -59,12 +59,7 @@ class PadatiousEngine(IntentEngine):
         return True
 
     def on_intents_loaded(self):
-        print('Training...')
-        log.info('Training...')
         self.container.train()
-        log.info('Training complete!')
-        print('Training complete!')
-        print()
 
     def calc_intents(self, query):
         matches = []
