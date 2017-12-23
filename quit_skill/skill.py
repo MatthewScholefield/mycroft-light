@@ -19,12 +19,10 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-from mycroft import main_thread
 from mycroft import MycroftSkill
 
 
 class QuitSkill(MycroftSkill):
     def __init__(self):
         super().__init__()
-        self.register_intent('quit', lambda: main_thread.quit())
+        self.register_intent('quit', lambda: self.rt.main_thread.quit())

@@ -25,7 +25,7 @@ from stackexchange import StackOverflow, Site
 from lxml import html
 import re
 
-from twiggy import log
+from mycroft.util import log
 
 
 class StackoverflowSkill(MycroftSkill):
@@ -58,4 +58,4 @@ class StackoverflowSkill(MycroftSkill):
                 self.add_result('answer_short', short)
                 return 0.8
         self.set_action('not.found')
-        return 0.6
+        return 0.4

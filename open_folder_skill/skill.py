@@ -33,7 +33,7 @@ class OpenFolderSkill(MycroftSkill):
         if SequenceMatcher(a='home', b=place).ratio() > 0.5:
             folder = expanduser('~')
         elif 'skill' in place:
-            folder = self.path_manager.skill_dir(place.lower().replace(' ', '_'))
+            folder = self.rt.paths.skill_dir(place.lower().replace(' ', '_'))
         else:
             folder = ''
 

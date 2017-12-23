@@ -4,7 +4,7 @@ from time import sleep
 import psutil
 
 from mycroft import MycroftSkill
-from twiggy import log
+from mycroft.util import log
 
 
 class SystemStatusSkill(MycroftSkill):

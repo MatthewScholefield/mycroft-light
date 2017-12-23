@@ -59,7 +59,7 @@ class TimeSkill(MycroftSkill):
                 self.add_result('place', place)
                 return 0.6
         else:
-            tz = self.global_config['location']['timezone']['code']
+            tz = self.rt.config['location']['timezone']['code']
 
         self.add_result('time', self.get_cur_time(tz))
 

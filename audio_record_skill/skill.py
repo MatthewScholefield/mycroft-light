@@ -25,7 +25,6 @@ from subprocess import Popen
 from threading import Thread
 
 from mycroft import MycroftSkill
-from mycroft.util.audio import play_wav
 
 
 class AudioRecordSkill(MycroftSkill):
@@ -100,7 +99,7 @@ class AudioRecordSkill(MycroftSkill):
     def record_end(self):
         if self.record_process is None:
             self.set_action('no.recording.to.end')
-            return 0.6
+            return 0.3
 
         self.set_callback(lambda: self.end_process('record_process'))
         return 0.88
@@ -110,7 +109,7 @@ class AudioRecordSkill(MycroftSkill):
             return 0.6
 
         def callback():
-            self.playback_process = play_wav(self.file_path)
+            self.playback_process = None #play_wav(self.file_path)  TODO: Fix
             self.notify_end('playback_process', 'playback.end')
             self.start_running()
         self.set_callback(callback)
@@ -118,7 +117,7 @@ class AudioRecordSkill(MycroftSkill):
     def playback_end(self):
         if self.playback_process is None:
             self.set_action('no.playback.to.end')
-            return 0.6
+            return 0.3
 
         self.set_callback(lambda: self.end_process('playback_process'))
         return 0.8

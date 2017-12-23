@@ -9,12 +9,12 @@ from pyowm.webapi25.forecastparser import ForecastParser
 from pyowm.webapi25.observationparser import ObservationParser
 
 from mycroft import MycroftSkill
-from twiggy import log
+from mycroft.util import log
 
 
 class OWMApi(Api):
-    def __init__(self):
-        super(OWMApi, self).__init__('owm')
+    def __init__(self, rt):
+        super(OWMApi, self).__init__(rt, 'owm')
         self.lang = 'en'
         self.observation = ObservationParser()
         self.forecast = ForecastParser()
@@ -82,12 +82,18 @@ class WeatherSkill(MycroftSkill):
         if key and not self.config.get('proxy'):
             return OWM(key)
         else:
-            return OWMApi()
+            return OWMApi(self.rt)
 
     def handle_weather(self, get_weather, intent_match, temp='temp', temp_min='temp_min',
                        temp_max='temp_max'):
         location, pretty_location = self.get_location(intent_match)
-        self.__build_results(pretty_location == self.location_pretty, pretty_location, get_weather(location), temp, temp_min, temp_max)
+        try:
+            weather = get_weather(location)
+            self.__build_results(pretty_location == self.location_pretty, pretty_location, weather,
+                                 temp, temp_min, temp_max)
+        except HTTPError:
+            self.set_action('location.not.found')
+            log.warning('No location found')
 
     def handle_current_intent(self, intent_match):
         self.handle_weather(lambda l: self.owm.weather_at_place(l).get_weather(), intent_match)
@@ -100,22 +106,11 @@ class WeatherSkill(MycroftSkill):
                             'day', 'min', 'max')
 
     def get_location(self, intent_match):
-        try:
-            location = intent_match.matches.get('location')
-            if location is not None:
-                return location, location
-
-            location = self.location
-            if type(location) is dict:
-                city = location['city']
-                state = city['state']
-                return city['name'] + ', ' + state['name'] + ', ' + \
-                    state['country']['name'], self.location_pretty
-
-            return None
-        except HTTPError:
-            self.set_action('location.not.found')
-            log.warning('No location found')
+        location = intent_match.matches.get('location')
+        if location is not None:
+            return location, location
+        city = self.location['city']
+        return city['code'] + ',' + city['state']['country']['code'], self.location_pretty
 
     def __build_results(
             self, is_local, location_pretty, weather, temp='temp', temp_min='temp_min',
@@ -134,7 +129,7 @@ class WeatherSkill(MycroftSkill):
         self.add_result('img_code', self.CODES[weather_code])
 
     def __get_temperature_unit(self):
-        system_unit = self.global_config.get('system_unit')
+        system_unit = self.rt.config['system_unit']
         return system_unit == 'metric' and 'celsius' or 'fahrenheit'
 
     def __get_temperature(self, weather, key):

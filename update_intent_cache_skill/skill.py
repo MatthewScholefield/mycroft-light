@@ -34,7 +34,7 @@ class UpdateIntentCacheSkill(MycroftSkill):
         self.register_entity('skill')
 
     def remove_intents(self, pattern):
-        files = glob.glob(os.path.join(self.path_manager.intent_cache, pattern))
+        files = glob.glob(os.path.join(self.rt.paths.user_config, 'intent_cache', pattern))
         if len(files) == 0:
             self.set_action('none.found')
             return 0.6

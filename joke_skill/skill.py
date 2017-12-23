@@ -31,6 +31,6 @@ class JokeSkill(MycroftSkill):
         self.register_intent('joke', self.joke)
 
     def joke(self):
-        lang = self.global_config['lang'][:-3]
+        lang = self.rt.config['lang'][:-3]
         joke = pyjokes.get_joke(language=lang)
         self.add_result('joke', joke)

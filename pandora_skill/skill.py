@@ -27,12 +27,11 @@ from io import StringIO
 from pandora import clientbuilder
 from pydora.audio_backend import VLCPlayer, PlayerUnusable, MPG123Player, \
     UnsupportedEncoding
-from threading import Thread
 
 from pydora.utils import iterate_forever
 
 from mycroft import MycroftSkill
-from twiggy import log
+from mycroft.util import log
 
 
 class PandoraSkill(MycroftSkill):
@@ -106,6 +105,9 @@ class PandoraSkill(MycroftSkill):
         self.set_callback(self.player.stop)
 
     def handle_stop(self):
+        if not self.is_running():
+            return 0.3
+
         def callback():
             self.must_stop = True
         self.set_callback(callback)

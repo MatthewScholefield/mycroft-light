@@ -20,30 +20,17 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from mycroft import MycroftSkill, MatchData
-
-
-class ClassName(MycroftSkill):
-    def __init__(self):
-        super().__init__()
-        self.register_intent('', self._)
-
-    def _(self, data: MatchData):
-        self.add_result('', None)
-
-
 from subprocess import check_output
 
 from padatious.match_data import MatchData
 
 from mycroft import MycroftSkill
-from mycroft.configuration import ConfigurationManager
 
 
 class ExplainFailureSkill(MycroftSkill):
     def __init__(self):
         super().__init__()
-        self.log_file = ConfigurationManager.get()['log_file']
+        self.log_file = self.rt.config['log_file']
         self.register_intent('why.did.skill.fail', self.why_did_skill_fail)
         self.register_entity('skill')
 

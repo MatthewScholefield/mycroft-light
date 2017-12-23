@@ -27,8 +27,8 @@ from uuid import uuid4
 from requests import HTTPError
 
 from mycroft import MycroftSkill
-from mycroft.api import DeviceApi, is_paired
-from mycroft.identity import IdentityManager
+from mycroft.api import DeviceApi
+from mycroft.util import log
 
 
 class PairingSkill(MycroftSkill):
@@ -37,7 +37,7 @@ class PairingSkill(MycroftSkill):
 
     def __init__(self):
         super().__init__()
-        self.api = DeviceApi()
+        self.api = DeviceApi(self.rt)
         self.data = None
         self.expire_time = None
         self.state = str(uuid4())
@@ -45,13 +45,13 @@ class PairingSkill(MycroftSkill):
         self.check_paired()
 
     def check_paired(self):
-        if not is_paired():
+        if not self.rt.device_info:
             self.pair_device()
             self.trigger_action('pair')
             self.create_activator()
 
     def pair_device(self):
-        if is_paired():
+        if self.rt.device_info:
             self.set_action('pair.complete')
             return 0.6
         elif self.data and self.expire_time > time.time():
@@ -72,8 +72,7 @@ class PairingSkill(MycroftSkill):
             token = self.data.get('token')
             login = self.api.activate(self.state, token)
 
-            IdentityManager.save(login)
-            IdentityManager.update(login)
+            self.rt.identity.register(login)
             self.set_action('pair.complete')
         except HTTPError:
             self.pair_device()

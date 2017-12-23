@@ -29,7 +29,7 @@ from parsedatetime import Calendar
 from threading import Timer
 
 from mycroft import MycroftSkill
-from twiggy import log
+from mycroft.util import log
 
 
 class AlarmSkill(MycroftSkill):
@@ -172,4 +172,4 @@ class AlarmSkill(MycroftSkill):
             return 0.9
         else:
             self.set_action('none.to.stop')
-            return 0.6
+            return 0.3
