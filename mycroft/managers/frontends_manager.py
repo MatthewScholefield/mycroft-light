@@ -19,28 +19,13 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-import json
-from os.path import isfile
-
-# The following lines are replaced during the release process.
-# START_VERSION_BLOCK
-CORE_VERSION_MAJOR = 0
-CORE_VERSION_MINOR = 8
-CORE_VERSION_BUILD = 16
-# END_VERSION_BLOCK
-
-CORE_VERSION_STR = (str(CORE_VERSION_MAJOR) + "." +
-                    str(CORE_VERSION_MINOR) + "." +
-                    str(CORE_VERSION_BUILD))
+from mycroft.frontends.frontend_plugin import FrontendPlugin
+from mycroft.group_plugin import GroupPlugin
+from mycroft.managers.manager_plugin import ManagerPlugin
 
 
-def get_core_version():
-    return CORE_VERSION_STR
-
-
-def get_enclosure_version():
-    if isfile('/opt/mycroft/version.json'):
-        with open('/opt/mycroft/version.json') as f:
-            return json.load(f).get('enclosureVersion')
-    return None
+class FrontendsManager(ManagerPlugin, GroupPlugin):
+    def __init__(self, rt):
+        ManagerPlugin.__init__(self, rt)
+        GroupPlugin.__init__(self, FrontendPlugin, 'mycroft.frontends', '_frontend')
+        self.init_plugins(rt)

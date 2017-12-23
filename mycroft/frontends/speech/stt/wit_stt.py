@@ -19,28 +19,9 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-import json
-from os.path import isfile
-
-# The following lines are replaced during the release process.
-# START_VERSION_BLOCK
-CORE_VERSION_MAJOR = 0
-CORE_VERSION_MINOR = 8
-CORE_VERSION_BUILD = 16
-# END_VERSION_BLOCK
-
-CORE_VERSION_STR = (str(CORE_VERSION_MAJOR) + "." +
-                    str(CORE_VERSION_MINOR) + "." +
-                    str(CORE_VERSION_BUILD))
+from mycroft.frontends.speech.stt.speech_recognition_stt_base import SpeechRecognitionSttBase
 
 
-def get_core_version():
-    return CORE_VERSION_STR
-
-
-def get_enclosure_version():
-    if isfile('/opt/mycroft/version.json'):
-        with open('/opt/mycroft/version.json') as f:
-            return json.load(f).get('enclosureVersion')
-    return None
+class WitStt(SpeechRecognitionSttBase):
+    def transcribe(self, audio):
+        return self.recognizer.recognize_wit(audio, self.token)

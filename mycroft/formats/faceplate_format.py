@@ -20,15 +20,14 @@
 # specific language governing permissions and limitations
 # under the License.
 
-import serial
-from threading import Thread, Timer
-
 from queue import Queue
-
-from mycroft.formats.mycroft_format import MycroftFormat
-from twiggy import log
+from threading import Timer
 from time import sleep, time as get_time
 
+import serial
+
+from mycroft.formats.format_plugin import FormatPlugin
+from mycroft.util import log
 
 VISEMES = {
     # /A group
@@ -87,13 +86,14 @@ VISEMES = {
 }
 
 
-class FaceplateFormat(MycroftFormat):
+class FaceplateFormat(FormatPlugin):
     """Format data into sentences"""
 
-    def __init__(self, path_manager):
-        super().__init__('.faceplate', 'faceplate', path_manager)
-        enc_cfg = self.global_config['enclosure']
-        self.serial = serial.serial_for_url(url=enc_cfg['port'], baudrate=enc_cfg['rate'], timeout=enc_cfg['timeout'])
+    def __init__(self, rt):
+        super().__init__(rt, '.faceplate')
+        enc_cfg = self.rt.config['enclosure']
+        self.serial = serial.serial_for_url(url=enc_cfg['port'], baudrate=enc_cfg['rate'],
+                                            timeout=enc_cfg['timeout'])
         self.queue = Queue()
         self.timers = []
 
@@ -126,7 +126,7 @@ class FaceplateFormat(MycroftFormat):
         while True:
             command = self.queue.get()
             if 'viseme' not in command:
-                log.debug('Sending message: ' + command)
+                log.debug('Sending message:', command)
             self.serial.write((command + '\n').encode())
             self.queue.task_done()
 
@@ -146,7 +146,7 @@ class FaceplateFormat(MycroftFormat):
 
     def _run_line(self, line):
         if line[0] == ':':
-            custom_cmd, serial_cmd = list(filter(None, line.split(':', 2)))
+            custom_cmd, serial_cmd = list(filter(bool, line.split(':', 2)))
             split = custom_cmd.split()
             cmd, args = split[0], split[1:]
 

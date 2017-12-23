@@ -20,32 +20,14 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-import os
 import sys
 
-sys.path.append(os.path.abspath('.'))
+sys.path += ['.']  # noqa
 
 from time import sleep
-from requests.exceptions import HTTPError, ConnectionError
-
-from mycroft.clients.enclosure_client import EnclosureClient
-from mycroft.clients.websocket_client import WebsocketClient
-
-from mycroft.api import load_device_info
-from mycroft.configuration import ConfigurationManager
-from mycroft.clients.speech_client import SpeechClient
-from mycroft.clients.text_client import TextClient
-from mycroft.clients.client_manager import ClientManager
-from mycroft.formats.format_manager import FormatManager
-from mycroft.engines.intent_manager import IntentManager
-from mycroft.managers.path_manager import PathManager
-from mycroft.managers.query_manager import QueryManager
-from mycroft.skill_loader import SkillLoader
-
-from twiggy import log
-from mycroft import main_thread
-from mycroft.util.log import setup_logging
+from mycroft.util import log
+from mycroft.group_plugin import GroupPlugin
+from mycroft.managers.manager_plugin import ManagerPlugin
 
 
 def info(message):
@@ -54,68 +36,27 @@ def info(message):
 
 
 def main():
-    ConfigurationManager.init()
-    config = ConfigurationManager.get()
-    setup_logging(config)
+    rt = GroupPlugin(ManagerPlugin, 'mycroft.managers', '_manager')
+    rt.init_plugins(rt, gp_order=[
+        'config', 'paths', 'filesystem', 'identity',
+        'device_info', 'query', 'formats', 'frontends',
+        'intent', 'skills', 'main_thread'
+    ])
 
-    if config['use_server']:
-        try:
-            info('Loading device info...')
-            load_device_info()
+    if rt.config['use_server']:
+        from mycroft.api import DeviceApi
+        rt.config.load_remote(DeviceApi(rt).get_settings())
 
-            info('Loading remote settings...')
-            ConfigurationManager.load_remote()
-        except (HTTPError, ConnectionError):
-            info('Failed to authenticate.')
+    rt.intent.all.compile()
+    rt.frontends.all.run(gp_daemon=True)
 
-    if len(sys.argv) > 1:
-        letters = ''.join(sys.argv[1:]).lower()
-    else:
-        letters = 'wtse'
-    clients = []
-    for c, cls in [
-        ('w', WebsocketClient),
-        ('t', TextClient),
-        ('s', SpeechClient),
-        ('e', EnclosureClient)
-    ]:
-        if c in letters:
-            clients.append(cls)
-
-    path_manager = PathManager()
-    intent_manager = IntentManager(path_manager)
-    formats = FormatManager(path_manager)
-    query_manager = QueryManager(intent_manager, formats)
-    skill_loader = SkillLoader(path_manager, intent_manager, query_manager)
-
-    if not config['use_server']:
-        skill_loader.blacklist += ['PairingSkill', 'ConfigurationSkill']
-
-    info('Loading skills...')
-    skill_loader.load_skills(info)
-    info('All skills loaded.')
-    print()
-
-    info('Compiling intents...')
-    intent_manager.on_intents_loaded()
-    info('Done compiling intents.')
-    print()
-
-    info('Starting clients: ' + ', '.join(cls.__name__ for cls in clients) + '...')
-    print()
-
-    client_manager = ClientManager(clients, path_manager, query_manager, formats)
-    client_manager.start()
     try:
-        main_thread.wait_for_quit()
+        rt.main_thread.wait()
     except KeyboardInterrupt:
         pass
-    finally:
-        log.debug('Quiting!')
-        sleep(0.1)
-        client_manager.on_exit()
-        sleep(0.1)
-        exit(0)
+    print()
+    log.info('Quiting...')
+    sleep(0.1)
 
 
 if __name__ == '__main__':

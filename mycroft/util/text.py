@@ -21,7 +21,6 @@
 # under the License.
 
 
-
 def to_camel(snake):
     """time_skill -> TimeSkill"""
     return snake.title().replace('_', '')
@@ -39,7 +38,7 @@ def split_sentences(text):
     Turns a string of multiple sentences into a list of separate ones
     As a side effect, .?! at the end of a sentence are removed
     """
-    sents = list(filter(None, text.split('. ')))
+    sents = list(filter(bool, text.split('. ')))
 
     # Rejoin sentences with an initial
     # ['Harry S', 'Truman'] -> ['Harry S. Truman']

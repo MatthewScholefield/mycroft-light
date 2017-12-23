@@ -19,28 +19,21 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+from threading import Event
 
-import json
-from os.path import isfile
-
-# The following lines are replaced during the release process.
-# START_VERSION_BLOCK
-CORE_VERSION_MAJOR = 0
-CORE_VERSION_MINOR = 8
-CORE_VERSION_BUILD = 16
-# END_VERSION_BLOCK
-
-CORE_VERSION_STR = (str(CORE_VERSION_MAJOR) + "." +
-                    str(CORE_VERSION_MINOR) + "." +
-                    str(CORE_VERSION_BUILD))
+from mycroft.managers.manager_plugin import ManagerPlugin
 
 
-def get_core_version():
-    return CORE_VERSION_STR
+class MainThreadManager(ManagerPlugin):
+    def __init__(self, rt):
+        super().__init__(rt)
+        self.quit_event = Event()
 
+    def __bool__(self):
+        return not self.quit_event.is_set()
 
-def get_enclosure_version():
-    if isfile('/opt/mycroft/version.json'):
-        with open('/opt/mycroft/version.json') as f:
-            return json.load(f).get('enclosureVersion')
-    return None
+    def quit(self):
+        self.quit_event.set()
+
+    def wait(self):
+        self.quit_event.wait()

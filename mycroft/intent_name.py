@@ -21,7 +21,6 @@
 # under the License.
 
 
-
 class IntentName:
     def __init__(self, skill='', intent=''):
         self.skill = skill

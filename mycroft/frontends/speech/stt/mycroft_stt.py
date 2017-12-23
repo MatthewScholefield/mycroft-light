@@ -19,28 +19,18 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-import json
-from os.path import isfile
-
-# The following lines are replaced during the release process.
-# START_VERSION_BLOCK
-CORE_VERSION_MAJOR = 0
-CORE_VERSION_MINOR = 8
-CORE_VERSION_BUILD = 16
-# END_VERSION_BLOCK
-
-CORE_VERSION_STR = (str(CORE_VERSION_MAJOR) + "." +
-                    str(CORE_VERSION_MINOR) + "." +
-                    str(CORE_VERSION_BUILD))
+from mycroft.api import STTApi
+from mycroft.frontends.speech.stt.stt_plugin import SttPlugin
 
 
-def get_core_version():
-    return CORE_VERSION_STR
+class MycroftStt(SttPlugin):
+    def __init__(self, rt):
+        super().__init__(rt)
 
+        self.api = STTApi(rt)
 
-def get_enclosure_version():
-    if isfile('/opt/mycroft/version.json'):
-        with open('/opt/mycroft/version.json') as f:
-            return json.load(f).get('enclosureVersion')
-    return None
+    def transcribe(self, audio):
+        result = self.api.stt(audio.get_flac_data(), self.lang, 1)
+        if not result:
+            raise ValueError
+        return result[0]

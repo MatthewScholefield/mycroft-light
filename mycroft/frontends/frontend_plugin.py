@@ -19,28 +19,35 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-import json
-from os.path import isfile
-
-# The following lines are replaced during the release process.
-# START_VERSION_BLOCK
-CORE_VERSION_MAJOR = 0
-CORE_VERSION_MINOR = 8
-CORE_VERSION_BUILD = 16
-# END_VERSION_BLOCK
-
-CORE_VERSION_STR = (str(CORE_VERSION_MAJOR) + "." +
-                    str(CORE_VERSION_MINOR) + "." +
-                    str(CORE_VERSION_BUILD))
+from mycroft.base_plugin import BasePlugin
 
 
-def get_core_version():
-    return CORE_VERSION_STR
+class FrontendPlugin(BasePlugin):
+    """
+    Provides common behavior like sending and receiving queries
+    Example frontends include the voice frontend and text frontend
+    """
 
+    def __init__(self, rt):
+        super().__init__(rt)
+        rt.query.on_query(self.on_query)
+        rt.query.on_response(self.on_response)
 
-def get_enclosure_version():
-    if isfile('/opt/mycroft/version.json'):
-        with open('/opt/mycroft/version.json') as f:
-            return json.load(f).get('enclosureVersion')
-    return None
+    def send_query(self, query):
+        """Helper to ask questions"""
+        self.rt.query.send(query)
+
+    def on_query(self, query):
+        """Called when any frontend sends query."""
+        pass
+
+    def on_response(self, formats):
+        """Called after send_query. Use FormatManager to get outputted response"""
+        pass
+
+    def run(self):
+        """Executes the main thread for the frontend"""
+        pass
+
+    def on_exit(self):
+        pass

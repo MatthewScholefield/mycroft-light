@@ -22,8 +22,10 @@
 
 from mycroft.intent_name import IntentName
 
+
 class ResultPackage:
-    def __init__(self, name=None, data=None, action=None, reset_event=None, callback=lambda x: x, confidence=0.0, prompt=False):
+    def __init__(self, name=None, data=None, action=None, reset_event=None,
+                 callback=lambda x: x.set_name(x.name), confidence=0.0, prompt=False):
         self.name = name or IntentName()
         self.data = data or {}
         self.action = action

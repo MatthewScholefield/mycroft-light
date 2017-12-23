@@ -19,58 +19,54 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
 from abc import ABCMeta
 from copy import copy
+from threading import Event
 
 import requests
 from requests import HTTPError
 
-from mycroft.configuration import ConfigurationManager
-from mycroft.identity import IdentityManager
-from twiggy import log
-from mycroft.version import VersionManager
-
-__device_info = {}
-
-
-def load_device_info():
-    global __device_info
-    __device_info = DeviceApi().get()
+from mycroft.util import log
+from mycroft.util.misc import run_parallel
+from mycroft.version import get_core_version, get_enclosure_version
 
 
 class Api(metaclass=ABCMeta):
     """ Generic object to wrap web APIs """
 
-    def __init__(self, path):
+    def __init__(self, rt, path):
+        self.rt = rt
         self.path = path
-        config = ConfigurationManager.get()
-        config_server = config['server']
-        self.url = config_server['url']
-        self.version = config_server['version']
-        self.identity = IdentityManager.get()
+        server_config = rt.config['server']
+        self.url = server_config['url']
+        self.version = server_config['version']
         self.old_params = None
+        self.refresh_event = Event()
+        self.refresh_event.set()
 
-    def request(self, params):
-        self.check_token()
+    def request(self, params, refresh=True):
+        if refresh and self.rt.identity.is_expired():
+            self.rt.identity.load()
+            if self.rt.identity.is_expired():
+                self.refresh_token()
+
         self.build_path(params)
         self.old_params = copy(params)
         return self.send(params)
 
-    def check_token(self):
-        if self.identity.refresh and self.identity.is_expired():
-            self.identity = IdentityManager.load()
-            if self.identity.is_expired():
-                self.refresh_token()
-
     def refresh_token(self):
+        if not self.refresh_event.is_set():
+            self.refresh_event.wait()
+            return
+        self.refresh_event.clear()
         data = Api.send(super(self.__class__, self), {
             'path': 'auth/token',
             'headers': {
-                'Authorization': 'Bearer ' + self.identity.refresh
+                'Authorization': 'Bearer ' + self.rt.identity.refresh_token
             }
         })
-        IdentityManager.save(data)
+        self.rt.identity.register(data)
+        self.refresh_event.set()
 
     def send(self, params):
         method = params.get('method', 'GET')
@@ -79,8 +75,7 @@ class Api(metaclass=ABCMeta):
         json = self.build_json(params)
         query = self.build_query(params)
         url = self.build_url(params)
-        log.name('api').fields(method=method, url=url, params=query,
-                                    data=data, json=json).debug()
+        log.debug(method, url, stack_offset=3)
         response = requests.request(method, url, headers=headers, params=query,
                                     data=data, json=json, timeout=(3.05, 15))
         return self.get_response(response)
@@ -114,7 +109,7 @@ class Api(metaclass=ABCMeta):
 
     def add_authorization(self, headers):
         if 'Authorization' not in headers:
-            headers['Authorization'] = 'Bearer ' + self.identity.access
+            headers['Authorization'] = 'Bearer ' + self.rt.identity.access_token
 
     def build_data(self, params):
         return params.get('data')
@@ -145,32 +140,30 @@ class Api(metaclass=ABCMeta):
 class DeviceApi(Api):
     """ Web API wrapper for obtaining device-level information """
 
-    def __init__(self):
-        super().__init__('device')
+    def __init__(self, rt):
+        super().__init__(rt, 'device')
 
     def get_code(self, state):
-        IdentityManager.update()
         return self.request({
             'path': '/code?state=' + state
-        })
+        }, refresh=False)
 
     def activate(self, state, token):
-        version = VersionManager.get()
         return self.request({
             'method': 'POST',
             'path': '/activate',
             'json': {
                 'state': state,
                 'token': token,
-                'coreVersion': version['coreVersion'],
-                'enclosureVersion': version['enclosureVersion']
+                'coreVersion': get_core_version(),
+                'enclosureVersion': get_enclosure_version()
             }
-        })
+        }, refresh=False)
 
     def get(self):
         """ Retrieve all device information from the web backend """
         return self.request({
-            'path': '/' + self.identity.uuid
+            'path': '/' + self.rt.identity.uuid
         })
 
     def get_settings(self):
@@ -179,11 +172,14 @@ class DeviceApi(Api):
         Returns:
             dict: JSON with user configuration information.
         """
-        settings = self.request({'path': '/' + self.identity.uuid + '/setting'})
-        if settings is None:
-            log.warning('Remote settings is None')
-            return {}
-        loc = self.request({'path': '/' + self.identity.uuid + '/location'})
+
+        def get_settings():
+            return self.request({'path': '/' + self.rt.identity.uuid + '/setting'}) or {}
+
+        def get_location():
+            return self.request({'path': '/' + self.rt.identity.uuid + '/location'})
+
+        loc, settings = run_parallel([get_location, get_settings], label='Getting Settings')
         if loc:
             settings['location'] = loc
         return settings
@@ -192,8 +188,8 @@ class DeviceApi(Api):
 class STTApi(Api):
     """ Web API wrapper for performing Speech to Text (STT) """
 
-    def __init__(self):
-        super().__init__('stt')
+    def __init__(self, rt):
+        super().__init__(rt, 'stt')
 
     def stt(self, audio, language, limit):
         """ Web API wrapper for performing Speech to Text (STT)
@@ -212,15 +208,3 @@ class STTApi(Api):
             'query': {'lang': language, 'limit': limit},
             'data': audio
         })
-
-
-def is_paired():
-    """ Determine if this device is actively paired with a web backend
-
-    Determines if the installation of Mycroft has been paired by the user
-    with the backend system, and if that pairing is still active.
-
-    Returns:
-        bool: True if paired with backend
-    """
-    return bool(__device_info)

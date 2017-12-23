@@ -21,36 +21,30 @@
 # under the License.
 from threading import Thread
 
+from mycroft.frontends.frontend_plugin import FrontendPlugin
 from mycroft.util import log
 
 
-def safe_run(target, label='', warn=False, args=None, kwargs=None):
-    try:
-        return target(*(args or []), **(kwargs or {}))
-    except (SystemExit, KeyboardInterrupt):
-        raise
-    except Exception as e:
-        if warn:
-            log.warning(label, '--', e.__class__.__name__ + ':', e, stack_offset=1)
-        else:
-            log.exception(label, stack_offset=1)
-        return None
+class FaceplateFrontend(FrontendPlugin):
+    """Interact with Mycroft via the Mark 1 Enclosure"""
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-def run_parallel(functions, label='', *safe_args, **safe_kwargs):
-    threads = []
-    return_vals = [None] * len(functions)
-    for i, fn in enumerate(functions):
-        def wrapper(i, fn=fn):
-            fn_label = label + ' - ' + fn.__name__
-            return_vals[i] = safe_run(fn, label=fn_label, *safe_args, **safe_kwargs)
+    def run(self):
+        if not self.rt.formats.faceplate:
+            return
+        Thread(target=self.rt.formats.faceplate.run, daemon=True).start()
+        while not self.rt.main_thread.exit_event.is_set():
+            line = self.rt.formats.faceplate.readline()
+            if 'volume.up' in line:
+                self.rt.skills.volume.increase_volume()
+            elif 'volume.down' in line:
+                self.rt.skills.volume.decrease_volume()
+            elif 'Command: ' in line:
+                pass  # Reply from Arduino
+            elif len(line.strip()) > 0:
+                log.warning('Could not handle message: ' + line)
 
-        threads.append(Thread(target=wrapper, args=(i,)))
-
-    for t in threads:
-        t.start()
-
-    for t in threads:
-        t.join()
-
-    return return_vals
+    def on_response(self, formats):
+        pass

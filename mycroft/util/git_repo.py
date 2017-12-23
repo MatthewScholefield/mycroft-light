@@ -48,7 +48,8 @@ class GitRepo:
 
     def _clone(self):
         if self.tag is None:
-            call(['git', 'clone', '-b', self.branch, '--single-branch', '--depth', '1', self.url, self.dir])
+            call(['git', 'clone', '-b', self.branch, '--single-branch', '--depth', '1', self.url,
+                  self.dir])
         else:
             call(['git', 'init'])
             call(['git', 'remote', 'add', 'origin', self.url])

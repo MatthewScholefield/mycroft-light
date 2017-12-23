@@ -22,18 +22,19 @@
 
 import yaml
 
-from mycroft.formats.mycroft_format import MycroftFormat
+from mycroft.formats.format_plugin import FormatPlugin
 
 
-class ClientFormat(MycroftFormat, dict):
+class ClientFormat(FormatPlugin, dict):
     """Specify general client parameters"""
 
-    def __init__(self, path_manager):
+    def __init__(self, rt):
         """
         Attributes:
             output  The most recent generated sentence
         """
-        super().__init__('.client', 'client', path_manager)
+        FormatPlugin.__init__(self, rt, '.client')
+        dict.__init__(self)
 
     def reset(self):
         self.clear()

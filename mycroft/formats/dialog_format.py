@@ -23,18 +23,18 @@
 import random
 import re
 
-from mycroft.formats.mycroft_format import MycroftFormat
+from mycroft.formats.format_plugin import FormatPlugin
 
 
-class DialogFormat(MycroftFormat):
+class DialogFormat(FormatPlugin):
     """Format data into sentences"""
 
-    def __init__(self, path_manager):
+    def __init__(self, rt):
         """
         Attributes:
             output  The most recent generated sentence
         """
-        super().__init__('.dialog', 'dialog', path_manager)
+        super().__init__(rt, '.dialog')
         self.output = ""
 
     def get(self):
@@ -46,14 +46,14 @@ class DialogFormat(MycroftFormat):
     def generate_format(self, file, results):
         best_lines, best_score = [], 0
         for line in file.read().split('\n'):
-            if line.isspace():
+            if not line or line.isspace():
                 continue
 
             line_score = 0
             for key in results:
                 token = '{' + key + '}'
                 if token in line:
-                    line = line.replace(token, results[key])
+                    line = line.replace(token, str(results[key]))
                     line_score += 1
 
             if re.search('{[a-zA-Z_]*}', line):

@@ -19,18 +19,18 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
 from threading import Thread
 
+from mycroft.managers.manager_plugin import ManagerPlugin
+from mycroft.util import log
 from mycroft.util.misc import safe_run
 
 
-class QueryManager:
+class QueryManager(ManagerPlugin):
     """Launches queries in separate threads"""
 
-    def __init__(self, intent_manager, formats):
-        self.intent_manager = intent_manager
-        self.formats = formats
+    def __init__(self, rt):
+        super().__init__(rt)
         self.threads = []
         self.on_query_callbacks = []
         self.on_response_callbacks = []
@@ -39,19 +39,21 @@ class QueryManager:
         """Function to run query in a separate thread"""
         for i in self.on_query_callbacks:
             safe_run(lambda: i(query))
-        safe_run(self.send_package, self.intent_manager.calc_result(query), warn=False)
+        safe_run(self.send_package, args=[self.rt.intent.calc_result(query)], warn=False)
 
     def send_package(self, package):
         """Generates data in all the formats and gives that formatted data to each callback"""
 
-        self.formats.generate(package.action, package.data)
+        self.rt.formats.generate(package.action, package.data)
+        log.debug('Dialog:', self.rt.formats.dialog.get())
         if package.reset_event is not None:
-            self.formats.set_reset_event(package.reset_event)
+            self.rt.formats.set_reset_event(package.reset_event)
         threads = []
 
         def mklm(fn):
             def ca():
-                fn(self.formats)
+                fn(self.rt.formats)
+
             return ca
 
         for resp_callback in self.on_response_callbacks:
@@ -63,9 +65,9 @@ class QueryManager:
         for i in threads:
             i.join()
 
-        self.formats.reset()
+        self.rt.formats.reset()
 
-    def send_query(self, query):
+    def send(self, query):
         """Starts calculating a query in a new thread"""
         t = Thread(target=self._run_query, args=(query,))
         t.start()
