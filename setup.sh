@@ -98,7 +98,7 @@ install_deps() {
 }
 
 install_mycroft() {
-    "$VIRTUALENV_ROOT/bin/python3" -m pip install -e . --upgrade
+    "$VIRTUALENV_ROOT/bin/pip3" install -e . --upgrade
 }
 
 hash_dependencies() {

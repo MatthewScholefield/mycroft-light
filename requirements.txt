@@ -9,8 +9,10 @@ pyserial
 pyalsaaudio
 tornado
 websocket-client
-padatious
 pyinotify
+
+fann2==1.0.7
+padatious
 
 # Extra deps required for some installations
 urllib3
