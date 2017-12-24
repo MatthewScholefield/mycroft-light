@@ -51,7 +51,7 @@ class IdentityManager(ManagerPlugin):
             'expiration': 'expires_at'
         }
         data['expiration'] += get_time()
-        return {k.get(replacements, k): v for k, v in data.items()}
+        return {replacements.get(k, k): v for k, v in data.items()}
 
     def register(self, data):
         """Registers new login data from server"""
