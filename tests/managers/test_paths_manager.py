@@ -23,10 +23,10 @@ import sys
 sys.path += ['.']  # noqa
 
 from unittest.mock import Mock
-from mycroft.managers.paths_manager import resolve_refs, StringGetter
-from mycroft.managers import paths_manager
-PathsManager = paths_manager.PathsManager
-paths_manager.resource_filename = lambda *args: ''
+from mycroft.services.paths_service import resolve_refs, StringGetter
+from mycroft.services import paths_service
+PathsManager = paths_service.PathsService
+paths_service.resource_filename = lambda *args: ''
 
 
 class TestResolver:

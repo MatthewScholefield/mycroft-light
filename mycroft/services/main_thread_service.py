@@ -19,17 +19,21 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from mycroft.api import DeviceApi
-from mycroft.managers.manager_plugin import ManagerPlugin
+from threading import Event
+
+from mycroft.services.service_plugin import ServicePlugin
 
 
-class DeviceInfoManager(ManagerPlugin, dict):
+class MainThreadService(ServicePlugin):
     def __init__(self, rt):
-        ManagerPlugin.__init__(self, rt)
-        dict.__init__(self)
-        if not rt.config['use_server']:
-            raise NotImplementedError('Server Disabled')
-        self.reload()
+        super().__init__(rt)
+        self.quit_event = Event()
 
-    def reload(self):
-        self.update(DeviceApi(self.rt).get())
+    def __bool__(self):
+        return not self.quit_event.is_set()
+
+    def quit(self):
+        self.quit_event.set()
+
+    def wait(self):
+        self.quit_event.wait()

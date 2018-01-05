@@ -19,21 +19,33 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from threading import Event
+from os import makedirs
+from os.path import join, isfile, isdir, expanduser
 
-from mycroft.managers.manager_plugin import ManagerPlugin
+from mycroft.services.service_plugin import ServicePlugin
 
 
-class MainThreadManager(ManagerPlugin):
-    def __init__(self, rt):
+class FilesystemService(ServicePlugin):
+    def __init__(self, rt, root=None):
         super().__init__(rt)
-        self.quit_event = Event()
+        self.root = root or expanduser(rt.paths.user_config)
+        if not isdir(''):
+            self.mkdir('')
 
-    def __bool__(self):
-        return not self.quit_event.is_set()
+    def path(self, file):
+        return join(self.root, file)
 
-    def quit(self):
-        self.quit_event.set()
+    def subdir(self, subdir):
+        return FilesystemService(self.rt, self.path(subdir))
 
-    def wait(self):
-        self.quit_event.wait()
+    def open(self, file, mode='r'):
+        return open(self.path(file), mode)
+
+    def isfile(self, file):
+        return isfile(self.path(file))
+
+    def isdir(self, dr):
+        return isdir(self.path(dr))
+
+    def mkdir(self, dr):
+        makedirs(self.path(dr), exist_ok=True)

@@ -21,12 +21,12 @@
 # under the License.
 from threading import Thread
 
-from mycroft.managers.manager_plugin import ManagerPlugin
+from mycroft.services.service_plugin import ServicePlugin
 from mycroft.util import log
 from mycroft.util.misc import safe_run
 
 
-class QueryManager(ManagerPlugin):
+class QueryService(ServicePlugin):
     """Launches queries in separate threads"""
 
     def __init__(self, rt):

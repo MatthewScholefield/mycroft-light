@@ -25,7 +25,7 @@ setup(
         # 'mycroft.frontends.speech.tts',
         'mycroft.intents',
         'mycroft.formats',
-        'mycroft.managers',
+        'mycroft.services',
         # 'mycroft.parsing',
         # 'mycroft.parsing.en_us',
         'mycroft.util'

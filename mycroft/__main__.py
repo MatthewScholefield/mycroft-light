@@ -27,7 +27,7 @@ sys.path += ['.']  # noqa
 from time import sleep
 from mycroft.util import log
 from mycroft.group_plugin import GroupPlugin
-from mycroft.managers.manager_plugin import ManagerPlugin
+from mycroft.services.service_plugin import ServicePlugin
 
 
 def info(message):
@@ -36,7 +36,7 @@ def info(message):
 
 
 def main():
-    rt = GroupPlugin(ManagerPlugin, 'mycroft.managers', '_manager')
+    rt = GroupPlugin(ServicePlugin, 'mycroft.services', '_service')
     rt.init_plugins(rt, gp_order=[
         'config', 'paths', 'filesystem', 'identity',
         'device_info', 'query', 'formats', 'frontends',
@@ -44,8 +44,7 @@ def main():
     ])
 
     if rt.config['use_server']:
-        from mycroft.api import DeviceApi
-        rt.config.load_remote(DeviceApi(rt).get_settings())
+        rt.config.load_remote()
 
     rt.intent.all.compile()
     rt.frontends.all.run(gp_daemon=True)
@@ -54,10 +53,9 @@ def main():
         rt.main_thread.wait()
     except KeyboardInterrupt:
         pass
-    print()
     log.info('Quiting...')
     sleep(0.1)
-
+    print()
 
 if __name__ == '__main__':
     main()

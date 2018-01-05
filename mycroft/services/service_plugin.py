@@ -22,7 +22,7 @@
 from mycroft.base_plugin import BasePlugin
 
 
-class ManagerPlugin(BasePlugin):
+class ServicePlugin(BasePlugin):
     def __init__(self, rt):
         super().__init__(rt)
         self.config = rt.config.get(self.attr_name, {})

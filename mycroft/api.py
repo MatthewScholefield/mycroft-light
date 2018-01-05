@@ -24,7 +24,7 @@ from copy import copy
 from threading import Event
 
 import requests
-from requests import HTTPError
+from requests import RequestException
 
 from mycroft.util import log
 from mycroft.util.misc import run_parallel
@@ -76,8 +76,13 @@ class Api(metaclass=ABCMeta):
         query = self.build_query(params)
         url = self.build_url(params)
         log.debug(method, url, stack_offset=3)
-        response = requests.request(method, url, headers=headers, params=query,
-                                    data=data, json=json, timeout=(3.05, 15))
+        try:
+            response = requests.request(method, url, headers=headers, params=query,
+                                    data=data, json=json, timeout=(3.05, 5))
+        except RequestException:
+            response = None
+        if response is None:
+            raise ConnectionError('Could not ' + method + ' ' + url)
         return self.get_response(response)
 
     def get_response(self, response):
@@ -88,7 +93,7 @@ class Api(metaclass=ABCMeta):
                 and not response.url.endswith('auth/token'):
             self.refresh_token()
             return self.send(self.old_params)
-        raise HTTPError(data, response=response)
+        raise ConnectionError(data)
 
     def get_data(self, response):
         try:
@@ -180,6 +185,8 @@ class DeviceApi(Api):
             return self.request({'path': '/' + self.rt.identity.uuid + '/location'})
 
         loc, settings = run_parallel([get_location, get_settings], label='Getting Settings')
+        if not settings:
+            raise ConnectionError('Could not request settings from server')
         if loc:
             settings['location'] = loc
         return settings

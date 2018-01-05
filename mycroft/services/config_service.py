@@ -24,9 +24,10 @@ from os.path import join, expanduser
 
 import yaml
 from pkg_resources import Requirement, resource_filename
-from requests import HTTPError
+from requests import RequestException
 
-from mycroft.managers.manager_plugin import ManagerPlugin
+from mycroft.api import DeviceApi
+from mycroft.services.service_plugin import ServicePlugin
 from mycroft.util import log
 from mycroft.util.text import to_snake
 
@@ -42,18 +43,18 @@ DEFAULT_CONFIG = resource_filename(Requirement.parse('mycroft-light'), 'mycroft/
 LOAD_ORDER = [DEFAULT_CONFIG, REMOTE_CACHE, SYSTEM_CONFIG, USER_CONFIG]
 
 
-class ConfigManager(ManagerPlugin, dict):
+class ConfigService(ServicePlugin, dict):
     def __init__(self, rt):
-        ManagerPlugin.__init__(self, rt)
+        ServicePlugin.__init__(self, rt)
         dict.__init__(self)
         self.load_local()
 
-    def load_remote(self, remote_settings):
+    def load_remote(self, settings=None):
         log.debug('Loading remote config...')
         try:
-            self.__store_cache(remote_settings)
+            self.__store_cache(settings or DeviceApi(self.rt).get_settings())
             self.load_local()
-        except HTTPError:
+        except ConnectionError:
             log.exception('Loading Remote Config')
 
     @classmethod

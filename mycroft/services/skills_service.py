@@ -29,7 +29,7 @@ from subprocess import call
 import pyinotify
 
 from mycroft.group_plugin import GroupPlugin
-from mycroft.managers.manager_plugin import ManagerPlugin
+from mycroft.services.service_plugin import ServicePlugin
 from mycroft.skills.skill_plugin import SkillPlugin
 from mycroft.util import log
 from mycroft.util.git_repo import GitRepo
@@ -50,11 +50,11 @@ class EventHandler(pyinotify.ProcessEvent):
             self.skills.reload(folder_name)
 
 
-class SkillsManager(ManagerPlugin, GroupPlugin):
+class SkillsService(ServicePlugin, GroupPlugin):
     """Dynamically loads skills"""
 
     def __init__(self, rt):
-        ManagerPlugin.__init__(self, rt)
+        ServicePlugin.__init__(self, rt)
 
         self.git_repo = GitRepo(directory=self.rt.paths.skills,
                                 url='https://github.com/MatthewScholefield/mycroft-light.git',
@@ -64,6 +64,7 @@ class SkillsManager(ManagerPlugin, GroupPlugin):
         sys.path.append(self.rt.paths.skills)
 
         GroupPlugin.__init__(self, SkillPlugin, 'mycroft.skills', '_skill')
+        self.error_label = 'Loading skill'
         for cls in self._classes.values():
             cls.rt = rt
         self.init_plugins()
@@ -76,7 +77,7 @@ class SkillsManager(ManagerPlugin, GroupPlugin):
         handler = EventHandler(self)
         notifier = pyinotify.ThreadedNotifier(wm, handler)
         notifier.daemon = True
-        wdd = wm.add_watch(skills_dir, mask, rec=True)
+        wm.add_watch(skills_dir, mask, rec=True)
         notifier.start()
 
     def reload(self, folder_name):

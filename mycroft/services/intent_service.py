@@ -25,17 +25,17 @@ from math import sqrt
 from mycroft.group_plugin import GroupPlugin
 from mycroft.intent_name import IntentName
 from mycroft.intents.intent_plugin import IntentPlugin, IntentMatch
-from mycroft.managers.manager_plugin import ManagerPlugin
+from mycroft.services.service_plugin import ServicePlugin
 from mycroft.result_package import ResultPackage
 from mycroft.util import log
 from mycroft.util.misc import run_parallel
 
 
-class IntentManager(ManagerPlugin, GroupPlugin):
+class IntentService(ServicePlugin, GroupPlugin):
     """Used to handle creating both intents and intent engines"""
 
     def __init__(self, rt):
-        ManagerPlugin.__init__(self, rt)
+        ServicePlugin.__init__(self, rt)
         GroupPlugin.__init__(self, IntentPlugin, 'mycroft.intents', '_intent')
         self.init_plugins(rt)
         self.handlers_s = {}  # Example: { 'skill_name:intent.name': [intent_name_handler, alias_name_handler] }
@@ -146,10 +146,10 @@ class IntentManager(ManagerPlugin, GroupPlugin):
         for match in to_test:
             for handler in self.handlers_s[str(match.name)]:
                 functions.append(lambda m=match, h=handler: (m, h(m)))
-        packages = run_parallel(functions)
+        outputs = run_parallel(functions)
 
         best_package = ResultPackage()
-        for match, package in packages:
+        for match, package in outputs:
             log.info(str(match.name) + ':', str(match.confidence))
             log.debug('\tConfidence:', package.confidence)
             package.confidence = sqrt(package.confidence * match.confidence)
@@ -160,6 +160,8 @@ class IntentManager(ManagerPlugin, GroupPlugin):
             log.info('Selected intent', best_package.name, best_package.confidence)
             try:
                 return best_package.callback(best_package)
+            except (SystemExit, KeyboardInterrupt):
+                raise
             except:
                 log.exception(best_package.name, 'callback')
         log.info('Falling back. Too low:', best_package.name, best_package.confidence)
@@ -167,17 +169,20 @@ class IntentManager(ManagerPlugin, GroupPlugin):
         functions = []
         for name, handlers in self.fallbacks_s.items():
             for handler in handlers:
-                functions.append(lambda name=name, handler=handler: (name, handler(query)))
+                functions.append(lambda handler=handler: handler(query))
+
         packages = run_parallel(functions)
+        for package in packages:
+            log.debug(str(package.name) + ':', package.confidence)
 
-        best_package = ResultPackage()
-        for name, package in packages:
-            log.debug(name + ':', package.confidence)
-            if package.confidence > best_package.confidence:
-                best_package = package
-
-        try:
-            return best_package.callback(best_package)
-        except:
-            log.exception(best_package.name, 'callback')
-            return ResultPackage(action=IntentName())
+        while len(packages) > 0:
+            best_package = max(packages, key=lambda x: x.confidence)
+            del packages[packages.index(best_package)]
+            log.info('Selected', best_package.name)
+            try:
+                return best_package.callback(best_package)
+            except (SystemExit, KeyboardInterrupt):
+                raise
+            except:
+                log.exception(best_package.name, 'callback')
+        return ResultPackage(action=IntentName())

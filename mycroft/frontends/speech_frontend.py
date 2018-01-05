@@ -22,7 +22,7 @@
 
 from os.path import join, isfile
 
-from requests.exceptions import ReadTimeout, HTTPError
+from requests.exceptions import ReadTimeout, RequestException
 
 from mycroft.frontends.frontend_plugin import FrontendPlugin
 from mycroft.frontends.speech.recognizers.recognizer_plugin import RecognizerPlugin
@@ -87,7 +87,7 @@ class SpeechFrontend(FrontendPlugin):
 
                     try:
                         utterance = self.stt.transcribe(recording)
-                    except (HTTPError, ValueError, ReadTimeout):
+                    except (RequestException, ValueError, ReadTimeout):
                         log.exception('Speech Client')
                         utterance = ''
                     log.info('Utterance: ' + utterance)
@@ -99,7 +99,6 @@ class SpeechFrontend(FrontendPlugin):
             pass
 
     def on_query(self, query):
-        log.debug('INTERCEPT query...')
         self.recognizer.intercept(NewQuerySignal)
 
     def on_response(self, formats):

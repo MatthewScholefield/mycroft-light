@@ -21,11 +21,11 @@
 # under the License.
 from mycroft.frontends.frontend_plugin import FrontendPlugin
 from mycroft.group_plugin import GroupPlugin
-from mycroft.managers.manager_plugin import ManagerPlugin
+from mycroft.services.service_plugin import ServicePlugin
 
 
-class FrontendsManager(ManagerPlugin, GroupPlugin):
+class FrontendsService(ServicePlugin, GroupPlugin):
     def __init__(self, rt):
-        ManagerPlugin.__init__(self, rt)
+        ServicePlugin.__init__(self, rt)
         GroupPlugin.__init__(self, FrontendPlugin, 'mycroft.frontends', '_frontend')
         self.init_plugins(rt)

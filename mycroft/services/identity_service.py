@@ -23,11 +23,11 @@ import json
 from os.path import isfile
 from time import time as get_time
 
-from mycroft.managers.manager_plugin import ManagerPlugin
+from mycroft.services.service_plugin import ServicePlugin
 from mycroft.util import log
 
 
-class IdentityManager(ManagerPlugin):
+class IdentityService(ServicePlugin):
     def __init__(self, rt):
         super().__init__(rt)
         if not rt.config['use_server']:

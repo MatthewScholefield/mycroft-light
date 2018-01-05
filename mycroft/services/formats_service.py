@@ -24,11 +24,11 @@ from threading import Thread, Event
 
 from mycroft.formats.format_plugin import FormatPlugin
 from mycroft.group_plugin import GroupPlugin
-from mycroft.managers.manager_plugin import ManagerPlugin
+from mycroft.services.service_plugin import ServicePlugin
 from mycroft.util import log
 
 
-class FormatsManager(ManagerPlugin, GroupPlugin):
+class FormatsService(ServicePlugin, GroupPlugin):
     """
     Interface to access various formats. Currently supported attributes:
 
@@ -38,7 +38,7 @@ class FormatsManager(ManagerPlugin, GroupPlugin):
     """
 
     def __init__(self, rt):
-        ManagerPlugin.__init__(self, rt)
+        ServicePlugin.__init__(self, rt)
         GroupPlugin.__init__(self, FormatPlugin, 'mycroft.formats', '_format')
         self.init_plugins(rt)
 

@@ -19,33 +19,17 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from os import makedirs
-from os.path import join, isfile, isdir, expanduser
-
-from mycroft.managers.manager_plugin import ManagerPlugin
+from mycroft.api import DeviceApi
+from mycroft.services.service_plugin import ServicePlugin
 
 
-class FilesystemManager(ManagerPlugin):
-    def __init__(self, rt, root=None):
-        super().__init__(rt)
-        self.root = root or expanduser(rt.paths.user_config)
-        if not isdir(''):
-            self.mkdir('')
+class DeviceInfoService(ServicePlugin, dict):
+    def __init__(self, rt):
+        ServicePlugin.__init__(self, rt)
+        dict.__init__(self)
+        if not rt.config['use_server']:
+            raise NotImplementedError('Server Disabled')
+        self.reload()
 
-    def path(self, file):
-        return join(self.root, file)
-
-    def subdir(self, subdir):
-        return FilesystemManager(self.rt, self.path(subdir))
-
-    def open(self, file, mode='r'):
-        return open(self.path(file), mode)
-
-    def isfile(self, file):
-        return isfile(self.path(file))
-
-    def isdir(self, dr):
-        return isdir(self.path(dr))
-
-    def mkdir(self, dr):
-        makedirs(self.path(dr), exist_ok=True)
+    def reload(self):
+        self.update(DeviceApi(self.rt).get())

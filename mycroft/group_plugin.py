@@ -108,6 +108,7 @@ class GroupPlugin:
         self._suffix = ''
         self._base_cls = None
         self.all = None  # type: GroupRunner
+        self.error_label = 'Loading plugin'
 
         self.load_plugins(base_cls, package, suffix)
 
@@ -162,7 +163,7 @@ class GroupPlugin:
 
             return function
 
-        run_ordered_parallel(self._classes, get_function, *args, gp_label='Loading plugin',
+        run_ordered_parallel(self._classes, get_function, *args, gp_label=self.error_label,
                              **kwargs)
         self.all = GroupRunner(self._base_cls, self._plugins)
 

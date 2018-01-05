@@ -24,7 +24,7 @@ from os.path import expanduser
 
 from pkg_resources import Requirement, resource_filename
 
-from mycroft.managers.manager_plugin import ManagerPlugin
+from mycroft.services.service_plugin import ServicePlugin
 
 
 def find_refs(path):
@@ -77,7 +77,7 @@ class StringGetter:
         return path
 
 
-class PathsManager(ManagerPlugin):
+class PathsService(ServicePlugin):
     """
     An object that represents the data in mycroft.conf['paths']
     Any confi
