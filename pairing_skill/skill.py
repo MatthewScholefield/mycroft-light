@@ -24,11 +24,8 @@ import time
 from threading import Timer
 from uuid import uuid4
 
-from requests import HTTPError
-
 from mycroft import MycroftSkill
 from mycroft.api import DeviceApi
-from mycroft.util import log
 
 
 class PairingSkill(MycroftSkill):
@@ -74,7 +71,7 @@ class PairingSkill(MycroftSkill):
 
             self.rt.identity.register(login)
             self.set_action('pair.complete')
-        except HTTPError:
+        except ConnectionError:
             self.pair_device()
             self.create_activator()
         self.trigger_action('pair')
