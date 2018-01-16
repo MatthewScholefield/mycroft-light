@@ -61,13 +61,13 @@ class OptionPlugin:
             if not isclass(cls):
                 log.error('Class not callable:', cls)
             else:
-                if hasattr(self, 'plugin_path'):
-                    plugin_path = self.plugin_path + '.'
+                if hasattr(self, '_plugin_path'):
+                    plugin_path = self._plugin_path + '.'
                 else:
                     plugin_path = ''
 
-                cls.attr_name = self.make_name(cls)
-                cls.plugin_path = plugin_path + cls.attr_name
+                cls._attr_name = self.make_name(cls)
+                cls._plugin_path = plugin_path + cls._attr_name
                 return cls
         except:
             log.exception('Loading Module', package)

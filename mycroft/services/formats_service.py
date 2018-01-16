@@ -22,6 +22,9 @@
 import json
 from threading import Thread, Event
 
+from mycroft.formats.client_format import ClientFormat
+from mycroft.formats.dialog_format import DialogFormat
+from mycroft.formats.faceplate_format import FaceplateFormat
 from mycroft.formats.format_plugin import FormatPlugin
 from mycroft.group_plugin import GroupPlugin
 from mycroft.services.service_plugin import ServicePlugin
@@ -40,29 +43,36 @@ class FormatsService(ServicePlugin, GroupPlugin):
     def __init__(self, rt):
         ServicePlugin.__init__(self, rt)
         GroupPlugin.__init__(self, FormatPlugin, 'mycroft.formats', '_format')
-        self.init_plugins(rt)
+        self._init_plugins(rt)
 
-        self.reset_event = Event()
-        self.reset_event.set()
+        # Explicit type listings for default plugins to aid autocomplete
+        self.client = self.client  # type: ClientFormat
+        self.dialog = self.dialog  # type: DialogFormat
+        self.faceplate = self.faceplate  # type: FaceplateFormat
+        self.all = self.all  # type: FormatPlugin
+
+        self._reset_event = Event()
+        self._reset_event.set()
 
     def generate(self, name, data):
         """Called to send the raw data to the formats to be generated"""
         log.debug('Package data: \n' + json.dumps(data, indent=4))
         self.all.reset()
 
-        was_handled = any(self.all.generate(name, data, gp_warn=False))
+        # noinspection PyArgumentList,PyTypeChecker
+        was_handled = any(self.all.generate(name, data, gp_warn=False))  # type: ignore
 
         if not was_handled:
             log.warning('No format handled ' + str(name))
 
     def reset(self):
-        if self.reset_event.is_set():
+        if self._reset_event.is_set():
             self.all.reset()
 
     def set_reset_event(self, event):
-        self.reset_event = event
+        self._reset_event = event
         Thread(target=self._wait_and_reset, daemon=True).start()
 
     def _wait_and_reset(self):
-        self.reset_event.wait()
+        self._reset_event.wait()
         self.all.reset()

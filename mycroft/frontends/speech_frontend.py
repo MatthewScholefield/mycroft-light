@@ -53,13 +53,13 @@ class SpeechFrontend(FrontendPlugin):
     def create_recognizer(self) -> RecognizerPlugin:
         r = OptionPlugin(RecognizerPlugin, 'mycroft.frontends.speech.recognizers',
                          '_recognizer', 'pocketsphinx')
-        r.plugin_path = self.plugin_path + '.recognizers'
+        r._plugin_path = self._plugin_path + '.recognizers'
         r.init(self.config['recognizers']['module'], self.rt)
         return r
 
     def create_stt(self):
         stt = OptionPlugin(SttPlugin, 'mycroft.frontends.speech.stt', '_stt', 'mycroft')
-        stt.plugin_path = self.plugin_path + '.stt'
+        stt._plugin_path = self._plugin_path + '.stt'
         stt.init(self.config['stt']['module'], self.rt)
         return stt
 

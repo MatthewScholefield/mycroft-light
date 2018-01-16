@@ -37,7 +37,7 @@ class IntentService(ServicePlugin, GroupPlugin):
     def __init__(self, rt):
         ServicePlugin.__init__(self, rt)
         GroupPlugin.__init__(self, IntentPlugin, 'mycroft.intents', '_intent')
-        self.init_plugins(rt)
+        self._init_plugins(rt)
         self.handlers_s = {}  # Example: { 'skill_name:intent.name': [intent_name_handler, alias_name_handler] }
         self.fallbacks_s = {}
 

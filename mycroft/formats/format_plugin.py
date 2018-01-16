@@ -36,8 +36,8 @@ class FormatPlugin(BasePlugin):
     The EnclosureFormat could put data into visual faceplate animations
 
     Args:
+        rt (Root): Root instance
         extension (str): File extension of format to handle
-        attr_name (str): Name of attribute in format manager (formats.XXXXX)
     """
 
     def __init__(self, rt, extension):

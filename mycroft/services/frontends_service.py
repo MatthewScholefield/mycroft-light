@@ -28,4 +28,4 @@ class FrontendsService(ServicePlugin, GroupPlugin):
     def __init__(self, rt):
         ServicePlugin.__init__(self, rt)
         GroupPlugin.__init__(self, FrontendPlugin, 'mycroft.frontends', '_frontend')
-        self.init_plugins(rt)
+        self._init_plugins(rt)

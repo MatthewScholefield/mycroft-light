@@ -63,26 +63,26 @@ def run_ordered_parallel(items, get_function, *args, gp_order=None, gp_daemon=Fa
 
 class GroupRunner(metaclass=ABCMeta):
     def __init__(self, cls, plugins):
-        self.plugins = plugins
-        self.cls = cls
+        self._plugins = plugins
+        self._cls = cls
 
         for fn_name in filter(lambda x: not x.startswith('_') and callable(getattr(cls, x)),
                               dir(cls)):
             setattr(self, fn_name, self.__make_method(fn_name))
 
     def __make_method(self, fn_name):
-        return lambda *args, **kwargs: run_ordered_parallel(self.plugins,
+        return lambda *args, **kwargs: run_ordered_parallel(self._plugins,
                                                             lambda plugin: getattr(plugin, fn_name),
                                                             *args,
                                                             gp_label='Running all.' + fn_name,
                                                             **kwargs)
 
-    def __getattribute__(self, item):
+    def __getattribute__(self, item) -> list:
         try:
             return super().__getattribute__(item)
         except AttributeError:
             raise AttributeError(
-                "'" + self.cls.__name__ + "' base class has no method '" + item + "'")
+                "'" + self._cls.__name__ + "' base class has no method '" + item + "'")
 
 
 class Empty:
@@ -101,18 +101,18 @@ class Empty:
         return self
 
 
-class GroupPlugin:
+class GroupPlugin(metaclass=ABCMeta):
     def __init__(self, base_cls, package, suffix):
         self._plugins = {}
         self._classes = {}
         self._suffix = ''
         self._base_cls = None
+        self._error_label = 'Loading plugin'
         self.all = None  # type: GroupRunner
-        self.error_label = 'Loading plugin'
 
-        self.load_plugins(base_cls, package, suffix)
+        self._load_plugins(base_cls, package, suffix)
 
-    def load_classes(self, package, suffix):
+    def _load_classes(self, package, suffix):
         classes = {}
         folder = list(import_module(package).__path__)[0]
         for loader, mod_name, is_pkg in pkgutil.walk_packages([folder]):
@@ -130,27 +130,27 @@ class GroupPlugin:
                 continue
 
             try:
-                plugin_path = object.__getattribute__(self, 'plugin_path') + '.'
+                plugin_path = object.__getattribute__(self, '_plugin_path') + '.'
             except AttributeError:
                 plugin_path = ''
 
-            mod_cls.attr_name = self.make_name(mod_cls)
-            mod_cls.plugin_path = plugin_path + mod_cls.attr_name
+            mod_cls._attr_name = self._make_name(mod_cls)
+            mod_cls._plugin_path = plugin_path + mod_cls._attr_name
 
-            classes[mod_cls.attr_name] = mod_cls
+            classes[mod_cls._attr_name] = mod_cls
         return classes
 
-    def load_plugins(self, base_cls, package, suffix):
+    def _load_plugins(self, base_cls, package, suffix):
         self._plugins = {}
         self._suffix = suffix
         self._base_cls = base_cls
         self.all = None
-        self._classes = self.load_classes(package, suffix)
+        self._classes = self._load_classes(package, suffix)
 
-    def make_name(self, cls):
+    def _make_name(self, cls):
         return to_snake(cls.__name__).replace(self._suffix, '')
 
-    def init_plugins(self, *args, **kwargs):
+    def _init_plugins(self, *args, **kwargs):
         """
         Args:
             gp_order (list): List of attribute names in load order.
@@ -159,11 +159,11 @@ class GroupPlugin:
 
         def get_function(cls):
             def function(*args, **kwargs):
-                self._plugins[self.make_name(cls)] = cls(*args, **kwargs)
+                self._plugins[self._make_name(cls)] = cls(*args, **kwargs)
 
             return function
 
-        run_ordered_parallel(self._classes, get_function, *args, gp_label=self.error_label,
+        run_ordered_parallel(self._classes, get_function, *args, gp_label=self._error_label,
                              **kwargs)
         self.all = GroupRunner(self._base_cls, self._plugins)
 

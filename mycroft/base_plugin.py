@@ -21,14 +21,18 @@
 # under the License.
 from abc import ABCMeta
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from mycroft.root import Root
+
 
 class BasePlugin(metaclass=ABCMeta):
-    plugin_path = ''
-    attr_name = ''
+    _plugin_path = ''
+    _attr_name = ''
 
     def __init__(self, rt):
-        self.rt = rt
-        self.parents = self.plugin_path.split('.')
+        self.rt = rt  # type: Root
         self.config = rt.config or {}
-        for p in self.parents:
-            self.config = self.config.get(p, {})
+        for parent in self._plugin_path.split('.'):
+            self.config = self.config.get(parent, {})

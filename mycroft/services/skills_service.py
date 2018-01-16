@@ -67,7 +67,7 @@ class SkillsService(ServicePlugin, GroupPlugin):
         self.error_label = 'Loading skill'
         for cls in self._classes.values():
             cls.rt = rt
-        self.init_plugins()
+        self._init_plugins()
 
         # The watch manager stores the watches and provides operations on watches
         wm = pyinotify.WatchManager()
@@ -123,7 +123,7 @@ class SkillsService(ServicePlugin, GroupPlugin):
 
         return cls
 
-    def load_classes(self, package, suffix):
+    def _load_classes(self, package, suffix):
         """
         Looks in the skill folder and loads the
         CamelCase equivalent class of the snake case folder
@@ -156,9 +156,9 @@ class SkillsService(ServicePlugin, GroupPlugin):
             if not cls:
                 continue
 
-            cls.attr_name = self.make_name(cls)
-            if cls.attr_name not in self.blacklist:
-                classes[cls.attr_name] = cls
+            cls._attr_name = self._make_name(cls)
+            if cls._attr_name not in self.blacklist:
+                classes[cls._attr_name] = cls
 
         log.info('Skipped folders:', ', '.join(invalid_names))
         return classes

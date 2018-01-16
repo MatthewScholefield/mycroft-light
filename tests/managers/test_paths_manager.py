@@ -68,7 +68,7 @@ class TestPathsManager:
     def setup(self):
         self.rt = Mock()
         self.rt.config = {'lang': 'en-us'}
-        PathsManager.attr_name = 'paths'
+        PathsManager._attr_name = 'paths'
 
     def test_1(self):
         self.rt.config['paths'] = {'a': '1', 'b': '2$a'}

@@ -26,8 +26,7 @@ sys.path += ['.']  # noqa
 
 from time import sleep
 from mycroft.util import log
-from mycroft.group_plugin import GroupPlugin
-from mycroft.services.service_plugin import ServicePlugin
+from mycroft.root import Root
 
 
 def info(message):
@@ -36,12 +35,7 @@ def info(message):
 
 
 def main():
-    rt = GroupPlugin(ServicePlugin, 'mycroft.services', '_service')
-    rt.init_plugins(rt, gp_order=[
-        'config', 'paths', 'filesystem', 'identity',
-        'device_info', 'query', 'formats', 'frontends',
-        'intent', 'skills', 'main_thread'
-    ])
+    rt = Root()
 
     if rt.config['use_server']:
         rt.config.load_remote()
@@ -56,6 +50,7 @@ def main():
     log.info('Quiting...')
     sleep(0.1)
     print()
+
 
 if __name__ == '__main__':
     main()
