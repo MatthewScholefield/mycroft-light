@@ -204,7 +204,7 @@ class STTApi(Api):
         Args:
             audio (bytes): The recorded audio, as in a FLAC file
             language (str): A BCP-47 language code, e.g. 'en-US'
-            limit (int): Maximum minutes to transcribe(?)
+            limit (int): Maximum minutes to _transcribe(?)
 
         Returns:
             str: JSON structure with transcription results

@@ -6,3 +6,4 @@ mycroft_light.egg-info/
 .installed
 debian/
 .cache/
+.venv/

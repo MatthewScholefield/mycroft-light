@@ -1,8 +1,11 @@
 # Core dependencies
+git+https://github.com/MatthewScholefield/pocketsphinx-python@patch-2#egg=pocketsphinx
+
 PyYAML
+pyaml
 Twiggy
 requests
-pocketsphinx
+# pocketsphinx
 SpeechRecognition
 PyAudio
 pyserial
@@ -13,12 +16,6 @@ pyinotify
 
 fann2==1.0.7
 padatious
-
-# Extra deps required for some installations
-urllib3
-certifi
-chardet
-idna
 
 # Skill dependencies
 multi-key-dict
@@ -32,3 +29,4 @@ cleverwrap
 pydora
 psutil
 py-stackexchange
+lxml

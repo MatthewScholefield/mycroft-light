@@ -19,29 +19,23 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from abc import ABCMeta
+from mycroft.interfaces.faceplate_interface import FaceplateInterface
+from mycroft.interfaces.interface_plugin import InterfacePlugin
+from mycroft.group_plugin import GroupPlugin
+from mycroft.interfaces.speech_interface import SpeechInterface
+from mycroft.interfaces.text_interface import TextInterface
+from mycroft.interfaces.tts_interface import TtsInterface
+from mycroft.services.service_plugin import ServicePlugin
 
-from typing import TYPE_CHECKING
 
-from mycroft.util import log
-
-if TYPE_CHECKING:
-    from mycroft.root import Root
-
-
-class BasePlugin(metaclass=ABCMeta):
-    """Any dynamically loaded class"""
-    _plugin_path = ''
-    _attr_name = ''
-    _package_struct = {}
-
+class InterfacesService(ServicePlugin, GroupPlugin):
     def __init__(self, rt):
-        self.rt = rt  # type: Root
+        ServicePlugin.__init__(self, rt)
+        GroupPlugin.__init__(self, InterfacePlugin, 'mycroft.interfaces', '_interface')
+        self._init_plugins(rt)
 
-        self.config = rt.config if 'config' in rt else {}
-
-        for parent in self._plugin_path.split('.'):
-            self.config = self.config.get(parent, {})
-
-        if self._package_struct:
-            self.rt.package.add(self._package_struct)
+    def __type_hinting__(self):
+        self.faceplate = ''  # type: FaceplateInterface
+        self.speech = ''  # type: SpeechInterface
+        self.text = ''  # type: TextInterface
+        self.tts = ''  # type: TtsInterface

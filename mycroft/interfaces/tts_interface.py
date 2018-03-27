@@ -19,29 +19,26 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from abc import ABCMeta
+from threading import Event
 
-from typing import TYPE_CHECKING
-
-from mycroft.util import log
-
-if TYPE_CHECKING:
-    from mycroft.root import Root
+from mycroft.interfaces.interface_plugin import InterfacePlugin
+from mycroft.interfaces.tts.tts_plugin import TtsPlugin
+from mycroft.option_plugin import OptionPlugin
 
 
-class BasePlugin(metaclass=ABCMeta):
-    """Any dynamically loaded class"""
-    _plugin_path = ''
-    _attr_name = ''
-    _package_struct = {}
+class TtsInterface(InterfacePlugin, OptionPlugin):
+    """Speak outputs"""
 
     def __init__(self, rt):
-        self.rt = rt  # type: Root
+        InterfacePlugin.__init__(self, rt)
+        OptionPlugin.__init__(self, TtsPlugin, 'mycroft.interfaces.tts', '_tts', 'mimic')
+        self.init(self.config['module'], rt)
+        self.event = Event()
 
-        self.config = rt.config if 'config' in rt else {}
+    def on_response(self, package):
+        self.read(package.speech)
+        self.event.set()
+        self.event.clear()
 
-        for parent in self._plugin_path.split('.'):
-            self.config = self.config.get(parent, {})
-
-        if self._package_struct:
-            self.rt.package.add(self._package_struct)
+    def wait(self):
+        self.event.wait()

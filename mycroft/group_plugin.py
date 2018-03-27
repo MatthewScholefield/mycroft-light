@@ -21,26 +21,30 @@
 # under the License.
 import pkgutil
 from abc import ABCMeta
+from functools import wraps
 from importlib import import_module
 from inspect import isclass
 from threading import Thread
+from typing import Any
 
 from mycroft.util import log
 from mycroft.util.misc import safe_run
 from mycroft.util.text import to_camel, to_snake
 
 
-def run_ordered_parallel(items, get_function, *args, gp_order=None, gp_daemon=False, gp_label='',
-                         gp_warn=False, **kwargs):
+def run_ordered_parallel(items, get_function, args, kwargs,
+                         order=None, daemon=False, label='', warn=False,
+                         custom_exception=type(None), custom_handler=None):
     return_vals = []
 
     def run_item(item, name):
-        return_val = safe_run(get_function(item), label=gp_label + ' ' + name, args=args,
-                              kwargs=kwargs, warn=gp_warn)
+        return_val = safe_run(get_function(item), args=args, kwargs=kwargs,
+                              label=label + ' ' + name, warn=warn,
+                              custom_exception=custom_exception, custom_handler=custom_handler)
         return_vals.append(return_val)
 
     remaining = list(items)
-    for name in gp_order or []:
+    for name in order or []:
         if name in items:
             run_item(items[name], name)
             remaining.remove(name)
@@ -49,12 +53,12 @@ def run_ordered_parallel(items, get_function, *args, gp_order=None, gp_daemon=Fa
 
     threads = []
     for name in remaining:
-        threads.append(Thread(target=run_item, args=(items[name], name), daemon=gp_daemon))
+        threads.append(Thread(target=run_item, args=(items[name], name), daemon=daemon))
 
     for i in threads:
         i.start()
 
-    if not gp_daemon:
+    if not daemon:
         for i in threads:
             i.join()
         return return_vals
@@ -71,11 +75,12 @@ class GroupRunner(metaclass=ABCMeta):
             setattr(self, fn_name, self.__make_method(fn_name))
 
     def __make_method(self, fn_name):
-        return lambda *args, **kwargs: run_ordered_parallel(self._plugins,
-                                                            lambda plugin: getattr(plugin, fn_name),
-                                                            *args,
-                                                            gp_label='Running all.' + fn_name,
-                                                            **kwargs)
+        @wraps(getattr(self._cls, fn_name))
+        def method(*args, **kwargs):
+            gp_kwargs = GroupPlugin.extract_gp_kwargs(kwargs)
+            return run_ordered_parallel(self._plugins, lambda plugin: getattr(plugin, fn_name),
+                                        args=args, kwargs=kwargs, label='Running all.' + fn_name, **gp_kwargs)
+        return method
 
     def __getattribute__(self, item) -> list:
         try:
@@ -112,15 +117,26 @@ class GroupPlugin(metaclass=ABCMeta):
 
         self._load_plugins(base_cls, package, suffix)
 
+    @staticmethod
+    def extract_gp_kwargs(kwargs):
+        gp_kwargs = {}
+        for name in list(kwargs):
+            if name.startswith('gp_'):
+                gp_kwargs[name.replace('gp_', '')] = kwargs.pop(name)
+        return gp_kwargs
+
     def _load_classes(self, package, suffix):
         classes = {}
         folder = list(import_module(package).__path__)[0]
         for loader, mod_name, is_pkg in pkgutil.walk_packages([folder]):
             if not mod_name.endswith(suffix):
                 continue
+
+            log.debug('Loading', mod_name + '...')
+
             try:
                 module = loader.find_module(mod_name).load_module(mod_name)
-            except:
+            except Exception:
                 log.exception('Loading', mod_name)
                 continue
             cls_name = to_camel(mod_name)
@@ -152,6 +168,7 @@ class GroupPlugin(metaclass=ABCMeta):
 
     def _init_plugins(self, *args, **kwargs):
         """
+        Call __init__ of all plugins. *args and **kwargs match the base plugin's __init__
         Args:
             gp_order (list): List of attribute names in load order.
                     Other attributes will be loaded after
@@ -163,8 +180,12 @@ class GroupPlugin(metaclass=ABCMeta):
 
             return function
 
-        run_ordered_parallel(self._classes, get_function, *args, gp_label=self._error_label,
-                             **kwargs)
+        gp_kwargs = GroupPlugin.extract_gp_kwargs(kwargs)
+        run_ordered_parallel(self._classes, get_function,
+                             args=args, kwargs=kwargs, label=self._error_label,
+                             custom_exception=NotImplementedError,
+                             custom_handler=lambda e, l: log.info(l + ': Skipping disabled plugin'),
+                             **gp_kwargs)
         self.all = GroupRunner(self._base_cls, self._plugins)
 
     def __repr__(self):
@@ -173,12 +194,22 @@ class GroupPlugin(metaclass=ABCMeta):
     def __str__(self):
         return self._base_cls.__name__ + ': ' + str(list(self._plugins.keys()))
 
-    def __getattribute__(self, item):
+    def __getattribute__(self, item) -> Any:
         try:
             return object.__getattribute__(self, item)
         except AttributeError:
             pass
+
+        if 'all' not in self.__dict__:
+            raise RuntimeError('Please call GroupPlugin.__init__ first')
+
         if item not in object.__getattribute__(self, '_plugins'):
             log.warning(item, 'plugin does not exist.', stack_offset=1)
             self._plugins[item] = Empty()
         return object.__getattribute__(self, '_plugins')[item]
+
+    def __getitem__(self, item) -> Any:
+        return self._plugins[item]
+
+    def __iter__(self):
+        return iter(self._plugins)

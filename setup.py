@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 
-from setuptools import setup
-
 from os.path import abspath, dirname, join
 
-with open(join(abspath(dirname(__file__)), 'requirements.txt')) as f:
-    requirements = [i for i in f.readlines() if not i.strip().startswith('#')]
+from setuptools import setup
 
 setup(
     name='mycroft-light',
@@ -15,22 +12,36 @@ setup(
     author='Mycroft AI Inc.',
     author_email='support@mycroft.ai',
     maintainer='Matthew D. Scholefield',
-    maintainer_email='matthew.scholefield@mycroft.ai',	
+    maintainer_email='matthew.scholefield@mycroft.ai',
     license='Apache-2.0',
     packages=[
         'mycroft',
-        'mycroft.frontends',
-        # 'mycroft.frontends.speech',
-        # 'mycroft.frontends.speech.recognizers',
-        # 'mycroft.frontends.speech.tts',
         'mycroft.intents',
-        'mycroft.formats',
+        'mycroft.interfaces',
+        'mycroft.interfaces.speech',
+        'mycroft.interfaces.speech.recognizers',
+        'mycroft.interfaces.speech.stt',
+        'mycroft.interfaces.tts',
         'mycroft.services',
-        # 'mycroft.parsing',
-        # 'mycroft.parsing.en_us',
+        'mycroft.transformers',
         'mycroft.util'
     ],
-    install_requires=requirements,
+    install_requires=[
+        'PyYAML',
+        'pyaml',
+        'Twiggy',
+        'requests',
+        'pocketsphinx',
+        'SpeechRecognition',
+        'PyAudio',
+        'pyserial',
+        'pyalsaaudio',
+        'tornado',
+        'websocket-client',
+        'pyinotify',
+        'fann2==1.0.7',
+        'padatious'
+    ],
     entry_points={
         'console_scripts': [
             'mycroft = mycroft.__main__:main'

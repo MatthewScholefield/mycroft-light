@@ -19,29 +19,32 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from abc import ABCMeta
+from abc import abstractmethod
 
-from typing import TYPE_CHECKING
+from speech_recognition import AudioData
 
-from mycroft.util import log
-
-if TYPE_CHECKING:
-    from mycroft.root import Root
+from mycroft.base_plugin import BasePlugin
 
 
-class BasePlugin(metaclass=ABCMeta):
-    """Any dynamically loaded class"""
-    _plugin_path = ''
-    _attr_name = ''
-    _package_struct = {}
-
+class SttPlugin(BasePlugin):
     def __init__(self, rt):
-        self.rt = rt  # type: Root
+        super().__init__(rt)
+        self.lang = str(self._get_lang(rt.config))
 
-        self.config = rt.config if 'config' in rt else {}
+        self.credential = self.config.get('credential', {})
+        self.token = str(self.credential.get('token'))
+        self.username = str(self.credential.get('username'))
+        self.password = str(self.credential.get('password'))
 
-        for parent in self._plugin_path.split('.'):
-            self.config = self.config.get(parent, {})
+    @staticmethod
+    def _get_lang(config_core):
+        lang = config_core.get('lang', 'en-US')
+        langs = lang.split('-')
+        if len(langs) == 2:
+            return langs[0].lower() + '-' + langs[1].upper()
+        return lang
 
-        if self._package_struct:
-            self.rt.package.add(self._package_struct)
+    @abstractmethod
+    def transcribe(self, audio: AudioData) -> str:
+        """Internal function to overload. Returns transcription"""
+        pass

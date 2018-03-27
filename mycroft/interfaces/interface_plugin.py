@@ -19,29 +19,36 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from abc import ABCMeta
-
-from typing import TYPE_CHECKING
-
-from mycroft.util import log
-
-if TYPE_CHECKING:
-    from mycroft.root import Root
+from mycroft.package_cls import Package
+from mycroft.base_plugin import BasePlugin
 
 
-class BasePlugin(metaclass=ABCMeta):
-    """Any dynamically loaded class"""
-    _plugin_path = ''
-    _attr_name = ''
-    _package_struct = {}
+class InterfacePlugin(BasePlugin):
+    """
+    Provides common behavior like sending and receiving queries
+    Example interfaces include the voice interface and text interface
+    """
 
     def __init__(self, rt):
-        self.rt = rt  # type: Root
+        super().__init__(rt)
+        rt.query.on_query(self.on_query)
+        rt.query.on_response(self.on_response)
 
-        self.config = rt.config if 'config' in rt else {}
+    def send_query(self, query):
+        """Helper to ask questions"""
+        self.rt.query.send(query)
 
-        for parent in self._plugin_path.split('.'):
-            self.config = self.config.get(parent, {})
+    def on_query(self, query):
+        """Called when any interface sends query."""
+        pass
 
-        if self._package_struct:
-            self.rt.package.add(self._package_struct)
+    def on_response(self, package: Package):
+        """Called after send_query. Package contains all data from skill"""
+        pass
+
+    def run(self):
+        """Executes the main thread for the interface"""
+        pass
+
+    def on_exit(self):
+        pass

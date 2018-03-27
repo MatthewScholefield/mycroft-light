@@ -80,7 +80,6 @@ class StringGetter:
 class PathsService(ServicePlugin):
     """
     An object that represents the data in mycroft.conf['paths']
-    Any confi
 
     Usage:
     paths.skills  # /home/user/.mycroft/skills

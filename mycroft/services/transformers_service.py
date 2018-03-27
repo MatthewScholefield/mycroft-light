@@ -19,29 +19,32 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from abc import ABCMeta
-
-from typing import TYPE_CHECKING
-
+from mycroft.group_plugin import GroupPlugin
+from mycroft.package_cls import Package
+from mycroft.services.service_plugin import ServicePlugin
+from mycroft.transformers.transformer_plugin import TransformerPlugin
+from mycroft.transformers.dialog_transformer import DialogTransformer
 from mycroft.util import log
 
-if TYPE_CHECKING:
-    from mycroft.root import Root
 
-
-class BasePlugin(metaclass=ABCMeta):
-    """Any dynamically loaded class"""
-    _plugin_path = ''
-    _attr_name = ''
-    _package_struct = {}
+class TransformersService(ServicePlugin, GroupPlugin):
+    _package_struct = {
+        'action': str
+    }
 
     def __init__(self, rt):
-        self.rt = rt  # type: Root
+        ServicePlugin.__init__(self, rt)
+        GroupPlugin.__init__(self, TransformerPlugin, 'mycroft.transformers', '_transformer')
+        self._init_plugins(rt)
 
-        self.config = rt.config if 'config' in rt else {}
+    def __type_hinting__(self):
+        self.dialog = ''  # type: DialogTransformer
 
-        for parent in self._plugin_path.split('.'):
-            self.config = self.config.get(parent, {})
+    def process(self, package: Package):
+        """Called to modify attributes within package"""
+        if not package.action:
+            package.action = package.match.intent_id.split(':')[1] if package.match else ''
 
-        if self._package_struct:
-            self.rt.package.add(self._package_struct)
+        self.all.process(package, gp_warn=False)  # type: ignore
+
+        log.debug('Package: \n' + str(package))

@@ -19,11 +19,11 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from threading import Thread
+from threading import Thread, Event
 
 from mycroft.services.service_plugin import ServicePlugin
 from mycroft.util import log
-from mycroft.util.misc import safe_run
+from mycroft.util.misc import safe_run, run_parallel
 
 
 class QueryService(ServicePlugin):
@@ -34,38 +34,41 @@ class QueryService(ServicePlugin):
         self.threads = []
         self.on_query_callbacks = []
         self.on_response_callbacks = []
+        self.response_event = Event()
+        self.query_consumer = None
 
     def _run_query(self, query):
         """Function to run query in a separate thread"""
-        for i in self.on_query_callbacks:
-            safe_run(lambda: i(query))
-        safe_run(self.send_package, args=[self.rt.intent.calc_result(query)], warn=False)
+        run_parallel(self.on_query_callbacks, label='Running query', args=[query])
+        if self.query_consumer:
+            self.query_consumer(query)
+        else:
+            safe_run(self.send_package, args=[self.rt.intent.calc_package(query)], warn=False)
 
     def send_package(self, package):
-        """Generates data in all the formats and gives that formatted data to each callback"""
+        """Generates various forms of the data and gives that formatted data to each callback"""
 
-        self.rt.formats.generate(package.action, package.data)
-        log.debug('Dialog:', self.rt.formats.dialog.get())
-        if package.reset_event is not None:
-            self.rt.formats.set_reset_event(package.reset_event)
-        threads = []
+        self.rt.transformers.process(package)
+        log.debug('Dialog:', package.speech)
 
         def mklm(fn):
             def ca():
-                fn(self.rt.formats)
+                fn(package)
 
             return ca
 
-        for resp_callback in self.on_response_callbacks:
-            threads.append(Thread(target=safe_run, args=(mklm(resp_callback),)))
+        threads = [
+            Thread(target=safe_run, args=(mklm(resp_callback),))
+            for resp_callback in self.on_response_callbacks
+        ]
 
+        self.response_event.set()
         for i in threads:
             i.start()
 
         for i in threads:
             i.join()
-
-        self.rt.formats.reset()
+        self.response_event.clear()
 
     def send(self, query):
         """Starts calculating a query in a new thread"""
@@ -76,6 +79,21 @@ class QueryService(ServicePlugin):
     def on_query(self, callback):
         """Assign a callback to be run whenever a new response comes in"""
         self.on_query_callbacks.append(callback)
+
+    def get_next_query(self, timeout=None):
+        """Waits for and consume next response"""
+        on_query = Event()
+
+        def consumer(query):
+            consumer.query = query
+            on_query.set()
+        consumer.query = None
+
+        self.query_consumer = consumer
+        on_query.wait(timeout)
+        self.query_consumer = None
+
+        return consumer.query
 
     def on_response(self, callback):
         """Assign a callback to be run whenever a new response comes in"""

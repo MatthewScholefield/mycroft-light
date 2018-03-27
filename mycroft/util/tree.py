@@ -50,10 +50,10 @@ def tree_option_plugin(parents, obj):
 
 
 def tree_group_plugin(parents, obj):
-    subtrees = list(obj._plugins)
+    subtrees = list(obj)
     tree = {}
     for i in subtrees:
-        tree[i] = calc_tree(parents, obj._plugins[i])
+        tree[i] = calc_tree(parents, obj[i])
     tree.update(tree_default(parents, obj))
     return tree
 
@@ -64,7 +64,7 @@ def get_info(obj):
         lines = [i for i in lines if '@' not in i]  # filter out decorators
         return lines[0].replace('def ', '').replace('):', ')').replace('  ', '').replace(
             obj.__name__, '').replace('self, ', '').replace('self', '')
-    except:
+    except Exception:
         return None
 
 

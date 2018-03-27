@@ -1,5 +1,2 @@
-from padatious.match_data import MatchData
-
-from .skills.skill_plugin import SkillPlugin as MycroftSkill
-
-MatchData = MatchData
+from .skill_plugin import SkillPlugin as MycroftSkill, intent_handler, intent_prehandler
+from .package_cls import Package

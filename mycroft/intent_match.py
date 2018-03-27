@@ -19,29 +19,27 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from abc import ABCMeta
-
-from typing import TYPE_CHECKING
-
-from mycroft.util import log
-
-if TYPE_CHECKING:
-    from mycroft.root import Root
 
 
-class BasePlugin(metaclass=ABCMeta):
-    """Any dynamically loaded class"""
-    _plugin_path = ''
-    _attr_name = ''
-    _package_struct = {}
+class IntentMatch:
+    """An object that describes the how a query fits into a particular intent"""
 
-    def __init__(self, rt):
-        self.rt = rt  # type: Root
+    def __init__(self, intent_id='', confidence=0.0, matches=None, query=''):
+        self.intent_id = intent_id
+        self.confidence = confidence
+        self.matches = matches or {}
+        self.query = query
 
-        self.config = rt.config if 'config' in rt else {}
+    def __getitem__(self, item):
+        return self.matches.__getitem__(item)
 
-        for parent in self._plugin_path.split('.'):
-            self.config = self.config.get(parent, {})
+    def __contains__(self, item):
+        return self.matches.__contains__(item)
 
-        if self._package_struct:
-            self.rt.package.add(self._package_struct)
+    def __repr__(self):
+        return '<IntentMatch intent_id={} confidence={} matches={} query={}>'.format(
+            self.intent_id, self.confidence, self.matches, self.query
+        )
+
+    def __bool__(self):
+        return any(bool(i) for i in [self.intent_id, self.confidence, self.matches, self.query])

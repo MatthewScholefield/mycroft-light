@@ -19,12 +19,11 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-import os
 from os.path import join
+from typing import Any
 
 from padatious import IntentContainer
 
-from mycroft.intent_name import IntentName
 from mycroft.intents.intent_plugin import IntentPlugin, IntentMatch
 from mycroft.util import log
 
@@ -36,32 +35,19 @@ class PadatiousIntent(IntentPlugin):
         super().__init__(rt)
         self.container = IntentContainer(join(rt.paths.user_config, 'intent_cache'))
 
-    def try_register_intent(self, *args, **kwargs):
-        arg_names = ['skill_name', 'intent_name']
-        kwargs.update(dict(zip(arg_names, args)))
-        skill_name, intent_name = map(kwargs.get, arg_names)
+    def register(self, intent: Any, skill_name: str, intent_id: str):
+        file_name = join(self.rt.paths.skill_locale(skill_name), intent + '.intent')
+        self.container.load_intent(name=intent_id, file_name=file_name)
 
-        if not isinstance(intent_name, str):
-            return None
-        intent_dir = self.rt.paths.skill_vocab(skill_name)
-        file_name = os.path.join(intent_dir, intent_name + '.intent')
-        if not os.path.isfile(file_name):
-            return None
+    def register_entity(self, entity: Any, entity_id: str, skill_name: str):
+        file_name = join(self.rt.paths.skill_locale(skill_name), entity + '.intent')
+        self.container.load_intent(name=entity_id, file_name=file_name)
 
-        name = IntentName(skill_name, intent_name)
-        self.container.load_file(str(name), file_name)
-        return name
+    def unregister(self, intent_id: str):
+        self.container.remove_intent(intent_id)
 
-    def try_register_entity(self, skill_name, ent_name):
-        if not isinstance(ent_name, str):
-            return False
-        intent_dir = self.rt.paths.skill_vocab(skill_name)
-        file_name = os.path.join(intent_dir, ent_name + '.entity')
-        if not os.path.isfile(file_name):
-            return False
-
-        self.container.load_entity(ent_name, file_name)
-        return True
+    def unregister_entity(self, entity_id: str):
+        self.container.remove_entity(entity_id)
 
     def compile(self):
         log.info('Training...')
@@ -69,10 +55,8 @@ class PadatiousIntent(IntentPlugin):
         log.info('Training complete!')
 
     def calc_intents(self, query):
-        matches = []
-        for data in self.container.calc_intents(query):
-            matches.append(IntentMatch(name=IntentName.from_str(data.name),
-                                       confidence=data.conf,
-                                       matches=data.matches,
-                                       query=query))
-        return matches
+        return [
+            IntentMatch(intent_id=data.name, confidence=data.conf,
+                        matches=data.matches, query=query)
+            for data in self.container.calc_intents(query)
+        ]

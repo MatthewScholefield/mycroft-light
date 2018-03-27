@@ -52,6 +52,21 @@ class BaseLogger(metaclass=ABCMeta):
     def write(self, text):
         pass
 
+    def _shorten_mod(self, mod_name):
+        def is_ess(i, s):
+            return len(s[:i + 1].split('.')[-1]) <= 2
+
+        i = 0
+        while len(mod_name) > 20 and i < len(mod_name):
+            if is_ess(i, mod_name):
+                i += 1
+                continue
+            mod_name = mod_name[:i] + mod_name[i + 1:]
+
+        mod_name = ' ' * (20 - len(mod_name)) + mod_name
+
+        return mod_name
+
     def _get_function_info(self, offset):
         offset += 1
         # Stack:
@@ -81,17 +96,18 @@ class BaseLogger(metaclass=ABCMeta):
                 if len(stack) > offset + 1:
                     return self._get_function_info(offset + 1)
                 return ''
-            return module_name + ':' + function_name + ':' + str(line_no)
-        except:
+            return self._shorten_mod(module_name) + ':' + '{:03}'.format(line_no)
+        except Exception:
             return ''
 
     def _get_prefix(self, level, offset):
-        return ' - '.join([
+        prefix = ' | '.join([
             strftime('%m/%d %H:%M:%S', gmtime()),
             self._get_function_info(offset + 1),
-            self.fn_names[level].upper(),
+            ' ' * (5 - len(self.fn_names[level])) + self.fn_names[level].upper(),
             ''
         ])
+        return prefix
 
     def __init__(self, level):
         for i in range(level):

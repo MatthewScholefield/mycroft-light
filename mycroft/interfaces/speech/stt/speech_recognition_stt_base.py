@@ -19,29 +19,11 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from abc import ABCMeta
-
-from typing import TYPE_CHECKING
-
-from mycroft.util import log
-
-if TYPE_CHECKING:
-    from mycroft.root import Root
+from mycroft.interfaces.speech.stt.stt_plugin import SttPlugin
 
 
-class BasePlugin(metaclass=ABCMeta):
-    """Any dynamically loaded class"""
-    _plugin_path = ''
-    _attr_name = ''
-    _package_struct = {}
-
+class SpeechRecognitionSttBase(SttPlugin):
     def __init__(self, rt):
-        self.rt = rt  # type: Root
-
-        self.config = rt.config if 'config' in rt else {}
-
-        for parent in self._plugin_path.split('.'):
-            self.config = self.config.get(parent, {})
-
-        if self._package_struct:
-            self.rt.package.add(self._package_struct)
+        super().__init__(rt)
+        from speech_recognition import Recognizer
+        self.recognizer = Recognizer()

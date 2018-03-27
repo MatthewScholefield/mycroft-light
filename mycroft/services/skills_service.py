@@ -19,6 +19,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+import os
 import sys
 from importlib import import_module, reload
 from inspect import isclass
@@ -30,7 +31,7 @@ import pyinotify
 
 from mycroft.group_plugin import GroupPlugin
 from mycroft.services.service_plugin import ServicePlugin
-from mycroft.skills.skill_plugin import SkillPlugin
+from mycroft.skill_plugin import SkillPlugin
 from mycroft.util import log
 from mycroft.util.git_repo import GitRepo
 from mycroft.util.misc import safe_run
@@ -45,9 +46,10 @@ class EventHandler(pyinotify.ProcessEvent):
         self.skills = skills
 
     def process_default(self, event):
-        folder_name = basename(event.path)
-        if any(event.name.endswith(ext) for ext in self.exts) and folder_name.endswith('_skill'):
-            self.skills.reload(folder_name)
+        for folder in event.path.split('/'):
+            if folder.endswith('_skill'):
+                if any(event.name.endswith(ext) for ext in self.exts):
+                    self.skills.reload(folder)
 
 
 class SkillsService(ServicePlugin, GroupPlugin):
@@ -63,11 +65,13 @@ class SkillsService(ServicePlugin, GroupPlugin):
         self.blacklist = self.config['blacklist']
         sys.path.append(self.rt.paths.skills)
 
+        log.info('Loading skills...')
         GroupPlugin.__init__(self, SkillPlugin, 'mycroft.skills', '_skill')
         self.error_label = 'Loading skill'
         for cls in self._classes.values():
             cls.rt = rt
         self._init_plugins()
+        log.info('Finished loading skills.')
 
         # The watch manager stores the watches and provides operations on watches
         wm = pyinotify.WatchManager()
@@ -81,44 +85,46 @@ class SkillsService(ServicePlugin, GroupPlugin):
         notifier.start()
 
     def reload(self, folder_name):
+        log.debug('Reloading', folder_name + '...')
         skill_name = folder_name.replace(self._suffix, '')
-        self.rt.intent.remove_skill(skill_name)
 
         if skill_name in self._plugins:
+            self._plugins[skill_name]._unload()
             del self._plugins[skill_name]
+
         if skill_name in self._classes:
+            self.rt.intent.remove_skill(skill_name)
             del self._classes[skill_name]
 
         cls = self.load_skill_class(folder_name)
         if not cls:
             return
+
+        cls._attr_name = self._make_name(cls)
         cls.rt = self.rt
         self._classes[skill_name] = cls
 
         def init():
             self._plugins[skill_name] = cls()
+            return True
 
-        safe_run(init, label='Reloading ' + skill_name)
-        self.rt.intent.all.compile()
-        log.info('Reloaded:', folder_name)
+        if safe_run(init, label='Reloading ' + skill_name):
+            self.rt.intent.all.compile()
+            log.info('Reloaded', folder_name)
 
     def load_skill_class(self, folder_name):
         cls_name = to_camel(folder_name)
-        skill_name = folder_name.replace(self._suffix, '')
-
-        if skill_name in self._classes:
-            self.rt.intent.remove_skill(skill_name)
 
         try:
             mod = import_module(folder_name + '.skill')
             mod = reload(mod)
             cls = getattr(mod, cls_name, '')
-        except:
+        except Exception:
             log.exception('Loading', folder_name)
             return None
 
         if not isclass(cls):
-            log.warning('Could not find', cls_name, 'in', folder_name)
+            log.error('Could not find', cls_name, 'in', folder_name)
             return None
 
         return cls

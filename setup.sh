@@ -3,7 +3,7 @@
 apt_packages=""
 
 show_usage() {
-    echo "Usage: $1 [-f]"
+    echo "Usage: $1 [-f] [-h]"
     echo "Sets up and updates both python and native dependencies"
     exit 0
 }
@@ -13,8 +13,8 @@ found_exe() {
 }
 
 found_lib() {
-    found=1
-    paths="$(ld --verbose | grep SEARCH_DIR | tr -s '; ' '\n' | grep -o '/[^"]*')"
+    local found=1
+    local paths="$(ld --verbose | grep SEARCH_DIR | tr -s '; ' '\n' | grep -o '/[^"]*')"
     for p in $paths; do
         if [ -e "$p/$1" ]; then
             found=0
@@ -38,31 +38,17 @@ install_fann() {
     fi
     rm -rf /tmp/fann-2.2.0
     curl -L https://github.com/libfann/fann/archive/2.2.0.tar.gz | tar xvz -C /tmp
-    prev_d="$(pwd)"
+    local prev_d="$(pwd)"
     cd /tmp/fann-2.2.0
     cmake .
     sudo make install
     cd "$prev_d"
 }
 
-find_virtualenv_root() {
-    if [ -z "$WORKON_HOME" ]; then
-        VIRTUALENV_ROOT=${VIRTUALENV_ROOT:-"${HOME}/.virtualenvs/mycroft-light"}
-    else
-        VIRTUALENV_ROOT="$WORKON_HOME/mycroft-light"
-    fi
-}
-
-activate_virtualenv() {
-    source "$VIRTUALENV_ROOT/bin/activate"
-}
-
 create_virtualenv() {
-    if [ ! -d "$VIRTUALENV_ROOT" ]; then
-        mkdir -p $(dirname "$VIRTUALENV_ROOT")
-        python3 -m venv "$VIRTUALENV_ROOT" --without-pip
-        activate_virtualenv
-        curl https://bootstrap.pypa.io/get-pip.py | python3
+    if [ ! -d ".venv/" ]; then
+        python3 -m venv .venv/ --without-pip
+        curl https://bootstrap.pypa.io/get-pip.py | .venv/bin/python
     fi
 }
 
@@ -70,12 +56,12 @@ install_deps() {
     echo "Installing packages..."
 
     if found_exe sudo; then
-        SUDO=sudo
+        local SUDO=sudo
     fi
 
     while read line; do
-        exe=${line%%:*}
-        packages="$(echo ${line##*:} | tr -s ' ')"
+        local exe=${line%%:*}
+        local packages="$(echo ${line##*:} | tr -s ' ')"
         if found_exe $exe; then
             $SUDO $exe $packages
             break
@@ -97,10 +83,6 @@ install_deps() {
     fi
 }
 
-install_mycroft() {
-    "$VIRTUALENV_ROOT/bin/pip3" install -e . --upgrade
-}
-
 hash_dependencies() {
     md5sum requirements.txt packages.txt > .installed
 }
@@ -119,12 +101,11 @@ if file_has_changed "packages.txt"; then
     install_deps
 fi
 
-find_virtualenv_root
 create_virtualenv
-activate_virtualenv
 
 if file_has_changed "requirements.txt"; then
-    install_mycroft
+    .venv/bin/pip install -r requirements.txt
+    .venv/bin/pip install -e .
 fi
 
 hash_dependencies

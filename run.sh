@@ -11,18 +11,6 @@ check_no_root() {
     fi
 }
 
-find_virtualenv_root() {
-    if [ -z "$WORKON_HOME" ]; then
-        VIRTUALENV_ROOT=${VIRTUALENV_ROOT:-"${HOME}/.virtualenvs/mycroft-light"}
-    else
-        VIRTUALENV_ROOT="$WORKON_HOME/mycroft-light"
-    fi
-}
-
-activate_virtualenv() {
-    . "${VIRTUALENV_ROOT}/bin/activate"
-}
-
 check_dependencies() {
     if [ ! -f .installed ] || ! md5sum -c .installed > /dev/null
     then
@@ -36,7 +24,5 @@ check_dependencies() {
 set -eE  # Fail on errors
 cd "$(dirname $(readlink -f "$0"))"
 check_no_root
-find_virtualenv_root
-activate_virtualenv
 check_dependencies
-python3 -m mycroft $@
+.venv/bin/python -m mycroft $@

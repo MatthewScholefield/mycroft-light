@@ -43,9 +43,7 @@ class OptionPlugin:
             return
         try:
             self._plugin = self._class(*args, **kwargs)
-        except KeyboardInterrupt:
-            raise
-        except:
+        except Exception:
             if self.make_name(self._class) != self._default:
                 log.exception('Loading', self._class.__name__)
                 self._option = self._default
@@ -55,6 +53,7 @@ class OptionPlugin:
 
     def load_class(self, option):
         package = self._package + '.' + option + self._suffix
+        log.debug('Loading', package + '...')
         try:
             mod = import_module(package)
             cls = getattr(mod, to_camel(option + self._suffix), '')
@@ -69,7 +68,7 @@ class OptionPlugin:
                 cls._attr_name = self.make_name(cls)
                 cls._plugin_path = plugin_path + cls._attr_name
                 return cls
-        except:
+        except Exception:
             log.exception('Loading Module', package)
         return None
 

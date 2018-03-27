@@ -37,6 +37,8 @@ class GitRepo:
 
     def run_inside(self, command):
         cur_path = getcwd()
+        if command.startswith('./'):
+            command = join(self.dir, command[2:])
         try:
             chdir(self.dir)
             if isinstance(command, str):

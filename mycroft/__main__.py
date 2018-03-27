@@ -29,11 +29,6 @@ from mycroft.util import log
 from mycroft.root import Root
 
 
-def info(message):
-    print(message)
-    log.info(message)
-
-
 def main():
     rt = Root()
 
@@ -41,7 +36,7 @@ def main():
         rt.config.load_remote()
 
     rt.intent.all.compile()
-    rt.frontends.all.run(gp_daemon=True)
+    rt.interfaces.all.run(gp_daemon=True)
 
     try:
         rt.main_thread.wait()
