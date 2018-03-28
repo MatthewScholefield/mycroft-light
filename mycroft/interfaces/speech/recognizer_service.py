@@ -62,6 +62,7 @@ class RecognizerService(BasePlugin):
         self._intercept = None
         self._has_activated = False
         self.engine = WakeWordService(rt, self.on_activation)  # type: WakeWordEnginePlugin
+        self.engine.startup()
 
     def intercept(self, exception):
         self._intercept = exception
@@ -88,9 +89,9 @@ class RecognizerService(BasePlugin):
 
     def wait_for_wake_word(self):
         """Listens to the microphone and returns when it hears the wake word"""
-        self.engine.start()
         log.info('Waiting for wake word...')
         self.av_energy = self._calc_energy(self.stream.read(self.chunk_size))
+        self.engine.continue_listening()
 
         while not self._has_activated:
             self._check_intercept()
@@ -99,7 +100,7 @@ class RecognizerService(BasePlugin):
             self.engine.update(chunk)
 
         self._has_activated = False
-        self.engine.stop()
+        self.engine.pause_listening()
 
     def update_energy(self, energy):
         """Updates internal state with energy. Calcs average energy, noise level, and integral"""
@@ -143,6 +144,7 @@ class RecognizerService(BasePlugin):
         self.stream.stop_stream()
         self.stream.close()
         self.p.terminate()
+        self.engine.shutdown()
 
     def on_activation(self):
         """Called by child classes"""

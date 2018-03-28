@@ -19,7 +19,7 @@ setup(
         'mycroft.intents',
         'mycroft.interfaces',
         'mycroft.interfaces.speech',
-        'mycroft.interfaces.speech.recognizers',
+        'mycroft.interfaces.speech.wake_word_engines',
         'mycroft.interfaces.speech.stt',
         'mycroft.interfaces.tts',
         'mycroft.services',

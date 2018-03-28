@@ -69,6 +69,6 @@ class GitRepo:
             # Touch folder
             os.utime(git_folder)
             if not self.tag:
-                self.run_inside(['git', 'pull', '--ff-only'])
+                self.run_inside('git pull --ff-only')
             return True
         return False

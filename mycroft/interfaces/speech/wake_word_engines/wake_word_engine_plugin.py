@@ -15,11 +15,19 @@ class WakeWordEnginePlugin(BasePlugin):
         self.config = speech_config['wake_word_engine'].get(self._attr_name)
 
     @abstractmethod
-    def start(self):
+    def startup(self):
         pass
 
     @abstractmethod
-    def stop(self):
+    def shutdown(self):
+        pass
+
+    @abstractmethod
+    def continue_listening(self):
+        pass
+
+    @abstractmethod
+    def pause_listening(self):
         pass
 
     def update(self, audio_buffer: bytes):

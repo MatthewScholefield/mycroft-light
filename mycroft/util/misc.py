@@ -122,9 +122,10 @@ def calc_md5(fname):
     return hash_md5.hexdigest()
 
 
-def download(url, file: Union[str, io, None] = None) -> Union[bytes, None]:
+def download(url, file: Union[str, io, None] = None, debug=True) -> Union[bytes, None]:
     """Pass file as a filename, open file object, or None to return the request bytes"""
-    log.debug('Downloading:', url)
+    if debug:
+        log.debug('Downloading:', url)
     import urllib.request
     import shutil
     if isinstance(file, str):
@@ -157,7 +158,7 @@ def download_extract_tar(tar_url, folder, check_md5=False, subdir='',
     elif check_md5:
         md5_url = tar_url + '.md5'
         try:
-            remote_md5 = download(md5_url).decode('ascii').split(' ')[0]
+            remote_md5 = download(md5_url, debug=False).decode('ascii').split(' ')[0]
         except RequestException as e:
             log.warning('Failed to download md5 at url:', md5_url)
             return False

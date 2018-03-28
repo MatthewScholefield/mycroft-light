@@ -69,11 +69,17 @@ class PocketsphinxEngine(WakeWordEnginePlugin):
         self.ps.end_utt()
         return self.ps.hyp()
 
-    def start(self):
+    def startup(self):
         self.buffer = b'\0' * int(self.width * self.rate * self.config['wake_word_length'])
 
-    def stop(self):
+    def shutdown(self):
         self.buffer = b''
+
+    def pause_listening(self):
+        pass
+
+    def continue_listening(self):
+        pass
 
     def update(self, raw_audio: bytes):
         self.buffer = self.buffer[len(raw_audio):] + raw_audio

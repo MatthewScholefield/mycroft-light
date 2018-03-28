@@ -30,7 +30,6 @@ from mycroft.util.misc import download_extract_tar
 
 
 class PreciseEngine(WakeWordEnginePlugin):
-    update_freq = 24  # in hours
     program_url = (
         'https://raw.githubusercontent.com/MycroftAI/'
         'precise-data/dist/{arch}/precise-engine.tar.gz'
@@ -39,38 +38,39 @@ class PreciseEngine(WakeWordEnginePlugin):
         'https://raw.githubusercontent.com/MycroftAI/'
         'precise-data/models/{model_name}.tar.gz'
     )
-    exe_name = 'precise-engine'
 
     def __init__(self, rt, on_activation: Callable):
         super().__init__(rt, on_activation)
 
-        exe_file = which(self.exe_name)
+        exe_file = which('precise-engine')
         precise_folder = join(self.rt.paths.user_config, 'precise')
         if not exe_file:
-            def on_update():
-                self.rt.interfaces.faceplate.text('Updating listener...')
-
-            def on_complete():
-                self.rt.interfaces.faceplate.reset()
-
-            download_extract_tar(self.program_url.format(arch=platform.machine()),
-                                 precise_folder, check_md5=False, subdir='precise-engine',
-                                 on_update=on_update, on_complete=on_complete)
-
             exe_file = join(precise_folder, 'precise-engine', 'precise-engine')
-        log.debug('Precise executable location: ' + exe_file)
+            download_extract_tar(
+                self.program_url.format(arch=platform.machine()),
+                precise_folder, check_md5=False, subdir='precise-engine',
+                on_update=lambda: self.rt.interfaces.faceplate.text('Updating listener...'),
+                on_complete=lambda: self.rt.interfaces.faceplate.reset()
+            )
+        log.debug('Using precise executable: ' + exe_file)
 
         model_folder = join(precise_folder, 'models', self.wake_word)
-        download_extract_tar(self.model_url.format(model_name=self.wake_word),
-                             model_folder, check_md5=True)
+        model_file = join(model_folder, self.wake_word + '.pb')
+        model_url = self.model_url.format(model_name=self.wake_word)
+        download_extract_tar(model_url, model_folder, check_md5=True)
 
         from precise_runner import PreciseRunner, PreciseEngine
-        engine = PreciseEngine(exe_file, join(model_folder, self.wake_word + '.pb'), chunk_size=1024)
+        engine = PreciseEngine(exe_file, model_file, chunk_size=1024)
         self.runner = PreciseRunner(engine, on_activation=on_activation)
 
-    def start(self):
-        print('START HERE')
+    def startup(self):
         self.runner.start()
 
-    def stop(self):
+    def shutdown(self):
         self.runner.stop()
+
+    def continue_listening(self):
+        self.runner.play()
+
+    def pause_listening(self):
+        self.runner.pause()

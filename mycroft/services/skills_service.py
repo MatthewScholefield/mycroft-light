@@ -19,12 +19,11 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-import os
 import sys
 from importlib import import_module, reload
 from inspect import isclass
 from os import listdir
-from os.path import isdir, join, dirname, basename
+from os.path import isdir, join, dirname
 from subprocess import call
 
 import pyinotify
@@ -41,15 +40,16 @@ from mycroft.util.text import to_camel
 class EventHandler(pyinotify.ProcessEvent):
     exts = ['.py', '.intent', '.entity']
 
-    def __init__(self, skills):
+    def __init__(self, skills, folder):
         super().__init__()
         self.skills = skills
+        self.folder = folder
 
     def process_default(self, event):
-        for folder in event.path.split('/'):
-            if folder.endswith('_skill'):
-                if any(event.name.endswith(ext) for ext in self.exts):
-                    self.skills.reload(folder)
+        skill_folder = event.path.replace(self.folder, '').split('/')[1]
+        if skill_folder.endswith('_skill'):
+            if any(event.name.endswith(ext) for ext in self.exts):
+                self.skills.reload(skill_folder)
 
 
 class SkillsService(ServicePlugin, GroupPlugin):
@@ -78,7 +78,7 @@ class SkillsService(ServicePlugin, GroupPlugin):
         mask = pyinotify.IN_MODIFY | pyinotify.IN_CREATE | pyinotify.IN_DELETE | pyinotify.IN_MOVED_TO
         skills_dir = self.rt.paths.skills
 
-        handler = EventHandler(self)
+        handler = EventHandler(self, skills_dir)
         notifier = pyinotify.ThreadedNotifier(wm, handler)
         notifier.daemon = True
         wm.add_watch(skills_dir, mask, rec=True)

@@ -20,7 +20,7 @@
 # specific language governing permissions and limitations
 # under the License.
 from math import sqrt
-from typing import Any, Callable, List, Union
+from typing import Callable, List, Union
 
 from mycroft.intent_context import IntentContext
 from mycroft.intent_match import IntentMatch
@@ -54,7 +54,6 @@ class IntentService(ServicePlugin, IntentContext):
 
     @staticmethod
     def default_prehandler(p: Package):
-        p.confidence = 0.75
         return p
 
     @staticmethod
@@ -96,12 +95,12 @@ class IntentService(ServicePlugin, IntentContext):
         return self.rt.package.new()
 
     @staticmethod
-    def _run_handler(handler: Callable, p: Package) -> Any:
+    def _run_handler(handler: Callable, p: Package) -> Package:
         try:
-            return handler(p)
+            return handler(p) or p
         except TypeError:
             pass
-        return handler()
+        return handler() or p
 
     def _run_prehandlers(self, matches: List[IntentMatch]) -> List[Package]:
         """Iterate through matches, executing prehandlers"""
@@ -111,10 +110,10 @@ class IntentService(ServicePlugin, IntentContext):
                 data = self.intent_data[match.intent_id]
                 prehandler = data.get('prehandler', self.default_prehandler)
                 package = self.rt.package.new()
+                package.confidence = 0.75
                 package.match = match
                 package.skill = self.intent_to_skill[match.intent_id]
-                output = self._run_handler(prehandler, package)
-                return output or package
+                return self._run_handler(prehandler, package)
 
             package_generators.append(callback)
 
@@ -137,8 +136,7 @@ class IntentService(ServicePlugin, IntentContext):
             log.info('Selected intent', intent_id, package.confidence)
             try:
                 handler = self.intent_data[intent_id].get('handler', self.default_handler)
-                output = self._run_handler(handler, package)
-                return output or package
+                return self._run_handler(handler, package)
             except Exception:
                 log.exception(intent_id, 'callback')
         return None
