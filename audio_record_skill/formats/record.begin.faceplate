@@ -1,4 +1,0 @@
-:repeat 3 1: eyes.blink
-:repeat 3 1.2: eyes.blink
-:delay 4: mouth.listen
-eyes.color=10289152

@@ -1,3 +1,0 @@
-multi-key-dict==2.0.3
-pyowm==2.6.1
-requests==2.13.0

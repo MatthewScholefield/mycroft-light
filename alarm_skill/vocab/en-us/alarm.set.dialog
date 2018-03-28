@@ -1,4 +1,0 @@
-An alarm has been created for {weekday} at {hour}:{minute} {am_pm}.
-I've created an alarm for {weekday} at {hour}:{minute} {am_pm}.
-I've set an alarm to {label} on {weekday} at {hour}:{minute} {am_pm}.
-An alarm has been created to {label} on {weekday} at {hour}:{minute} {am_pm}.
