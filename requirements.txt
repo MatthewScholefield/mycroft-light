@@ -13,6 +13,7 @@ pyalsaaudio
 tornado
 websocket-client
 pyinotify
+typing  # For Python 3.4
 
 fann2==1.0.7
 padatious

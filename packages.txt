@@ -1,5 +1,5 @@
 
-apt-get: install -y             curl python3-dev   python3-pip portaudio19-dev swig python3-virtualenv       libyaml-dev   libpulse-dev          libfann-dev   libffi-dev   libssl-dev
+apt-get: install -y             curl python3-dev   python3-pip portaudio19-dev swig python3-virtualenv       libyaml-dev   libpulse-dev          libfann-dev   libffi-dev   libssl-dev       libxml2-dev libxslt1-dev
 dnf: install -y                 curl python3-devel python3-pip portaudio-devel swig python3-virtualenv       libyaml-devel pulseaudio-libs-devel fann-devel    libffi-devel openssl-devel
 pacman: -S --needed --noconfirm curl python        python-pip  portaudio       swig python-virtualenvwrapper libyaml       libpulse                            libffi       openssl
 zypper: -n install              curl python3-devel python3-pip portaudio-devel swig python3-virtualenv       libyaml-devel libpulse-devel        libfann-devel libffi-devel libopenssl-devel

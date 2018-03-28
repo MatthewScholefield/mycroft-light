@@ -60,7 +60,7 @@ class ScheduledTask:
         self.kwargs = kwargs or {}
         self.is_running = True
 
-        self.timer: Timer = None
+        self.timer = None  # type: Timer
 
     def start(self):
         def wrapper():

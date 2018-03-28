@@ -25,4 +25,4 @@ set -eE  # Fail on errors
 cd "$(dirname $(readlink -f "$0"))"
 check_no_root
 check_dependencies
-.venv/bin/python -m mycroft $@
+.venv/bin/mycroft $@
