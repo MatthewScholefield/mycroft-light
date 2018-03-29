@@ -32,7 +32,7 @@ class GitRepo:
         self.dir = directory
         self.url = url
         self.branch = branch
-        self.update_freq = update_freq
+        self.update_freq = update_freq  # Hours
         self.tag = tag
 
     def run_inside(self, command):
