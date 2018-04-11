@@ -1,0 +1,25 @@
+.sectionTitle {
+  width: 100%
+  font-size: 21px
+  position: relative
+  background: #FFF
+  z-index: 2
+  margin: 44px 0
+  span {
+    position: relative
+    z-index: 2
+    background: #FFF
+    padding: 0 15px 0 0
+    font-weight: 800
+  }
+  &:after {
+    width: 100%
+    display: table
+    content: " "
+    border-top: 1px solid #000
+    top: 50%
+    position: absolute
+    left: 0
+    z-index: 1
+  }
+}

@@ -1,0 +1,53 @@
+.profile-picture {
+  display: table
+  width: 275px
+  position: relative
+  span {
+    text-transform: uppercase
+    font-size: 14px
+    display: table
+    width: 100%
+    color: #4a4a4a
+    font-weight: 600
+    margin-bottom: 16px
+  }
+  button {
+    position: absolute
+    bottom: 0
+    left: 0
+    border: none
+    background: transparent
+    color: #fff
+    text-shadow: 0 0 5px #000
+    width: 140px
+    height: 30px
+  }
+  img {
+    width: 140px
+    height: 120px
+    background-position: 2px 2px
+    background-repeat: no-repeat
+    background-size: 134px
+  }
+  a {
+    display: none
+    position: absolute
+    top: 50px
+    width: 140px
+    text-align: center
+    color: #22A7F0
+    font-weight: 700
+    font-size: 12px
+    &:hover {
+      text-decoration: none
+    }
+  }
+  &.no-picture {
+    a {
+      display: block
+    }
+    button {
+      display: none
+    }
+  }
+}

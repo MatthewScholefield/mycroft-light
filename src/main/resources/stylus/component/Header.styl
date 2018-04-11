@@ -1,0 +1,171 @@
+@import "../Grid.styl"
+
+.header {
+  width: 100%
+  display: table
+  background: #2C3E50
+  z-index: 100
+  top: 0
+  position: fixed
+
+  .header-brand {
+    background-image: embedurl("../../image/brand.png")
+    margin-left: 15px
+    width: 160px
+    height: 60px
+    background-size: contain
+    background-repeat: no-repeat
+    background-position: center
+    float: left
+    z-index: 2
+    position: relative
+    &.active, &:hover {
+      background-image: embedurl("../../image/brand-active.png")
+    }
+  }
+
+  .header-menu {
+    width: 100%
+    height: 60px
+    position: absolute
+    z-index: 1
+    .header-menu-items {
+      display: table
+      margin: 0 auto
+      .header-menu-item {
+        display: inline-block
+
+        .header-menu-link {
+          padding: 15px 30px
+          display: table
+          text-decoration: none
+          color: #FFF
+          font-size: 21px
+          font-weight: 600
+          &:hover {
+            color: #498cdc
+          }
+          &.active {
+            color: #498cdc
+          }
+          i {
+            font-size: 1.2em;
+            float: left;
+            margin: 2px 12px 0 0;
+          }
+          span {
+            float: left;
+            margin-top: 1px;
+          }
+        }
+
+      }
+    }
+  }
+
+  .header-right {
+    float: right
+    display: table
+    z-index: 2
+    position: relative
+    .header-user {
+      padding: 10px
+      cursor: pointer
+      display: table
+      float: right
+      box-sizing: border-box
+      text-decoration: none
+      span {
+        color: #f3ebd6
+        font-size: 22px
+        font-weight: 600
+        float: left
+        height: 40px
+        max-width: 340px
+        text-overflow: ellipsis
+        display: block
+        overflow: hidden
+        position: relative
+        span {
+          top: 7px;
+        }
+        i {
+          color: white
+          position: relative
+          top: 7px
+          font-size: 30px
+          }
+      }
+    }
+    .Dropdown-menu {
+    overflow-y: hidden !important
+    }
+  }
+}
+
+@media screen and (min-width: $xs) and (max-width: 840px) {
+  .header {
+    .header-brand {
+      width: 50px
+      background-position: left
+      background-size: 160px
+    }
+    .header-menu {
+      display: table
+    }
+    .header-right {
+      width: auto
+      span.div.span {
+        display: none !important
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 980px) {
+  .header {
+    .header-brand {
+      width: 48px
+      background-position: left
+      background-size: 160px
+    }
+    .header-menu {
+      display: table
+      .header-menu-item {
+        a {
+          width: 60px
+          text-align: center
+          padding: 10px 5px !important
+          .header-menu-item-title {
+            float: left !important;
+            margin-top: 5px !important;
+            margin-right: 4px !important;
+          }
+          i {
+            display: none
+          }
+        }
+      }
+    }
+    .header-right {
+      width: auto
+      .header-user {
+        span {
+          span {
+            display: none !important
+          }
+        }
+      }
+      span.div.span {
+        display: none !important
+      }
+    }
+  }
+  .tagging-icon {
+    display: none !important;
+  }
+  .tagging-item {
+    position: relative !important;
+    top: 5px !important;
+  }
+}

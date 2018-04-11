@@ -1,0 +1,157 @@
+@import "../Grid.styl"
+
+.skill {
+  margin-top: 30px
+  .list {
+    width: 100%
+    display: table
+    margin-bottom: 50px
+    .title {
+      i {
+        font-size: 36px
+        color: inherit
+      }
+      span {
+        font-size: 30px
+        font-weight: 600
+        color: inherit
+        position: relative
+        top: -9px;
+        margin-left: 9px;
+      }
+    }
+    .items {
+      width: 100%
+      display: table
+      .item {
+        width: 100%
+        display: table
+        border-bottom: 1px solid #DDD
+        padding: 10px
+        box-sizing: border-box
+        &:first-child {
+          border-top: 1px solid #DDD
+        }
+        .name {
+          width: 150px
+          display: table
+          float: left
+          font-size: 16px
+          font-weight: 600
+          color: #4a4a4a
+        }
+        .message {
+          width: calc(100% - 186px)
+          display: table
+          float: left
+          font-size: 16px
+          color: #4a4a4a
+        }
+        .switch {
+          width: 36px
+          display: table
+          float: left
+          margin-top: 4px
+        }
+      }
+    }
+  }
+  .delete {
+    float: right
+    background: none
+    color: #777
+    transition: 300ms
+    border: none
+    margin-top: -50px
+    &:hover {
+      color: #444
+    }
+  }
+  .delete-error {
+    float: right
+    background: none
+    color: #777
+    transition: 300ms
+    border: none
+    margin-top: -54px
+    &:hover {
+      color: #444
+    }
+  }
+  .skill-item {
+    .skill-title {
+      display: table;
+      box-sizing: border-box;
+      padding: 12px 15px;
+      width: 100%;
+      background: #f1f1f1;
+      font-weight: 700;
+    }
+    .skill-content {
+      padding: 10px;
+      border: 1px solid #f1f1f1;
+      border-top: none;
+      margin-bottom: 10px;
+      > div {
+        > div {
+          > label {
+            padding-bottom: 10px;
+            display: table;
+          }
+        }
+      }
+    }
+  }
+
+  .oauth {
+    background: #498cdc;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-weight: bold;
+    color: white;
+    font-family: monospace;
+  }
+
+  .sectionTitle {
+    font-size: 18px;
+    margin: 0 0 10px 0;
+  }
+
+  .checkbox {
+    width: 30px
+  }
+
+  select {
+    background: #FFF;
+    border-radius: 5px;
+    height: 40px;
+  }
+
+  label {
+    display: table;
+    width: 100%;
+  }
+
+  .skill-list {
+    display: table;
+    margin: 0 auto 20px auto;
+    > a {
+      display: table;
+      margin: 0 auto 10px auto;
+    }
+    span {
+      text-align: center;
+      width: 100%;
+      float: left;
+      margin-bottom: 10px;
+    }
+  }
+
+}
+
+@media screen and (max-width: $xs) {
+  .skill {
+    margin-top: 40px
+  }
+}

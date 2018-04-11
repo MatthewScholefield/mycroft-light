@@ -1,0 +1,42 @@
+.panel {
+  width: 316px
+  box-sizing: border-box
+  border-radius: 14px
+  margin: 0 auto
+  display: table
+  box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.30)
+  background: #ffffff
+  .title {
+    width: 100%
+    box-sizing: border-box
+    padding: 20px
+    display: table
+    font-size: 23px
+    text-align: center
+    background: #2C3E50
+    font-weight: 600
+    color: #FFF
+    border-radius: 14px 14px 0 0
+    text-transform: uppercase
+    &.success {
+      background: #b8e986
+      color: #2C3E50
+    }
+  }
+  .body {
+    min-height: 400px
+    box-sizing: border-box
+    .BackButton {
+      padding: 0 15px
+      box-sizing: border-box
+    }
+  }
+}
+
+@media screen and (max-width: $xs) {
+  .panel {
+    width: 100%
+    max-width: 316px
+  }
+}
+

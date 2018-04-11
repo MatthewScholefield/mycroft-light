@@ -1,0 +1,62 @@
+.home {
+  .support, .subscribed {
+    font-size: 36px
+    font-weight: 900
+    color: #22A7F0
+    display: table
+    width: 100%
+    padding: 10px 0 30px 0
+  }
+  .subscribed {
+    width: 400px
+  }
+  .subscribed-text, .support-text {
+    width: 100%
+    display: block
+    font-size: 16px
+    color: #545454
+    line-height: 1.2
+    span span {
+      float: left
+      line-height: 0.9
+      text-transform: uppercase
+      background: #22A7F0
+      border-radius: 1px
+      font-size: 20px !important
+      padding: 8px
+      font-weight: bold
+      color: #FFF
+      margin: 3px 3px 0 0 !important
+      &.smaller {
+        margin: -4px 3px 0 0
+        font-size: 48px
+      }
+    }
+  }
+  .mycroft-img {
+    display: table
+    margin: 30px auto
+    max-width: 620px
+  }
+  .support-subimg {
+    width: 100%
+    display: table
+    font-size: 16px
+    color: #545454
+    line-height: 1.2
+  }
+  .account-types {
+    margin: 40px 0
+  }
+}
+
+@media screen and (max-width: 799px) {
+  .home {
+    .mycroft-img {
+      width: 100%
+    }
+    .subscribed {
+      width: 100%
+    }
+  }
+}

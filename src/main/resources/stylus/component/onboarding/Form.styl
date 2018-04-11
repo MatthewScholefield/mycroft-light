@@ -1,0 +1,151 @@
+@import "../../Grid.styl"
+
+.onboarding-form {
+  section {
+    display: table
+    padding: 20px
+    height: 150px
+    box-sizing: border-box
+    width: 100%
+    &.disabled {
+      opacity: 0.3
+      &:before {
+        content: " "
+        position: absolute
+        width: 100%
+        height: 150px
+        cursor: pointer
+      }
+    }
+    h2 {
+      font-size: 36px
+      color: #4a4a4a
+      font-weight: bold
+      margin: 0
+      &.blue {
+        color: #22A7F0
+      }
+      img {
+        height: 36px
+        position: relative
+        top: -3px
+      }
+    }
+    small {
+      font-size: 16px
+      color: #4a4a4a
+      text-align: left
+      margin-top: 6px
+      display: table
+    }
+    input {
+      background-color: white
+      background-image: none
+      margin-top: 16px
+      border: 1px solid #CFCFCF
+      border-radius: 7px
+      width: 418px
+      height: 58px
+      font-size: 36px
+      color: #4a4a4a
+      padding: 0 10px
+      &:focus, &:hover {
+        border-color: #555
+        box-shadow: none
+      }
+    }
+    > .button {
+      margin-top: 0
+      border: 1px solid #22A7F0
+      border-radius: 7px
+      width: 230px
+      height: 57px
+      font-size: 22px
+      color: #FFF
+      i {
+        position: relative
+        top: 4px
+        left: 5px
+      }
+    }
+    .choose-file {
+      margin-top: 16px
+    }
+    .ButtonGroup {
+      margin-top: 6px
+      button {
+        min-width: 100px
+        height: 58px
+        font-size: 25px
+      }
+    }
+    .list {
+      display: table
+      width: 100%
+      font-weight: 600
+      font-size: 16px
+      color: #4a4a4a
+      margin-top: 36px
+      text-align: left
+      span {
+        float: left
+      }
+      ul {
+        float: left
+        margin: 0
+        padding: 0 0 0 47px
+        list-style: none
+        li {
+          &:nth-child(1) {
+            color: #f4c700
+          }
+          &:nth-child(2) {
+            color: #8a83e0
+          }
+          &:nth-child(3) {
+            color: #ff6666
+          }
+          &:nth-child(4) {
+            color: #2C3E50
+          }
+          &:nth-child(5) {
+            color: #f57423
+          }
+          &:nth-child(6) {
+            color: #7d7d7d
+          }
+          &:nth-child(7) {
+            color: #67bf00
+          }
+        }
+      }
+    }
+  }
+  &.thanks {
+    section {
+      a {
+        margin-top: 62px
+        border: 1px solid #22A7F0
+        border-radius: 7px
+        width: 190px
+        height: 57px
+        font-size: 22px
+        padding: 12px
+        text-align: center
+        i {
+          top: 5px
+          left: 3px
+          position: relative
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: $xs) {
+  .onboarding-form {
+    input, .geosuggest, .geosuggest__input-wrapper {
+      width: inherit !important
+    }
+  }
+}

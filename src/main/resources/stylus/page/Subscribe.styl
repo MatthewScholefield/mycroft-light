@@ -1,0 +1,90 @@
+.home-subscribe {
+  .support {
+    text-align: center
+    padding: 0
+    margin: 0
+  }
+  .support-message {
+    width: 100%
+    display: table
+    font-family: "Roboto"
+    font-size: 18px
+    font-weight: normal
+    text-align: center
+    text-transform: uppercase
+    color: #324A6B
+    margin-bottom: 50px
+  }
+  .subscribe-buttons {
+    display: table
+    margin: 0 auto 50px auto
+    .subscription {
+      width: 185px
+      padding: 30px 0
+      border: none
+      float: left
+      color: #FFF
+      font-size: 15px
+      background: #22A7F0
+      font-weight: normal !important
+      strong {
+        margin-right: 3px
+      }
+      &:last-child {
+        background: #324A6B
+        margin-left: 50px
+      }
+    }
+  }
+
+
+  // TEST A
+  .test-a-subscription {
+    background: linear-gradient(#6aa3f2, #5377e7)
+    border: none
+    box-shadow: 0 1px 2px #BBB
+    margin: 0 auto
+    diplay: table
+    text-transform: none !important
+    span {
+      padding: 12px
+      display: table
+      color: #FFF
+      strong {
+        display: table
+        width: 100%
+      }
+      small {
+        display: table
+        width: 100%
+        font-weight: normal !important
+        margin-top: 5px
+      }
+    }
+    &:hover {
+      box-shadow: 0 0 40px #6AA3F2
+    }
+  }
+}
+
+@media screen and (max-width: 799px) {
+  .home-subscribe {
+    .subscribe-buttons {
+      width: 185px
+      .subscription {
+        &:last-child {
+          margin-left: 0
+        }
+      }
+    }
+  }
+}
+.iframe-fixed {
+  position: fixed;
+  width: 100%;
+  height: calc(100vh - 40px);
+  top: 60px;
+  left: 0;
+  -webkit-overflow-scrolling: touch;
+  overflow-y: scroll;
+}

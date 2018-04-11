@@ -1,0 +1,46 @@
+.button-group-field {
+  max-width: 360px !important
+  label {
+    margin-bottom: 0
+  }
+  .button-group {
+    button {
+      float: left
+      border: none
+      border-radius: 50px
+      padding: 8px 16px
+      margin: 6px 8px 0 0
+      text-align: center
+      cursor: pointer
+      background: #E8E8E8
+      color: #737373
+      outline: none
+      min-width: 114px
+      font-size: 16px
+      i {
+        font-size: 20px
+      }
+      &:focus {
+        background: darken(#e8e8e8, 10%);
+      }
+      &.active {
+        color: #FFF
+        background: #22A7F0
+        &:focus {
+          background: darken(#22A7F0, 10%);
+        }
+      }
+    }
+    img {
+      max-height: 20px
+    }
+    span.align {
+      margin-left: 5px
+    }
+    span.align.left {
+      float: left
+      margin-right: 5px
+      margin-left: 0
+    }
+  }
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mycroft Home</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <link rel="shortcut icon" type="image/ico" href="/src/main/resources/image/brandIcon.ico"/>
+  <link rel="stylesheet" type="text/css"
+        href="node_modules/font-awesome/css/font-awesome.min.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900" rel="stylesheet">
+  <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.css"/>
+
+  <script type="text/javascript">
+    var data = decodeURIComponent(window.location.search.replace("?data=", "").replace("+", "%20"));
+    if (data) {
+      localStorage.setItem("SocialAuthData", data);
+      window.close();
+    }
+    window.addEventListener("load", function() {
+      if (window.location.hash && window.location.hash.split("?")[0] === "#/_=_") {
+        window.location.href = window.location.href.split("#")[0];
+      }
+    });
+    window.addEventListener("hashchange", function() {
+      if (window.location.hash && window.location.hash.split("?")[0] === "#/_=_") {
+        window.location.href = window.location.href.split("#")[0];
+      }
+    });
+  </script>
+  <script>
+    (function(h,o,t,j,a,r){
+      h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+      h._hjSettings={hjid:"HOTJAR_ID",hjsv:5};
+      a=o.getElementsByTagName('head')[0];
+      r=o.createElement('script');r.async=1;
+      r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+      a.appendChild(r);
+    })(window,document,'//static.hotjar.com/c/hotjar-','.js?sv=');
+  </script>
+  <script type="text/javascript">
+    !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
+      analytics.load("SEGMENT_KEY");
+      analytics.page();
+    }}();
+  </script>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://maps.googleapis.com/maps/api/js?key=GOOGLE_API&libraries=places"></script>
+<script type="text/javascript" src="node_modules/jimp/browser/lib/jimp.min.js"></script>
+<script type="text/javascript" src="build/bundle.js?BUILD"></script>
+</body>
+</html>

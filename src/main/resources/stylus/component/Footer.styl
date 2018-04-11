@@ -1,0 +1,157 @@
+.footer {
+  display: table
+  width: 100%
+  height: 110px
+  padding: 10px 10px 20px 10px
+  background: #f7f7f7
+  .presentationLink {
+    display: table
+    img {
+      max-height: 65px
+      float: left
+      max-width: 100%
+    }
+  }
+  .item {
+    float: left
+    padding: 5px
+    color: #9b9b9b
+    > span {
+      font-size: 12px
+      font-weight: 600
+      display: table
+    }
+    > div {
+      margin-top: 5px
+      display: table
+      a {
+        display: table
+        margin: 10px 30px 10px 0
+        float: left
+        text-decoration: none
+        &:hover {
+          text-decoration: none
+        }
+        i {
+          color: #9b9b9b
+          font-size: 24px
+        }
+        &:last-child {
+          margin-right: 0
+        }
+      }
+    }
+    > ul {
+      margin-top: 10px
+      padding: 0
+      list-style: none
+      color: #a3a3a3
+      display: table
+      li {
+        width: 170px
+        line-height: 1.1
+        color: #a3a3a3
+        font-size: 10px
+        a {
+          color: #a3a3a3
+          font-size: 14px
+          text-decoration: none
+          width: 100%
+          overflow: hidden
+          word-wrap: break-word
+          top: 1px
+          &:hover {
+            text-decoration: none
+            color: #22A7F0
+          }
+        }
+      }
+    }
+    .forum {
+      color: #9b9b9b
+      font-size: 12px
+      font-weight: 900
+      display: table
+      width: 30px
+      line-height: 1
+      span {
+        display: table
+      }
+      &:hover {
+        text-decoration: none
+        color: #22A7F0
+      }
+    }
+    .twitter:hover i {
+      color: #55ACEE;
+    }
+    .facebook:hover i {
+      color: #3B5998;
+    }
+    .instagram:hover i {
+      color: #262626;
+    }
+    .youtube:hover i {
+      color: #E52D27;
+    }
+    .github:hover i {
+      color: #333333;
+    }
+    .slack:hover i {
+      color: #563A59;
+    }
+  }
+  .copyright {
+    color: #a9a9a9
+    float: right
+    font-size: 12px
+    margin: 10px 20px 0 0
+    div {
+      float: right
+      font-size: 32px
+      i {
+        margin-right: 10px
+        &:last-child {
+          margin-right: 0
+        }
+      }
+    }
+    span {
+      display: table
+      width: 100%
+      text-align: right
+      font-weight: 100
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .footer {
+    .presentationLink {
+      display: none
+    }
+    .item {
+      > span, > div, > ul {
+        margin: 10px auto 0 auto
+      }
+    }
+    .copyright {
+      display: table
+      margin: 30px auto 20px auto
+      float: none
+      div {
+        display: table
+        margin: 0 auto
+        float: initial
+      }
+      span {
+        display: block
+        float: left
+        margin-left: 5px
+        width: auto
+        max-width: 200px;
+      }
+    }
+  }
+}
+

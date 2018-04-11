@@ -1,0 +1,48 @@
+@import "../Grid.styl"
+
+.not-found {
+  .content {
+    padding: 50px
+    box-sizing: border-box
+    background: embedurl('../../image/404.jpg')
+    background-position: center
+    background-repeat: no-repeat
+    h1 {
+      color: #FFF
+      font-weight: 700
+      text-shadow: 0 0 5px #000
+    }
+    h3 {
+      color: #FFF
+      text-shadow: 0 0 5px #000
+      margin-bottom: 30px
+      line-height: 1.4
+      opacity: 0.9
+    }
+    .button {
+      background: none
+      color: #FFF
+      border: 1px solid #FFF
+      font-weight: normal
+      opacity: 0.9
+    }
+  }
+}
+
+@media screen and (max-width $xs) {
+  .not-found {
+    .content {
+      min-height: calc(100vh - 401px)
+      background-size: cover
+    }
+  }
+}
+
+@media screen and (min-width $lg) {
+  .not-found {
+    .content {
+      min-height: calc(100vh - 120px)
+      background-size: 100% 100%
+    }
+  }
+}

@@ -1,0 +1,66 @@
+@import "../../Grid.styl"
+
+.account-types {
+  width: 100%
+  display: table
+  .button {
+    width: 30%
+    margin: 0 1.5%
+    border: none
+    background: #e8e8e8
+    border-radius: 5px !important
+    padding: 15px 0 !important
+    cursor: pointer
+    float: left
+    transition: 300ms
+    height: 75px
+    strong {
+      display: table
+      float: left
+      width: 100%
+      color: #4a4a4a
+      text-align: center
+      font-weight: 600
+      font-size: 15px
+    }
+    small {
+      display: table
+      float: left
+      margin-top: 5px
+      width: 100%
+      color: #4c4c4c
+      text-align: center
+      font-size: 90%
+      -webkit-transition: 300ms
+      font-weight: 100
+      transition: 300ms
+      text-transform: none
+    }
+    &:focus {
+      background: darken(#e8e8e8, 10%);
+    }
+    &.active, &:hover {
+      background: #22A7F0 !important
+      color: #FFF
+      transition: 300ms
+      small, strong {
+        transition: 300ms
+        color: #FFF
+      }
+      &:focus {
+        background: darken(#22A7F0, 10%);
+      }
+    }
+  }
+}
+
+@media screen and (max-width: $xs) {
+  .account-types {
+    a {
+      width: 100% !important
+      max-width: 200px !important
+      float: none !important
+      margin: 0 auto 20px auto !important
+    }
+  }
+}

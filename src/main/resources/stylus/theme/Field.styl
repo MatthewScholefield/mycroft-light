@@ -1,0 +1,72 @@
+.FormField {
+  width: 100%
+  display: table
+  margin-bottom: 22px
+  max-width: 260px
+  .FormLabel {
+    width: 100%
+  }
+  input, .react-date-field {
+    max-width: 260px !important
+  }
+  .button {
+    float: left
+    margin: 0 8px 8px 0
+  }
+  small {
+    color: $smallInfo
+    width: 100%
+    display: table
+    margin-top: 8px
+  }
+}
+
+input {
+  border: 1px solid $grayBorder
+  border-radius: 5px
+  background-color: $white
+  background-image: none
+  max-width: 260px
+  color: $black
+  display: block
+  line-height: 1.2
+  height: 38px
+  padding: 0 8px
+  width: 100%
+  box-shadow: none
+  font-size: 16px
+  &:focus, &:hover {
+    border-color: $grayBorder
+    box-shadow: none
+  }
+  &.error {
+    border-color: #ff6666 !important
+    position: relative
+    z-index: 2
+  }
+}
+
+.geosuggest__input {
+  border: 1px solid $grayBorder
+  box-shadow: none
+  border-radius: 5px
+  height: 38px
+  font-size: 16px
+  background-color: $white
+  padding: 0 8px
+  font-weight: 400
+  font-style: italic
+}
+
+.react-date-field {
+  width: 100%
+  border-radius: 5px
+  border-color: $grayBorder
+  background-color: $white
+  input {
+    border-radius: 5px
+    height: 38px
+    font-size: 16px
+    background-color: $white
+  }
+}

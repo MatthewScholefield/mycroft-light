@@ -1,0 +1,183 @@
+.payment {
+  .msg {
+    font-size: 16px
+    margin: 35px 0
+    display: table
+  }
+  .panel {
+    label {
+      color: #4a4a4a
+      font-weight: 600
+    }
+    input {
+      border-color: #d0d0d0 !important
+      &.error {
+        border-color: #FF6666 !important
+      }
+    }
+    .body {
+      > div {
+        display: table
+        width: 100%
+      }
+      .card-fields {
+        padding: 25px 30px 30px 30px
+        box-sizing: border-box
+        .FormField {
+          margin-bottom: 5px
+        }
+        .prices {
+          margin-bottom: 20px
+        }
+        > .error {
+          font-size: 14px
+          color: #ff6666
+          text-align: center
+          height: 55px
+        }
+        .pay-button {
+          background: #22A7F0
+          border: none
+          color: #FFF
+          box-sizing: border-box
+          padding: 6px 15px
+          font-size: 14px
+          font-weight: 500
+          height: 38px
+          border-radius: 5px
+          margin: 0 auto 0 auto
+          display: table
+          i {
+            margin-right: 4px
+          }
+          span {
+            top: 4px
+          }
+          .Spinner {
+              margin-top: -9px
+          }
+        }
+        .exp-cvc {
+          display: table
+          > div {
+            width: 50%
+            float: left
+          }
+          input {
+            z-index: 2
+            position: relative
+            &.error {
+              border-color: #FF6666 !important
+              z-index: 3
+            }
+          }
+          .FormField {
+            margin-bottom: 0
+            &.first {
+              input {
+                border-top-right-radius: 0
+                border-bottom-right-radius: 0
+              }
+            }
+            &.last {
+              input {
+                border-top-left-radius: 0
+                border-bottom-left-radius: 0
+                margin-left: -1px
+              }
+            }
+            i {
+              position: absolute
+              top: 36px
+              right: 10px
+              z-index: 3
+              color: #cfcfcf
+              font-size: 16px
+              cursor: pointer
+            }
+          }
+          > small {
+            width: 100%
+            &.right {
+              text-align: right
+            }
+          }
+        }
+      }
+      .security {
+        span {
+          font-size: 14px
+          color: #4a4a4a
+          text-align: center
+          display: table
+          width: 213px
+          margin: 24px auto 14px auto
+        }
+        img {
+          display: table
+          border-radius: 6px
+          width: 140px
+          height: 89px
+          margin: 0 auto
+        }
+      }
+      .success {
+        strong {
+          width: 100%
+          display: table
+          font-size: 20px
+          color: #4a4a4a
+          text-align: center
+          margin: 20px 0 36px 0
+        }
+        span {
+          width: 100%
+          display: table
+          font-size: 16px
+          color: #4a4a4a
+          padding: 0 43px
+          text-align: left
+          margin-top: 32px
+        }
+        img {
+          margin: 0 auto
+          display: table
+        }
+      }
+      .button-group {
+        width: 100%
+        button {
+          font-size: 14px
+          font-weight: normal
+          width: calc(50% - 10px)
+          padding: 8px
+          text-transform: lowercase
+          &:first-child {
+            margin: 0 20px 0 0
+          }
+          &:last-child {
+            margin: 0
+          }
+        }
+      }
+    }
+    input {
+      background-position: right 5px center
+      background-size: 32px
+      background-repeat: no-repeat
+      background: #FFF
+      &.MASTER_CARD {
+        background-image: embedurl("../../image/credit-card/master-card.png")
+      }
+      &.VISA {
+        background-image: embedurl("../../image/credit-card/visa.png")
+      }
+      &.AMERICAN_EXPRESS {
+        background-image: embedurl("../../image/credit-card/american-express.png")
+      }
+      &.DISCOVERY {
+        background-image: embedurl("../../image/credit-card/discovery.png")
+      }
+    }
+  }
+}

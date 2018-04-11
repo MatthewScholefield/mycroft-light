@@ -1,0 +1,62 @@
+.social-button {
+  cursor: pointer
+  display: table
+  float: left
+  margin-right: 5px
+  width: 100%
+  max-width: 220px
+  padding: 5px 15px
+  box-sizing: border-box
+  border: 2px solid #000
+  border-radius: 5px
+  text-align: center
+  margin-bottom: 10px
+  &[disabled] {
+    -webkit-filter: grayscale(90%);
+    filter: grayscale(90%);
+  }
+  i {
+    float: left
+    font-size: 25px
+  }
+  .status {
+    font-weight: 600
+    font-size: 15px
+    top: 2px
+    position: relative
+  }
+  &:last-child {
+    margin-right: 0
+    margin-bottom: 5px
+  }
+  &.active {
+    i {
+      color: #FFF
+      border: none
+    }
+  }
+  &.google {
+    color: #DB3236
+    border-color: #DB3236
+    &.active {
+      color: #FFF
+      background: #DB3236
+    }
+  }
+  &.facebook {
+    color: #3B5998
+    border-color: #3B5998
+    &.active {
+      color: #FFF
+      background: #3B5998
+    }
+  }
+  &.github {
+    color: #333
+    border-color: #333
+    &.active {
+      color: #FFF
+      background: #333
+    }
+  }
+}

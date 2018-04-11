@@ -1,0 +1,162 @@
+@import "../Grid.styl"
+
+.Settings {
+  .settingsDescription {
+    margin: 0 0 15px 0
+    float: left
+  }
+  .AdvancedSettingsButton {
+    margin: 30px auto 0 auto
+  }
+  p {
+    text-align: justify
+    width: 100%
+    display: table
+  }
+  #optin-section {
+    margin-top: 10px
+    input {
+      width: 30px
+      height: 30px
+      float: left
+    }
+    span {
+      margin-top: 5px
+      float: left
+      margin-left: 5px
+    }
+  }
+  .setting-voice-store {
+    font-weight: 600
+    font-size: 15px
+  }
+  .setting-voice-options {
+    color: #888
+    margin-bottom: 15px
+    font-size: 13px
+    display: table
+  }
+  .setting-voice-label {
+    display: table
+    width: 100%
+    max-width: 100%
+  }
+  .setting-voice-group {
+    display: table
+    width: 100%
+    .setting-voice-button {
+      float: left
+      display: table
+      width: 300px;
+      margin-right: 10px
+      border-radius: 20px
+      background: #e8e8e8
+      height: 40px
+      &:last-child {
+        margin-right: 0
+        margin-left: 10px
+      }
+      &:first-child {
+        margin-left: 0
+      }
+      span {
+        float: left
+        padding: 10px 25px
+        width: calc(100% - 40px)
+        color: #737373
+        box-sizing: border-box
+        text-align: center
+        border-radius: 20px 0 0 20px
+        display: table
+        cursor: pointer
+      }
+      button {
+        float: right
+        border: none
+        border-radius: 50%
+        background: #fff
+        width: 34px
+        height: 34px
+        margin: 3px
+        i {
+          color: #737373
+          font-size: 20px
+          margin-left: 2px
+          margin-top: 1px
+        }
+      }
+      &.active {
+        background: #22A7F0
+        span {
+          color: #fff
+        }
+        i {
+          color: #22A7F0
+        }
+      }
+    }
+  }
+  .setting-voice-premium {
+    width: 100%
+    display: table
+    height: 150px
+    background: #c2e691
+    box-sizing: border-box
+    padding: 10px
+    > span {
+      display: table
+      max-width: 370px
+      text-align: center
+      font-weight: bold
+      font-size: 15px
+      color: #555
+      margin: 10px auto
+    }
+    a {
+      width: 400px
+      border-radius: 50px
+      margin: 0 auto
+      border: none
+      h1 {
+        font-size: 22px
+        color: #737373
+        font-weight: bold
+        margin-bottom: 0
+      }
+      small {
+        font-weight: normal
+        color: #777
+      }
+    }
+    .setting-voice-premium-close {
+      float: right
+      background: none
+      border: none
+      font-size: 16px
+      transition: 200ms
+      &:hover {
+        opacity: 0.8
+      }
+    }
+  }
+}
+
+@media screen and (max-width: $xs) {
+  .Settings {
+    .setting-voice-button {
+      margin-left: 0 !important
+      margin-right: 0 !important
+      width: 270px !important
+      margin-bottom: 20px
+      &:last-child {
+        margin-left: 0 !important
+        margin-right: 0 !important
+      }
+    }
+    .setting-voice-premium {
+      a {
+        width: auto
+      }
+    }
+    }
+  }

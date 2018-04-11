@@ -1,0 +1,94 @@
+.AdvancedSettings {
+  .sttCredentials {
+    span {
+      color: #AAA
+      font-size: 10px
+      strong {
+        color: #777
+        text-transform: lowercase
+        padding-right: 3px
+      }
+    }
+    div {
+      .FormField {
+        margin-bottom: 0
+        input {
+          border-bottom: 0
+          border-top-left-radius: 5px
+          border-top-right-radius: 5px
+          border-radius: 0
+          border-color: #cfcfcf
+          &:focus, &:hover {
+            border-color: #cfcfcf
+            box-shadow: none
+          }
+        }
+      }
+      .field-password {
+        border-bottom-left-radius: 5px
+        border-bottom-right-radius: 5px
+        border-radius: 0
+        input {
+          border-radius: 5px
+        }
+      }
+    }
+  }
+  .voice-box {
+    select {
+      height: 35px
+      background: #FFF
+      min-width: 130px
+      padding: 5px
+      box-sizing: border-box
+      border-radius: 10px 0 0 10px
+      border: 1px solid #22A7F0
+    }
+    button {
+      width: 40px
+      height: 35px
+      background: #22A7F0
+      border: #FFF
+      color: #FFF
+      border-radius: 0 10px 10px 0;
+    }
+  }
+  .stt, .tts {
+    max-width: 100%
+  }
+
+  .setting-restore {
+    .FormField {
+      margin-bottom: 0 !important
+    }
+    small {
+      display: table
+      width: 250px
+      color: #AAA
+    }
+    .divider {
+      display: table
+      margin-bottom: 10px
+    }
+    .WakeWordSelect {
+      background: #FFF;
+      border: 1px solid #DDD;
+      border-radius: 5px;
+      padding: 5px;
+      height: 40px;
+    }
+  }
+  input[disabled] {
+    background: #f7f7f7;
+    color: #9e9b9b;
+  }
+  .developer-options {
+    width: 100%;
+    small {
+      font-size: 12px
+      width: 100%;
+      display: table;
+      margin-bottom: 3px
+    }
+  }
+}
