@@ -6,6 +6,7 @@ pyaml
 Twiggy
 requests
 # pocketsphinx
+precise-runner>=0.2.0
 SpeechRecognition
 PyAudio
 pyserial
