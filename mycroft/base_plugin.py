@@ -44,4 +44,4 @@ class BasePlugin(metaclass=ABCMeta):
             self.config = self.config.get(parent, {})
 
         if self._package_struct:
-            self.rt.package.add(self._package_struct)
+            self.rt.package.add_struct(self._package_struct)

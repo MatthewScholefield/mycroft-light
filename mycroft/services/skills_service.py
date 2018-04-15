@@ -109,7 +109,7 @@ class SkillsService(ServicePlugin, GroupPlugin):
             return True
 
         if safe_run(init, label='Reloading ' + skill_name):
-            self.rt.intent.all.compile()
+            self.rt.intent.context.compile()
             log.info('Reloaded', folder_name)
 
     def load_skill_class(self, folder_name):

@@ -75,12 +75,13 @@ class Api(metaclass=ABCMeta):
         json = self.build_json(params)
         query = self.build_query(params)
         url = self.build_url(params)
-        log.debug(method, url, stack_offset=3)
         try:
             response = requests.request(method, url, headers=headers, params=query,
-                                    data=data, json=json, timeout=(3.05, 5))
+                                        data=data, json=json, timeout=(3.05, 5))
         except RequestException:
             response = None
+        else:
+            log.debug(method, response.status_code, url, stack_offset=3)
         if response is None:
             raise ConnectionError('Could not ' + method + ' ' + url)
         return self.get_response(response)
@@ -160,6 +161,7 @@ class DeviceApi(Api):
             'json': {
                 'state': state,
                 'token': token,
+                'platform': self.rt.config['interfaces']['faceplate']['platform'],
                 'coreVersion': get_core_version(),
                 'enclosureVersion': get_enclosure_version()
             }

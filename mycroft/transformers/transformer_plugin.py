@@ -8,7 +8,7 @@ class TransformerPlugin(BasePlugin):
     """
     Class used to modify package states.
     For example, to replace a .dialog file with actual translated lines
-    Add new attributes in the *constructor* with: self.rt.package.add({'myattr': int})
+    Add new attributes in the *constructor* with: self.rt.package.add_struct({'myattr': int})
     """
     @abstractmethod
     def process(self, p: Package):

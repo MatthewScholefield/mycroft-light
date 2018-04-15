@@ -39,9 +39,10 @@ class TextInterface(InterfacePlugin):
         return not self.response_event.is_set()
 
     def run(self):
+        print(self.prompt, end='')
         try:
             while self.rt.main_thread:
-                query = input(self.prompt)
+                query = input()
                 self.response_event.clear()
                 self.send_query(query)
                 self.response_event.wait()
@@ -58,6 +59,7 @@ class TextInterface(InterfacePlugin):
         print()
         print("    " + package.text)
         print()
+        print(self.prompt, end='')
         self.response_event.set()
 
     def on_exit(self):

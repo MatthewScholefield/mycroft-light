@@ -21,15 +21,15 @@
 # under the License.
 from mycroft.api import DeviceApi
 from mycroft.services.service_plugin import ServicePlugin
+from mycroft.util.misc import safe_run
 
 
 class DeviceInfoService(ServicePlugin, dict):
     def __init__(self, rt):
         ServicePlugin.__init__(self, rt)
         dict.__init__(self)
-        if not rt.config['use_server']:
-            raise NotImplementedError('Server Disabled')
-        self.reload()
+        if rt.config['use_server']:
+            safe_run(self.reload, warn=True)
 
     def reload(self):
         self.update(DeviceApi(self.rt).get())

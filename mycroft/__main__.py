@@ -35,7 +35,7 @@ def main():
     if rt.config['use_server']:
         rt.config.load_remote()
 
-    rt.intent.all.compile()
+    rt.intent.context.compile()
     rt.interfaces.all.run(gp_daemon=True)
 
     try:

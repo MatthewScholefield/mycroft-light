@@ -19,8 +19,9 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+from inspect import signature
 from math import sqrt
-from typing import Callable, List, Union
+from typing import Callable, List, Union, Any
 
 from mycroft.intent_context import IntentContext
 from mycroft.intent_match import IntentMatch
@@ -30,7 +31,7 @@ from mycroft.util import log
 from mycroft.util.misc import run_parallel
 
 
-class IntentService(ServicePlugin, IntentContext):
+class IntentService(ServicePlugin):
     """Used to handle creating both intents and intent engines"""
     _package_struct = {
         'data': dict,
@@ -43,14 +44,80 @@ class IntentService(ServicePlugin, IntentContext):
 
     def __init__(self, rt):
         ServicePlugin.__init__(self, rt)
-        IntentContext.__init__(self, rt)
 
         self.rt.package.data = {}
         self.rt.package.skill = ''
         self.rt.package.lang = self.rt.config['lang']
         self.rt.package.match = IntentMatch()
         self.rt.package.action = ''
-        self.rt.package.confidence = 0.0
+        self.rt.package.confidence = 0.75
+
+        self.context = IntentContext(self.rt)
+
+        self.skill_intents = {}
+        # ------------------------------ Example ------------------------------
+        # {
+        #    '<skill_name>': {
+        #        '<intent_id>',
+        #        '<intent_id>',
+        #    }
+        # }
+
+        self.intent_to_skill = {}
+        self.fallback_intents = set()
+        self.intent_data = {}
+        # ------------------------------ Example ------------------------------
+        # {
+        #    '<intent_id>': {
+        #        'prehandler': <prehandler>,  # Optional
+        #        'handler': <handler>         # Optional
+        #    }
+        #    '<intent_id>': {
+        #        'prehandler': <prehandler>,  # Optional
+        #        'handler': <handler>         # Optional
+        #    }
+        # }
+
+    def remove_skill(self, skill_name):
+        if skill_name in self.skill_intents:
+            for intent_id in self.skill_intents.pop(skill_name):
+                del self.intent_data[intent_id]
+
+                if intent_id in self.intent_to_skill:
+                    del self.intent_to_skill[intent_id]
+
+                if intent_id in self.fallback_intents:
+                    del self.fallback_intents[intent_id]
+                else:
+                    self.context.unregister(intent_id)
+
+    def register(self, intent: Any, skill_name: str,
+                 intent_engine: str, handler: Callable, handler_type: str):
+        """
+        Register an intent via the corresponding intent engine
+
+        Note: register_intent in the MycroftSkill base class automatically creates a SkillResult
+        Args:
+            intent: argument used to build intent; can be anything
+            skill_name: snake_case name without `_skill` suffix
+            intent_engine: name of intent engine to register with. It must be installed
+            handler: function that calculates the confidence
+            handler_type: either 'prehandler' or 'handler'
+        """
+        if not intent_engine:  # A fallback
+            intent_id = IntentContext.create_intent_id('fallback', skill_name)
+            self.fallback_intents.add(intent_id)
+        else:
+            try:
+                intent_id = self.context.register(intent, intent_engine, skill_name)
+            except KeyError:
+                raise RuntimeError('Could not find required intent engine: ' + intent_engine)
+        data = {
+            handler_type: handler
+        }
+        self.skill_intents.setdefault(skill_name, set()).add(intent_id)
+        self.intent_to_skill[intent_id] = skill_name
+        self.intent_data.setdefault(intent_id, {}).update(data)
 
     @staticmethod
     def default_prehandler(p: Package):
@@ -71,7 +138,7 @@ class IntentService(ServicePlugin, IntentContext):
         """
         query = query.strip().lower()
 
-        matches = self.calc_intents(query)
+        matches = self.context.calc_intents(query)
         matches = [i for i in matches if i.confidence > 0.5]
 
         packages = self._run_prehandlers(matches)
@@ -82,8 +149,7 @@ class IntentService(ServicePlugin, IntentContext):
 
         matches = [
             IntentMatch(intent_id, confidence=None)
-            for intent_id, data in self.intent_data.items()
-            if not data['engine']
+            for intent_id in self.fallback_intents
         ]
 
         packages = self._run_prehandlers(matches)
@@ -92,15 +158,14 @@ class IntentService(ServicePlugin, IntentContext):
             return result_package
         log.info('All fallbacks failed.')
 
-        return self.rt.package.new()
+        return self.rt.package()
 
     @staticmethod
     def _run_handler(handler: Callable, p: Package) -> Package:
-        try:
+        if len(signature(handler).parameters) == 0:
+            return handler() or p
+        else:
             return handler(p) or p
-        except TypeError:
-            pass
-        return handler() or p
 
     def _run_prehandlers(self, matches: List[IntentMatch]) -> List[Package]:
         """Iterate through matches, executing prehandlers"""
@@ -109,15 +174,13 @@ class IntentService(ServicePlugin, IntentContext):
             def callback(match=match):
                 data = self.intent_data[match.intent_id]
                 prehandler = data.get('prehandler', self.default_prehandler)
-                package = self.rt.package.new()
-                package.confidence = 0.75
-                package.match = match
+                package = self.rt.package(match=match)
                 package.skill = self.intent_to_skill[match.intent_id]
                 return self._run_handler(prehandler, package)
 
             package_generators.append(callback)
 
-        for package in run_parallel(package_generators, filter_none=True):
+        for package in run_parallel(package_generators, filter_none=True, label='prehandler'):
             match = package.match
 
             log.info(str(match.intent_id) + ':', str(match.confidence))

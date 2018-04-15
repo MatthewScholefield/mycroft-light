@@ -27,6 +27,7 @@ from os.path import isfile, join
 
 from mycroft.package_cls import Package
 from mycroft.transformers.transformer_plugin import TransformerPlugin
+from mycroft.util import log
 from mycroft.util.misc import warn_once
 
 
@@ -42,6 +43,7 @@ class DialogTransformer(TransformerPlugin):
         locale_dir = self.rt.paths.skill_locale(skill_name=p.skill, lang=p.lang)
         file_base = join(locale_dir, p.action)
         speech = file_base + '.speech'
+        dialog = file_base + '.dialog'
         text = file_base + '.text'
 
         if not p.speech and not p.text:
@@ -49,6 +51,8 @@ class DialogTransformer(TransformerPlugin):
 
             if isfile(speech):
                 p.speech = self.render_file(speech, p)
+            elif isfile(dialog):
+                p.speech = self.render_file(dialog, p)
             if isfile(text):
                 p.text = self.render_file(text, p)
 
@@ -56,6 +60,9 @@ class DialogTransformer(TransformerPlugin):
             p.speech = p.text
         if not p.text:
             p.text = p.speech
+
+        if not p.speech and not p.text:
+            log.warning('No dialog at:', dialog)
 
     def render_file(self, filename: str, p: Package) -> str:
         best_lines, best_score = [], 0

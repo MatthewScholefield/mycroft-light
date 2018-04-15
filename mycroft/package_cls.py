@@ -84,6 +84,11 @@ class Package:
         self._struct = struct or {}
         self._load_struct(self._struct)
 
+    def add(self, **kwargs):
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+        return self
+
     def __type_hinting__(self):
         self.action = ''  # type: str
         self.skip_activation = ''  # type: bool
@@ -109,7 +114,7 @@ class Package:
             else:
                 self.__dict__[key] = None
 
-    def add(self, struct: dict):
+    def add_struct(self, struct: dict):
         self._load_struct(struct)
         self._struct = dict(recursive_merge(self._struct, struct))
 

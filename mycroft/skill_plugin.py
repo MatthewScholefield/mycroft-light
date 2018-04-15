@@ -19,34 +19,32 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+from copy import deepcopy
 from typing import Callable, Union
 
-from copy import deepcopy
-
-from mycroft.package_cls import Package
 from mycroft.base_plugin import BasePlugin
 from mycroft.intent_context import IntentContext
 from mycroft.intent_match import IntentMatch
+from mycroft.package_cls import Package
 from mycroft.util import log
 from mycroft.util.misc import safe_run
 
 
-def intent_prehandler(intent, intent_engine='padatious'):
-    def decorator(func):
-        func.handler_type = 'prehandler'
-        func.intent_params = intent, intent_engine
-        return func
+def __create_intent_decorator(intent, intent_engine, handler_type):
+    def decorator(wrapper):
+        wrapper.handler_type = handler_type
+        wrapper.intent_params = intent, intent_engine
+        return wrapper
 
     return decorator
+
+
+def intent_prehandler(intent, intent_engine='padatious'):
+    return __create_intent_decorator(intent, intent_engine, 'prehandler')
 
 
 def intent_handler(intent, intent_engine='padatious'):
-    def decorator(func):
-        func.handler_type = 'handler'
-        func.intent_params = intent, intent_engine
-        return func
-
-    return decorator
+    return __create_intent_decorator(intent, intent_engine, 'handler')
 
 
 class SkillPlugin(BasePlugin):
@@ -74,7 +72,23 @@ class SkillPlugin(BasePlugin):
         self.__scheduled_tasks.append(identifier)
 
     def execute(self, p: Package):
+        if not isinstance(p, Package):
+            raise TypeError('Invalid package: {}'.format(p))
         self.rt.query.send_package(deepcopy(p))
+        return self.rt.package()
+
+    def package(self, **kwargs):
+        """Create an empty package, with the skill attribute prefilled"""
+        return self.rt.package(skill=self.skill_name, **kwargs)
+
+    def intent_context(self, intents: list = None, intent_engine: str = 'padatious'):
+        """Create an IntentContext namespaced to the skill"""
+        context = IntentContext(self.rt, self.skill_name)
+        for intent in intents or []:
+            context.register(intent, intent_engine)
+        if intents:
+            context.compile()
+        return context
 
     def get_response(self, p: Package, intent_context: IntentContext = None) -> Union[IntentMatch, None]:
         """If intent_context is None, the reply can be anything."""
@@ -89,6 +103,7 @@ class SkillPlugin(BasePlugin):
                 matches = intent_context.calc_intents(response)
                 match = max(matches, key=lambda x: x.confidence)
                 if match.confidence > 0.5:
+                    match.intent_id = match.intent_id.split(':')[-1]
                     return match
             self.execute(p)
 

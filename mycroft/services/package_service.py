@@ -10,15 +10,15 @@ class PackageService(ServicePlugin):
         super().__init__(rt)
         self._package = Package()
 
-    def add(self, struct):
+    def add_struct(self, struct):
         """
         Register a data structure as part of the global package
         Example:
-            >>> self.rt.package.add({'album_art': {'url': str}})
+            >>> self.rt.package.add_struct({'album_art': {'url': str}})
             >>> def my_skill_handler(p: Package):
             ...     p.album_art.url = 'http://foo.com/bar.png'
         """
-        self._package.add(struct)
+        self._package.add_struct(struct)
 
     def __setattr__(self, key, value):
         if key in ('config', 'rt') or key.startswith('_'):
@@ -32,6 +32,6 @@ class PackageService(ServicePlugin):
             pass
         return self._package.__getattribute__(item)
 
-    def new(self):
+    def __call__(self, **kwargs):
         """Get an empty package instance"""
-        return deepcopy(self._package)
+        return deepcopy(self._package).add(**kwargs)
