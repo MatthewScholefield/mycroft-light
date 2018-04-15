@@ -23,4 +23,4 @@ class MimicTts(TtsPlugin):
         return join(self.rt.paths.mimic_dir, 'mimic')
 
     def read(self, text):
-        call([self.rt.paths.mimic_exe, '-t', text, '-voice', self.config['voice']])
+        call([self.exe, '-t', text, '-voice', self.config['voice']])

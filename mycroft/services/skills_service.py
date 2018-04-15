@@ -47,7 +47,7 @@ class EventHandler(pyinotify.ProcessEvent):
 
     def process_default(self, event):
         parts = event.path.replace(self.folder, '').split('/')
-        if len(parts) < 1:
+        if len(parts) < 2:
             return
 
         skill_folder = parts[1]
