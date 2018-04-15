@@ -46,7 +46,11 @@ class EventHandler(pyinotify.ProcessEvent):
         self.folder = folder
 
     def process_default(self, event):
-        skill_folder = event.path.replace(self.folder, '').split('/')[1]
+        parts = event.path.replace(self.folder, '').split('/')
+        if len(parts) < 1:
+            return
+
+        skill_folder = parts[1]
         if skill_folder.endswith('_skill'):
             if any(event.name.endswith(ext) for ext in self.exts):
                 self.skills.reload(skill_folder)
