@@ -1,4 +1,4 @@
-from mycroft import MycroftSkill, intent_handler, Package
+from mycroft_core import MycroftSkill, intent_handler, Package
 
 
 class QuitSkill(MycroftSkill):

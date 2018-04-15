@@ -1,0 +1,17 @@
+[
+  ["How are you?", "I'm good."],
+  ["How are you?", "I'm fine."],
+  ["How are you?", "I'm alright"],
+  ["Thanks", "You're welcome.", "Any time."],
+  ["What is your name", "My name is Mycroft."],
+  ["What is your name", "I'm Mycroft."],
+  ["Hello.", "Hi!"],
+  ["Hello.", "Hi there."],
+  ["Hi!", "Hello"],
+  ["What's up?", "Not much"],
+  ["What's up?", "Not too much."],
+  ["Bye.", "See you!", "Bye", "Are you going to leave?"],
+  ["Bye.", "See you later!", "Bye", "You just said that."],
+  ["Goodbye.", "See you!", "Goodbye", "Are you going to leave?"],
+  ["Goodbye.", "See you later!", "Goodbye", "You just said that."]
+]

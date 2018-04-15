@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from mycroft import MycroftSkill, Package, intent_prehandler
+from mycroft_core import MycroftSkill, Package, intent_prehandler
 
 
 class TimeSkill(MycroftSkill):
