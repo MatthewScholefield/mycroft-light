@@ -24,7 +24,6 @@ from os.path import join, expanduser
 
 import yaml
 from pkg_resources import Requirement, resource_filename
-from requests import RequestException
 
 from mycroft.api import DeviceApi
 from mycroft.services.service_plugin import ServicePlugin
@@ -35,7 +34,7 @@ SYSTEM_CONFIG = '/etc/mycroft/mycroft.conf'
 USER_CONFIG = join(expanduser('~'), '.mycroft/mycroft.conf')
 
 REMOTE_CONFIG = 'mycroft.ai'
-REMOTE_CACHE = '/opt/mycroft/web_config_cache.yaml'
+REMOTE_CACHE = join(expanduser('~'), '.mycroft/web_config_cache.yaml')
 IGNORED_SETTINGS = ["uuid", "@type", "active", "user", "device"]
 
 DEFAULT_CONFIG = resource_filename(Requirement.parse('mycroft-light'), 'mycroft/data/mycroft.conf')
