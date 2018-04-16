@@ -39,7 +39,6 @@ class Api(metaclass=ABCMeta):
         self.path = path
         server_config = rt.config['server']
         self.url = server_config['url']
-        self.version = server_config['version']
         self.old_params = None
         self.refresh_event = Event()
         self.refresh_event.set()
@@ -138,9 +137,7 @@ class Api(metaclass=ABCMeta):
         return params['path']
 
     def build_url(self, params):
-        path = params.get('path', '')
-        version = params.get('version', self.version)
-        return self.url + '/' + version + '/' + path
+        return self.url + '/' + params.get('path', '')
 
 
 class DeviceApi(Api):
