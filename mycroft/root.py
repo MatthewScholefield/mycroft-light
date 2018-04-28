@@ -34,6 +34,7 @@ from mycroft.services.scheduler_service import SchedulerService
 from mycroft.services.service_plugin import ServicePlugin
 from mycroft.services.skills_service import SkillsService
 from mycroft.services.transformers_service import TransformersService
+from mycroft.util import log
 
 
 class Root(GroupPlugin):
@@ -41,11 +42,14 @@ class Root(GroupPlugin):
 
     def __init__(self):
         super().__init__(ServicePlugin, 'mycroft.services', '_service')
-        self._init_plugins(self, gp_order=[
+        threads = self._init_plugins(self, gp_order=[
             'config', 'package', 'scheduler', 'paths', 'filesystem', 'identity',
             'device_info', 'query', 'transformers', 'interfaces',
-            'intent', 'skills', 'main_thread'
-        ])
+            'intent', '*', 'skills', 'main_thread'
+        ], gp_timeout=2.0, gp_daemon=True)
+        for name, thread in threads.items():
+            if thread.is_alive():
+                log.warning('Service init method taking too long for:', name)
 
     def __type_hinting__(self):
         self.config = ''  # type: ConfigService

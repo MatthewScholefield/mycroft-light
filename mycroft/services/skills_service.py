@@ -93,7 +93,7 @@ class SkillsService(ServicePlugin, GroupPlugin):
         skill_name = folder_name.replace(self._suffix, '')
 
         if skill_name in self._plugins:
-            self._plugins[skill_name]._unload()
+            safe_run(self._plugins[skill_name]._unload, label='Skill unload')
             del self._plugins[skill_name]
 
         if skill_name in self._classes:

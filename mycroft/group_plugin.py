@@ -20,12 +20,13 @@
 # specific language governing permissions and limitations
 # under the License.
 import pkgutil
+import time
 from abc import ABCMeta
 from functools import wraps
 from importlib import import_module
 from inspect import isclass
 from threading import Thread
-from typing import Any
+from typing import Any, List, Dict, Union
 
 from mycroft.util import log
 from mycroft.util.misc import safe_run
@@ -34,7 +35,13 @@ from mycroft.util.text import to_camel, to_snake
 
 def run_ordered_parallel(items, get_function, args, kwargs,
                          order=None, daemon=False, label='', warn=False,
-                         custom_exception=type(None), custom_handler=None):
+                         custom_exception=type(None), custom_handler=None, timeout=None) \
+        -> Union[List[Any], Dict[str, Thread]]:
+    order = order or []
+    if '*' not in order:
+        order.append('*')
+    if daemon and timeout is None:
+        timeout = 0.0
     return_vals = []
 
     def run_item(item, name):
@@ -43,26 +50,39 @@ def run_ordered_parallel(items, get_function, args, kwargs,
                               custom_exception=custom_exception, custom_handler=custom_handler)
         return_vals.append(return_val)
 
-    remaining = list(items)
-    for name in order or []:
-        if name in items:
+    threads = {}
+    for name in set(items) - set(order):
+        threads[name] = Thread(target=run_item, args=(items[name], name), daemon=daemon)
+
+    for name in order:
+        if name == '*':
+            for i in threads.values():
+                i.start()
+            join_threads(threads.values(), timeout)
+        elif name in items:
             run_item(items[name], name)
-            remaining.remove(name)
         else:
             log.warning('Plugin from runner load order not found:', name)
 
-    threads = []
-    for name in remaining:
-        threads.append(Thread(target=run_item, args=(items[name], name), daemon=daemon))
-
-    for i in threads:
-        i.start()
-
     if not daemon:
+        return return_vals
+    return threads
+
+
+def join_threads(threads, timeout: float=None) -> bool:
+    """Join multiple threads, providing a global timeout"""
+    if timeout is None:
         for i in threads:
             i.join()
-        return return_vals
-    return None
+        return True
+
+    end_time = time.time() + timeout
+    for i in threads:
+        time_left = end_time - time.time()
+        if time_left <= 0:
+            return False
+        i.join(time_left)
+    return True
 
 
 class GroupRunner(metaclass=ABCMeta):
@@ -79,7 +99,9 @@ class GroupRunner(metaclass=ABCMeta):
         def method(*args, **kwargs):
             gp_kwargs = GroupPlugin.extract_gp_kwargs(kwargs)
             return run_ordered_parallel(self._plugins, lambda plugin: getattr(plugin, fn_name),
-                                        args=args, kwargs=kwargs, label='Running all.' + fn_name, **gp_kwargs)
+                                        args=args, kwargs=kwargs, label='Running all.' + fn_name,
+                                        **gp_kwargs)
+
         return method
 
     def __getattribute__(self, item) -> list:
@@ -166,12 +188,14 @@ class GroupPlugin(metaclass=ABCMeta):
     def _make_name(self, cls):
         return to_snake(cls.__name__).replace(self._suffix, '')
 
-    def _init_plugins(self, *args, **kwargs):
+    def _init_plugins(self, *args, **kwargs) -> Dict[str, Thread]:
         """
         Call __init__ of all plugins. *args and **kwargs match the base plugin's __init__
         Args:
             gp_order (list): List of attribute names in load order.
                     Other attributes will be loaded after
+        Returns:
+            Threads of plugin init methods
         """
 
         def get_function(cls):
@@ -181,12 +205,14 @@ class GroupPlugin(metaclass=ABCMeta):
             return function
 
         gp_kwargs = GroupPlugin.extract_gp_kwargs(kwargs)
-        run_ordered_parallel(self._classes, get_function,
-                             args=args, kwargs=kwargs, label=self._error_label,
-                             custom_exception=NotImplementedError,
-                             custom_handler=lambda e, l: log.info(l + ': Skipping disabled plugin'),
-                             **gp_kwargs)
+        threads = run_ordered_parallel(self._classes, get_function,
+                                       args=args, kwargs=kwargs, label=self._error_label,
+                                       custom_exception=NotImplementedError,
+                                       custom_handler=lambda e, l:
+                                       log.info(l + ': Skipping disabled plugin'),
+                                       **gp_kwargs)
         self.all = GroupRunner(self._base_cls, self._plugins)
+        return threads
 
     def __repr__(self):
         return self._base_cls.__name__ + ': ' + repr(self._plugins)

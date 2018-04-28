@@ -97,7 +97,7 @@ class Package:
         self.skill = ''  # type: str
         self.lang = ''  # type: str
         self.match = ''  # type: IntentMatch
-        self.confidence = ''  # type: str
+        self.confidence = ''  # type: float
 
     def _load_struct(self, struct: dict):
         if not isinstance(struct, dict):
