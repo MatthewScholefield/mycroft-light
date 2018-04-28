@@ -40,7 +40,8 @@ setup(
         'websocket-client',
         'pyinotify',
         'fann2==1.0.7',
-        'padatious'
+        'padatious',
+        'GitPython'
     ],
     entry_points={
         'console_scripts': [

@@ -22,6 +22,8 @@
 
 import os
 from os import getcwd, chdir
+
+from git import Git
 from os.path import isdir, join
 from subprocess import call
 from time import time
@@ -34,6 +36,7 @@ class GitRepo:
         self.branch = branch
         self.update_freq = update_freq  # Hours
         self.tag = tag
+        self.git = Git(self.dir)
 
     def run_inside(self, command):
         cur_path = getcwd()
@@ -50,13 +53,12 @@ class GitRepo:
 
     def _clone(self):
         if self.tag is None:
-            call(['git', 'clone', '-b', self.branch, '--single-branch', '--depth', '1', self.url,
-                  self.dir])
+            self.git.clone(self.url, self.dir, branch=self.branch, single_branch=True, depth=1)
         else:
-            call(['git', 'init'])
-            call(['git', 'remote', 'add', 'origin', self.url])
-            call(['git', 'fetch', 'origin', self.tag, '--depth', '1'])
-            call(['git', 'reset', '--hard', 'FETCH_HEAD'])
+            self.git.init()
+            self.git.remote('add', 'origin', self.url)
+            self.git.fetch('origin', self.tag, depth=1)
+            self.git.reset('FETCH_HEAD', hard=True)
 
     def try_pull(self):
         if not isdir(self.dir):
@@ -69,6 +71,6 @@ class GitRepo:
             # Touch folder
             os.utime(git_folder)
             if not self.tag:
-                self.run_inside('git pull --ff-only')
+                self.git.pull(ff_only=True)
             return True
         return False
