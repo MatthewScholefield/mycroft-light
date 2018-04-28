@@ -20,6 +20,7 @@
 # specific language governing permissions and limitations
 # under the License.
 from copy import deepcopy
+from os.path import join
 from typing import Callable, Union
 
 from mycroft.base_plugin import BasePlugin
@@ -57,6 +58,12 @@ class SkillPlugin(BasePlugin):
 
         self.__register_intents()
         self.__scheduled_tasks = []
+
+    def locale(self, file_name):
+        """Returns lines of file in skill's locale/<lang> folder"""
+        locale_folder = self.rt.paths.skill_locale(self.skill_name)
+        with open(join(locale_folder, file_name), 'r') as f:
+            return f.read().strip().split('\n')
 
     def create_thread(self, target, *args, **kwargs):
         safe_run(target, args=args, kwargs=kwargs, label=self.skill_name + ' thread')
