@@ -30,6 +30,7 @@ from mycroft.services.main_thread_service import MainThreadService
 from mycroft.services.package_service import PackageService
 from mycroft.services.paths_service import PathsService
 from mycroft.services.query_service import QueryService
+from mycroft.services.remote_key_service import RemoteKeyService
 from mycroft.services.scheduler_service import SchedulerService
 from mycroft.services.service_plugin import ServicePlugin
 from mycroft.services.skills_service import SkillsService
@@ -44,7 +45,7 @@ class Root(GroupPlugin):
         super().__init__(ServicePlugin, 'mycroft.services', '_service')
         threads = self._init_plugins(self, gp_order=[
             'config', 'package', 'scheduler', 'paths', 'filesystem', 'identity',
-            'device_info', 'query', 'transformers', 'interfaces',
+            'device_info', 'remote_key', 'query', 'transformers', 'interfaces',
             'intent', '*', 'skills', 'main_thread'
         ], gp_timeout=2.0, gp_daemon=True)
         for name, thread in threads.items():
@@ -65,3 +66,4 @@ class Root(GroupPlugin):
         self.scheduler = ''  # type: SchedulerService
         self.package = ''  # type: PackageService
         self.main_thread = ''  # type: MainThreadService
+        self.remote_key = ''  # type: RemoteKeyService
