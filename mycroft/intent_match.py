@@ -21,6 +21,10 @@
 # under the License.
 
 
+class MissingIntentMatch(KeyError):
+    pass
+
+
 class IntentMatch:
     """An object that describes the how a query fits into a particular intent"""
 
@@ -31,7 +35,11 @@ class IntentMatch:
         self.query = query
 
     def __getitem__(self, item):
-        return self.matches.__getitem__(item)
+        try:
+            return self.matches[item]
+        except KeyError:
+            pass
+        raise MissingIntentMatch(item)
 
     def __contains__(self, item):
         return self.matches.__contains__(item)

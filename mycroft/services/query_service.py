@@ -80,6 +80,9 @@ class QueryService(ServicePlugin):
         """Assign a callback to be run whenever a new response comes in"""
         self.on_query_callbacks.append(callback)
 
+    def remove_on_query(self, callback):
+        self.on_query_callbacks.remove(callback)
+
     def get_next_query(self, timeout=None):
         """Waits for and consume next response"""
         on_query = Event()

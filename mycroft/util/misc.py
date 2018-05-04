@@ -21,6 +21,8 @@
 # under the License.
 import hashlib
 from os import makedirs
+from urllib.error import URLError
+
 from os.path import isdir, join, basename
 from shutil import rmtree
 from threading import Thread
@@ -122,7 +124,8 @@ def calc_md5(fname):
     return hash_md5.hexdigest()
 
 
-def download(url, file: Union[str, io, None] = None, debug=True) -> Union[bytes, None]:
+def download(url, file: Union[str, io, None] = None, debug=True, timeout=None) -> Union[bytes,
+                                                                                        None]:
     """Pass file as a filename, open file object, or None to return the request bytes"""
     if debug:
         log.debug('Downloading:', url)
@@ -131,7 +134,7 @@ def download(url, file: Union[str, io, None] = None, debug=True) -> Union[bytes,
     if isinstance(file, str):
         file = open(file, 'wb')
     try:
-        with urllib.request.urlopen(url) as response:
+        with urllib.request.urlopen(url, timeout=timeout) as response:
             if file:
                 shutil.copyfileobj(response, file)
             else:
@@ -158,8 +161,8 @@ def download_extract_tar(tar_url, folder, check_md5=False, subdir='',
     elif check_md5:
         md5_url = tar_url + '.md5'
         try:
-            remote_md5 = download(md5_url, debug=False).decode('ascii').split(' ')[0]
-        except RequestException as e:
+            remote_md5 = download(md5_url, debug=False, timeout=1).decode('ascii').split(' ')[0]
+        except (RequestException, URLError) as e:
             log.warning('Failed to download md5 at url:', md5_url)
             return False
         if remote_md5 != calc_md5(data_file):

@@ -77,12 +77,12 @@ class Api(metaclass=ABCMeta):
         try:
             response = requests.request(method, url, headers=headers, params=query,
                                         data=data, json=json, timeout=(3.05, 5))
-        except RequestException:
-            response = None
+        except RequestException as e:
+            response = e
         else:
             log.debug(method, response.status_code, url, stack_offset=3)
-        if response is None:
-            raise ConnectionError('Could not ' + method + ' ' + url)
+        if isinstance(response, Exception):
+            raise ConnectionError('Failed to {} {}: {}'.format(method, url, response))
         return self.get_response(response)
 
     def get_response(self, response):

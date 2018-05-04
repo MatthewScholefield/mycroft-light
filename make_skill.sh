@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 eval skills_dir="~/.mycroft/skills"
-dialog_dir="vocab/en-us"
+dialog_dir="locale/en-us"
 
 if [ "$#" -gt "1" ] || [ "$1" = "-h" ]; then
     echo "Usage: $0 [ClassName]"
@@ -27,16 +27,16 @@ mkdir -p "$skill_dir"
 mkdir -p "$skill_dir/$dialog_dir"
 
 cat << EOF > "$skill_dir/skill.py"
-from mycroft import MycroftSkill, MatchData
+from mycroft import MycroftSkill, Package, intent_handler
 
 
 class $class_name(MycroftSkill):
-    def __init__(self):
-        super().__init__()
-        self.register_intent('', self._)
+    @intent_handler('')
+    def _(self, p: Package):
+        p.data = {
+            '': ''
+        }
 
-    def _(self, data: MatchData):
-        self.add_result('', None)
 EOF
 
 echo "Finished!"

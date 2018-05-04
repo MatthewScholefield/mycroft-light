@@ -20,6 +20,8 @@
 # specific language governing permissions and limitations
 # under the License.
 from copy import deepcopy
+
+import atexit
 from os.path import join
 from typing import Callable, Union
 
@@ -27,15 +29,16 @@ from mycroft.base_plugin import BasePlugin
 from mycroft.intent_context import IntentContext
 from mycroft.intent_match import IntentMatch
 from mycroft.package_cls import Package
+from mycroft.services.filesystem_service import FilesystemService
 from mycroft.util import log
 from mycroft.util.misc import safe_run
 
 
 def __create_intent_decorator(intent, intent_engine, handler_type):
-    def decorator(wrapper):
-        wrapper.handler_type = handler_type
-        wrapper.intent_params = intent, intent_engine
-        return wrapper
+    def decorator(func):
+        func.handler_type = handler_type
+        func.intent_params = intent, intent_engine
+        return func
 
     return decorator
 
@@ -48,6 +51,13 @@ def intent_handler(intent, intent_engine='padatious'):
     return __create_intent_decorator(intent, intent_engine, 'handler')
 
 
+def with_entity(entity, intent_engine='padatious'):
+    def decorator(func):
+        func.entity_params = entity, intent_engine
+        return func
+    return decorator
+
+
 class SkillPlugin(BasePlugin):
     """Base class for all Mycroft skills"""
 
@@ -55,9 +65,11 @@ class SkillPlugin(BasePlugin):
         super().__init__(self.rt)
         self.skill_name = self._attr_name
         self.config = self.rt.config.load_skill_config(self.rt.paths.skill_conf(self.skill_name))
+        self.filesystem = FilesystemService(self.rt, self.rt.paths.skill_dir(self.skill_name))
 
         self.__register_intents()
         self.__scheduled_tasks = []
+        atexit.register(self._unload)
 
     def locale(self, file_name):
         """Returns lines of file in skill's locale/<lang> folder"""
@@ -97,12 +109,13 @@ class SkillPlugin(BasePlugin):
             context.compile()
         return context
 
-    def get_response(self, p: Package, intent_context: IntentContext = None) -> Union[IntentMatch, None]:
+    def get_response(self, p: Package, intent_context: IntentContext = None,
+                     repeat_count=0) -> Union[IntentMatch, None]:
         """If intent_context is None, the reply can be anything."""
         p = deepcopy(p)
         p.skip_activation = True
-        self.execute(p)
-        while True:
+        for i in range(1 + repeat_count):
+            self.execute(p)
             response = self.rt.query.get_next_query()
             if response:
                 if not intent_context:
@@ -112,11 +125,17 @@ class SkillPlugin(BasePlugin):
                 if match.confidence > 0.5:
                     match.intent_id = match.intent_id.split(':')[-1]
                     return match
-            self.execute(p)
+        return IntentMatch(confidence=0.0, query='', intent_id='')
+
+    def shutdown(self):
+        """Called when quitting the program or unloading the skill"""
+        pass
 
     def _unload(self):
+        atexit.unregister(self._unload)
         for i in self.__scheduled_tasks:
             self.rt.scheduler.cancel(i)
+        safe_run(self.shutdown, label=self.skill_name + ' shutdown')
 
     def __register_intents(self):
         intents = []
@@ -129,4 +148,10 @@ class SkillPlugin(BasePlugin):
                     intents.append(intent)
                     self.rt.intent.register(intent, self.skill_name, intent_engine,
                                             item, handler_type)
+                # params = getattr(item, 'entity_params', None)
+                # if params:
+                #     entity, intent_engine = params
+                #     intents.append(entity)
+                #     self.rt.intent.context.register(entity, self.skill_name,
+                #                             intent_engine, item, handler_type)
         log.debug('Intents for', self.skill_name + ':', intents)

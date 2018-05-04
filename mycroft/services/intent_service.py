@@ -19,12 +19,13 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+from contextlib import suppress
 from inspect import signature
 from math import sqrt
 from typing import Callable, List, Union, Any
 
 from mycroft.intent_context import IntentContext
-from mycroft.intent_match import IntentMatch
+from mycroft.intent_match import IntentMatch, MissingIntentMatch
 from mycroft.package_cls import Package
 from mycroft.services.service_plugin import ServicePlugin
 from mycroft.util import log
@@ -87,7 +88,7 @@ class IntentService(ServicePlugin):
                     del self.intent_to_skill[intent_id]
 
                 if intent_id in self.fallback_intents:
-                    del self.fallback_intents[intent_id]
+                    self.fallback_intents.remove(intent_id)
                 else:
                     self.context.unregister(intent_id)
 
@@ -148,7 +149,7 @@ class IntentService(ServicePlugin):
         log.info('Falling back.')
 
         matches = [
-            IntentMatch(intent_id, confidence=None)
+            IntentMatch(intent_id, confidence=None, query=query)
             for intent_id in self.fallback_intents
         ]
 
@@ -162,10 +163,14 @@ class IntentService(ServicePlugin):
 
     @staticmethod
     def _run_handler(handler: Callable, p: Package) -> Package:
-        if len(signature(handler).parameters) == 0:
-            return handler() or p
-        else:
-            return handler(p) or p
+        try:
+            if len(signature(handler).parameters) == 0:
+                return handler() or p
+            else:
+                return handler(p) or p
+        except MissingIntentMatch:
+            p.confidence = 0.0
+            return p
 
     def _run_prehandlers(self, matches: List[IntentMatch]) -> List[Package]:
         """Iterate through matches, executing prehandlers"""
