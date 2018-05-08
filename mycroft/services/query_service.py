@@ -40,7 +40,7 @@ class QueryService(ServicePlugin):
     def _run_query(self, query):
         """Function to run query in a separate thread"""
         run_parallel(self.on_query_callbacks, label='Running query', args=[query])
-        if self.query_consumer:
+        if self.query_consumer and query:
             self.query_consumer(query)
         else:
             safe_run(self.send_package, args=[self.rt.intent.calc_package(query)], warn=False)
@@ -82,6 +82,9 @@ class QueryService(ServicePlugin):
 
     def remove_on_query(self, callback):
         self.on_query_callbacks.remove(callback)
+
+    def remove_on_response(self, callback):
+        self.on_response_callbacks.remove(callback)
 
     def get_next_query(self, timeout=None):
         """Waits for and consume next response"""
