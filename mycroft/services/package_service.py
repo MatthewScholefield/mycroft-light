@@ -1,5 +1,4 @@
 from copy import deepcopy
-from xml.dom.minidom import Attr
 
 from mycroft.package_cls import Package
 from mycroft.services.service_plugin import ServicePlugin

@@ -1,7 +1,6 @@
 import inspect
 from threading import Timer
 from typing import Callable
-from uuid import uuid4
 
 from mycroft.services.service_plugin import ServicePlugin
 from mycroft.util.misc import safe_run
