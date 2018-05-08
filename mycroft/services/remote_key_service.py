@@ -1,10 +1,9 @@
 import urllib.request
+from functools import wraps
 
 import requests
 from hashlib import md5
-from requests import request, get as request_get
 from urllib.parse import urlparse, quote
-from urllib.request import urlopen
 
 from mycroft.services.service_plugin import ServicePlugin
 from mycroft.util import log
@@ -15,9 +14,9 @@ class RemoteKeyService(ServicePlugin):
         super().__init__(rt)
         self.url_plugins = {}
 
-        urllib.request.urlopen = self.urlopen
-        requests.request = self.request
-        requests.get = self.request_get
+        urllib.request.urlopen = self.wrap_function(urllib.request.urlopen)
+        requests.request = self.wrap_function(requests.request)
+        requests.get = self.wrap_function(requests.get)
 
     def create_key(self, host: str, path: str) -> str:
         log.debug('Registered remote', path, 'key for', host)
@@ -42,16 +41,16 @@ class RemoteKeyService(ServicePlugin):
         log.debug('Injecting key for', plugin_name)
         return url.replace(parts[0] + '://' + parts[1], server_root)
 
-    def urlopen(self, url, *args, **kwargs):
-        log.debug('GET {}'.format(url))
-        url = self.modify_url(url)
-        return urlopen(url, *args, **kwargs)
-
-    def request(self, url, *args, **kwargs):
-        url = self.modify_url(url)
-        return request(url, *args, **kwargs)
-
-    def request_get(self, url, *args, **kwargs):
-        url = self.modify_url(url)
-        print('NeW:', url)
-        return request_get(url, *args, **kwargs)
+    def wrap_function(self, func, arg_index=0, arg_name='url'):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if len(args) > arg_index:
+                args = list(args)
+                url =args[arg_index]
+                args[arg_index] = self.modify_url(url)
+            else:
+                url = kwargs[arg_name]
+                kwargs[arg_name] = self.modify_url(url)
+            log.debug('GET {}'.format(url))
+            return func(*args, **kwargs)
+        return wrapper
