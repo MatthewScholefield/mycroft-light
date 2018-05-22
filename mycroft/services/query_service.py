@@ -23,7 +23,8 @@ from threading import Thread, Event
 
 from mycroft.services.service_plugin import ServicePlugin
 from mycroft.util import log
-from mycroft.util.misc import safe_run, run_parallel
+from mycroft.util.misc import safe_run
+from mycroft.util.parallel import run_parallel
 
 
 class QueryService(ServicePlugin):

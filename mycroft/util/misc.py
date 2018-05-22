@@ -25,8 +25,7 @@ from urllib.error import URLError
 
 from os.path import isdir, join, basename
 from shutil import rmtree
-from threading import Thread
-from typing import List, Callable, Union, Any, io
+from typing import Callable, Union, io
 
 from requests import RequestException
 
@@ -34,49 +33,17 @@ from mycroft.util import log
 
 
 def safe_run(target, args=None, kwargs=None, label='', warn=False,
-             custom_exception=type(None), custom_handler=None):
+             custom_exception=type(None), custom_handler=None, stack_offset=0):
     try:
         return target(*(args or []), **(kwargs or {}))
     except Exception as e:
         if isinstance(e, custom_exception):
             return custom_handler(e, label)
         if warn:
-            log.warning(label, '--', e.__class__.__name__ + ':', e, stack_offset=1)
+            log.warning(label, '--', e.__class__.__name__ + ':', e, stack_offset=stack_offset + 1)
         else:
-            log.exception(label, stack_offset=1)
+            log.exception(label, stack_offset=stack_offset + 1)
         return None
-
-
-def run_parallel(functions: List[Callable], label='',
-                 filter_none=False, *safe_args, **safe_kwargs) -> List[Union[Any, None]]:
-    """
-    Run a list of functions in parallel and return results
-
-    Args:
-        functions: all functions to be called
-        label: label to prepend to all error messages
-        filter_none: whether to remove None from return value list
-        *safe_args: All other arguments forwarded to <safe_run>
-    """
-    threads = []
-    return_vals = [None] * len(functions)
-    for i, fn in enumerate(functions):
-        def wrapper(i, fn=fn):
-            fn_label = label + ' - ' + fn.__name__
-            return_vals[i] = safe_run(fn, label=fn_label, *safe_args, **safe_kwargs)
-
-        threads.append(Thread(target=wrapper, args=(i,)))
-
-    for t in threads:
-        t.start()
-
-    for t in threads:
-        t.join()
-
-    if filter_none:
-        return_vals = [i for i in return_vals if i]
-
-    return return_vals
 
 
 def warn_once(key, message, stack_offset=0):

@@ -19,7 +19,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from mycroft.group_plugin import GroupPlugin
+from mycroft.plugin.group_plugin import GroupPlugin, GroupMeta
 from mycroft.package_cls import Package
 from mycroft.services.service_plugin import ServicePlugin
 from mycroft.transformers.transformer_plugin import TransformerPlugin
@@ -27,15 +27,15 @@ from mycroft.transformers.dialog_transformer import DialogTransformer
 from mycroft.util import log
 
 
-class TransformersService(ServicePlugin, GroupPlugin):
+class TransformersService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=TransformerPlugin,
+                          package='mycroft.transformers', suffix='_transformer'):
     _package_struct = {
         'action': str
     }
 
     def __init__(self, rt):
         ServicePlugin.__init__(self, rt)
-        GroupPlugin.__init__(self, TransformerPlugin, 'mycroft.transformers', '_transformer')
-        self._init_plugins(rt)
+        GroupPlugin.__init__(self, rt)
 
     def __type_hinting__(self):
         self.dialog = ''  # type: DialogTransformer

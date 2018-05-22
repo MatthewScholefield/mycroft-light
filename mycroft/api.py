@@ -21,13 +21,13 @@
 # under the License.
 from abc import ABCMeta
 from copy import copy
-from threading import Event
+from threading import Event, Lock
 
 import requests
 from requests import RequestException
 
 from mycroft.util import log
-from mycroft.util.misc import run_parallel
+from mycroft.util.parallel import run_parallel
 from mycroft.version import get_core_version, get_enclosure_version
 
 
@@ -40,8 +40,7 @@ class Api(metaclass=ABCMeta):
         server_config = rt.config['server']
         self.url = server_config['url']
         self.old_params = None
-        self.refresh_event = Event()
-        self.refresh_event.set()
+        self.refresh_lock = Lock()
 
     def request(self, params, refresh=True):
         if refresh and self.rt.identity.is_expired():
@@ -54,18 +53,17 @@ class Api(metaclass=ABCMeta):
         return self.send(params)
 
     def refresh_token(self):
-        if not self.refresh_event.is_set():
-            self.refresh_event.wait()
-            return
-        self.refresh_event.clear()
-        data = Api.send(super(self.__class__, self), {
-            'path': 'auth/token',
-            'headers': {
-                'Authorization': 'Bearer ' + self.rt.identity.refresh_token
-            }
-        })
-        self.rt.identity.register(data)
-        self.refresh_event.set()
+        if self.refresh_lock.locked():
+            with self.refresh_lock:
+                return
+        with self.refresh_lock:
+            data = Api.send(super(self.__class__, self), {
+                'path': 'auth/token',
+                'headers': {
+                    'Authorization': 'Bearer ' + self.rt.identity.refresh_token
+                }
+            })
+            self.rt.identity.register(data)
 
     def send(self, params):
         method = params.get('method', 'GET')
@@ -80,7 +78,7 @@ class Api(metaclass=ABCMeta):
         except RequestException as e:
             response = e
         else:
-            log.debug(method, response.status_code, url, stack_offset=3)
+            log.debug(method, url, response.status_code, stack_offset=3)
         if isinstance(response, Exception):
             raise ConnectionError('Failed to {} {}: {}'.format(method, url, response))
         return self.get_response(response)
@@ -178,7 +176,8 @@ class DeviceApi(Api):
         """
 
         def get_settings():
-            return self.request({'path': '/' + self.rt.identity.uuid + '/setting'}) or {}
+            out = self.request({'path': '/' + self.rt.identity.uuid + '/setting'})
+            return out or {}
 
         def get_location():
             return self.request({'path': '/' + self.rt.identity.uuid + '/location'})

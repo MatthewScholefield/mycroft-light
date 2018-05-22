@@ -5,8 +5,8 @@ from os.path import realpath, dirname
 from subprocess import check_output
 from typing import Set
 
-from mycroft.group_plugin import GroupPlugin, GroupRunner
-from mycroft.option_plugin import OptionPlugin
+from mycroft.plugin.group_plugin import GroupPlugin, GroupRunner
+from mycroft.plugin.option_plugin import OptionMeta
 from mycroft.util import log
 
 
@@ -101,7 +101,7 @@ def calc_tree(parents: Set[int], obj):
     for cls, handler in [
         (GroupRunner, tree_group_runner),
         (GroupPlugin, tree_group_plugin),
-        (OptionPlugin, tree_option_plugin),
+        (OptionMeta, tree_option_plugin),
         (dict, tree_dict),
         (object, tree_default)
     ]:

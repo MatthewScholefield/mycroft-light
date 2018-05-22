@@ -28,7 +28,7 @@ from subprocess import call
 
 import pyinotify
 
-from mycroft.group_plugin import GroupPlugin
+from mycroft.plugin.group_plugin import GroupPlugin, GroupMeta
 from mycroft.services.service_plugin import ServicePlugin
 from mycroft.skill_plugin import SkillPlugin
 from mycroft.util import log
@@ -56,7 +56,8 @@ class EventHandler(pyinotify.ProcessEvent):
                 self.skills.reload(skill_folder)
 
 
-class SkillsService(ServicePlugin, GroupPlugin):
+class SkillsService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=SkillPlugin,
+                    package='', suffix='_skill'):
     """Dynamically loads skills"""
 
     def __init__(self, rt):
@@ -69,12 +70,11 @@ class SkillsService(ServicePlugin, GroupPlugin):
         self.blacklist = self.config['blacklist']
         sys.path.append(self.rt.paths.skills)
 
-        log.info('Loading skills...')
-        GroupPlugin.__init__(self, SkillPlugin, 'mycroft.skills', '_skill')
-        self.error_label = 'Loading skill'
-        for cls in self._classes.values():
+        def inject_rt(cls):
             cls.rt = rt
-        self._init_plugins()
+
+        log.info('Loading skills...')
+        GroupPlugin.__init__(self, gp_alter_class=inject_rt)
         log.info('Finished loading skills.')
 
         # The watch manager stores the watches and provides operations on watches
@@ -90,7 +90,7 @@ class SkillsService(ServicePlugin, GroupPlugin):
 
     def reload(self, folder_name):
         log.debug('Reloading', folder_name + '...')
-        skill_name = folder_name.replace(self._suffix, '')
+        skill_name = folder_name.replace(self._suffix_, '')
 
         if skill_name in self._plugins:
             safe_run(self._plugins[skill_name]._unload, label='Skill unload')

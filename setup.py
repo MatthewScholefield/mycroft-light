@@ -16,7 +16,8 @@ setup(
     license='Apache-2.0',
     packages=[
         'mycroft',
-        'mycroft.intents',
+        'mycroft.intent',
+        'mycroft.intent.file_intents',
         'mycroft.interfaces',
         'mycroft.interfaces.speech',
         'mycroft.interfaces.speech.wake_word_engines',

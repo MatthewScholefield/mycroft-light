@@ -19,6 +19,7 @@ GitPython
 
 fann2==1.0.7
 padatious
+padaos>=0.1.2
 
 # Skill dependencies
 multi-key-dict

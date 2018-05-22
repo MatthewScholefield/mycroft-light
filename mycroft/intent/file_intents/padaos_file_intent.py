@@ -22,26 +22,29 @@
 from os.path import join
 from typing import Any
 
-from padatious import IntentContainer
+from padaos import IntentContainer
 
-from mycroft.intents.intent_plugin import IntentPlugin, IntentMatch
-from mycroft.util import log
+from mycroft.intent.intent_plugin import IntentPlugin, IntentMatch
 
 
-class PadatiousIntent(IntentPlugin):
+class PadaosFileIntent(IntentPlugin):
     """Interface for Padatious intent engine"""
 
     def __init__(self, rt):
         super().__init__(rt)
-        self.container = IntentContainer(join(rt.paths.user_config, 'intent_cache'))
+        self.container = IntentContainer()
+
+    def _read_file(self, file_name):
+        with open(file_name) as f:
+            return [i.strip() for i in f.readlines() if i.strip()]
 
     def register(self, intent: Any, skill_name: str, intent_id: str):
         file_name = join(self.rt.paths.skill_locale(skill_name), intent + '.intent')
-        self.container.load_intent(name=intent_id, file_name=file_name)
+        self.container.add_intent(intent_id, self._read_file(file_name))
 
     def register_entity(self, entity: Any, entity_id: str, skill_name: str):
         file_name = join(self.rt.paths.skill_locale(skill_name), entity + '.intent')
-        self.container.load_intent(name=entity_id, file_name=file_name)
+        self.container.add_entity(entity_id, self._read_file(file_name))
 
     def unregister(self, intent_id: str):
         self.container.remove_intent(intent_id)
@@ -50,13 +53,11 @@ class PadatiousIntent(IntentPlugin):
         self.container.remove_entity(entity_id)
 
     def compile(self):
-        log.info('Training...')
-        self.container.train()
-        log.info('Training complete!')
+        self.container.compile()
 
     def calc_intents(self, query):
         return [
-            IntentMatch(intent_id=data.name, confidence=data.conf,
-                        matches=data.matches, query=query)
-            for data in self.container.calc_intents(query)
+            IntentMatch(intent_id=match['name'], confidence=1.0,
+                        matches=match['entities'], query=query)
+            for match in self.container.calc_intents(query)
         ]

@@ -19,19 +19,20 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from typing import Any, Callable, List
+from typing import Any, List
 
-from mycroft.group_plugin import GroupPlugin
+from mycroft.plugin.group_plugin import GroupPlugin, GroupMeta
 from mycroft.intent_match import IntentMatch
-from mycroft.intents.intent_plugin import IntentPlugin
+from mycroft.intent.intent_plugin import IntentPlugin
 
 
-class IntentContext(GroupPlugin):
+class IntentContext(GroupPlugin, metaclass=GroupMeta, base=IntentPlugin, package='mycroft.intent',
+                    suffix='_intent'):
     """Used to handle creating both intents and intent engines"""
+    _plugin_path = 'intent'
 
     def __init__(self, rt, skill_name=None):
-        GroupPlugin.__init__(self, IntentPlugin, 'mycroft.intents', '_intent')
-        self._init_plugins(rt)
+        GroupPlugin.__init__(self, rt)
         self.skill_name = skill_name
         self.id_to_engine = {}
 
@@ -39,7 +40,7 @@ class IntentContext(GroupPlugin):
     def create_intent_id(intent: Any, skill_name: str):
         return skill_name + ':' + str(intent)
 
-    def register(self, intent: Any, intent_engine: str = 'padatious', skill_name: str = None) -> str:
+    def register(self, intent: Any, intent_engine: str = 'file', skill_name: str = None) -> str:
         """
         Register an intent via the corresponding intent engine
 
@@ -72,4 +73,4 @@ class IntentContext(GroupPlugin):
         self.all.compile()
 
     def calc_intents(self, query: str) -> List[IntentMatch]:
-        return sum(self.all.calc_intents(query), [])
+        return sum(filter(bool, self.all.calc_intents(query)), [])

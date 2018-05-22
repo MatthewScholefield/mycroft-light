@@ -29,7 +29,7 @@ from mycroft.intent_match import IntentMatch, MissingIntentMatch
 from mycroft.package_cls import Package
 from mycroft.services.service_plugin import ServicePlugin
 from mycroft.util import log
-from mycroft.util.misc import run_parallel
+from mycroft.util.parallel import run_parallel
 
 
 class IntentService(ServicePlugin):

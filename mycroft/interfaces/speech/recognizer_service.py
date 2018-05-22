@@ -24,7 +24,7 @@ import audioop
 import pyaudio
 from speech_recognition import AudioData
 
-from mycroft.base_plugin import BasePlugin
+from mycroft.plugin.base_plugin import BasePlugin
 from mycroft.interfaces.speech.wake_word_engines.wake_word_engine_plugin import WakeWordEnginePlugin
 from mycroft.interfaces.speech.wake_word_service import WakeWordService
 from mycroft.util import log

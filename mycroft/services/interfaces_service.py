@@ -21,18 +21,18 @@
 # under the License.
 from mycroft.interfaces.faceplate_interface import FaceplateInterface
 from mycroft.interfaces.interface_plugin import InterfacePlugin
-from mycroft.group_plugin import GroupPlugin
+from mycroft.plugin.group_plugin import GroupPlugin, GroupMeta
 from mycroft.interfaces.speech_interface import SpeechInterface
 from mycroft.interfaces.text_interface import TextInterface
 from mycroft.interfaces.tts_interface import TtsInterface
 from mycroft.services.service_plugin import ServicePlugin
 
 
-class InterfacesService(ServicePlugin, GroupPlugin):
+class InterfacesService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=InterfacePlugin,
+                        package='mycroft.interfaces', suffix='_interface'):
     def __init__(self, rt):
         ServicePlugin.__init__(self, rt)
-        GroupPlugin.__init__(self, InterfacePlugin, 'mycroft.interfaces', '_interface')
-        self._init_plugins(rt)
+        GroupPlugin.__init__(self, rt)
 
     def __type_hinting__(self):
         self.faceplate = ''  # type: FaceplateInterface

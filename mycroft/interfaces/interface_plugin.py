@@ -20,7 +20,7 @@
 # specific language governing permissions and limitations
 # under the License.
 from mycroft.package_cls import Package
-from mycroft.base_plugin import BasePlugin
+from mycroft.plugin.base_plugin import BasePlugin
 
 
 class InterfacePlugin(BasePlugin):

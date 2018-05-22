@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from mycroft.base_plugin import BasePlugin
+from mycroft.plugin.base_plugin import BasePlugin
 from mycroft.package_cls import Package
 
 

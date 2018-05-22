@@ -19,7 +19,8 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from mycroft.group_plugin import GroupPlugin
+from mycroft.plugin.base_plugin import BasePlugin
+from mycroft.plugin.group_plugin import GroupPlugin, GroupMeta
 from mycroft.services.config_service import ConfigService
 from mycroft.services.device_info_service import DeviceInfoService
 from mycroft.services.filesystem_service import FilesystemService
@@ -38,17 +39,19 @@ from mycroft.services.transformers_service import TransformersService
 from mycroft.util import log
 
 
-class Root(GroupPlugin):
+class Root(
+    GroupPlugin, metaclass=GroupMeta,
+    base=ServicePlugin, package='mycroft.services', suffix='_service'
+):
     """Class to help autocomplete determine types of dynamic root object"""
 
     def __init__(self):
-        super().__init__(ServicePlugin, 'mycroft.services', '_service')
-        threads = self._init_plugins(self, gp_order=[
+        GroupPlugin.__init__(self, self, gp_order=[
             'config', 'package', 'scheduler', 'paths', 'filesystem', 'identity',
             'device_info', 'remote_key', 'query', 'transformers', 'interfaces',
             'intent', '*', 'skills', 'main_thread'
         ], gp_timeout=2.0, gp_daemon=True)
-        for name, thread in threads.items():
+        for name, thread in self._init_threads.items():
             if thread.is_alive():
                 log.warning('Service init method taking too long for:', name)
 

@@ -23,7 +23,7 @@ from collections import namedtuple
 from inspect import isclass
 from typing import Union, Any, Callable, Dict
 
-from mycroft.group_plugin import Empty
+from mycroft.plugin.util import Empty
 from mycroft.intent_match import IntentMatch
 from mycroft.util.misc import warn_once, recursive_merge
 
@@ -162,7 +162,7 @@ class Package:
             return self.__dict__[item]
         except KeyError:
             if item.startswith('_'):
-                raise AttributeError
+                raise AttributeError(item)
             warn_once((type(self).__name__, item), 'package.' + item + ' attribute not found',
                       stack_offset=1)
             return Empty()

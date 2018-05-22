@@ -1,9 +1,7 @@
-from abc import abstractmethod
-
-from mycroft.base_plugin import BasePlugin
+from mycroft.plugin.base_plugin import BasePlugin
+from mycroft.plugin.option_plugin import MustOverride
 
 
 class TtsPlugin(BasePlugin):
-    @abstractmethod
     def read(self, text):
-        pass
+        raise MustOverride

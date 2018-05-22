@@ -23,16 +23,17 @@ from threading import Event
 
 from mycroft.interfaces.interface_plugin import InterfacePlugin
 from mycroft.interfaces.tts.tts_plugin import TtsPlugin
-from mycroft.option_plugin import OptionPlugin
+from mycroft.plugin.option_plugin import OptionMeta, OptionPlugin
 
 
-class TtsInterface(InterfacePlugin, OptionPlugin):
+class TtsInterface(
+    InterfacePlugin, OptionPlugin, metaclass=OptionMeta, base=TtsPlugin,
+    package='mycroft.interfaces.tts', suffix='_tts', default='mimic'
+):
     """Speak outputs"""
-
     def __init__(self, rt):
         InterfacePlugin.__init__(self, rt)
-        OptionPlugin.__init__(self, TtsPlugin, 'mycroft.interfaces.tts', '_tts', 'mimic')
-        self.init(self.config['module'], rt)
+        OptionPlugin.__init__(self, rt, __module__=self.config['module'])
         self.event = Event()
 
     def on_response(self, package):

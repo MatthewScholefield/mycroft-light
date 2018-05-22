@@ -23,8 +23,6 @@ from abc import ABCMeta
 
 from typing import TYPE_CHECKING
 
-from mycroft.util import log
-
 if TYPE_CHECKING:
     from mycroft.root import Root
 

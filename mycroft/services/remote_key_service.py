@@ -15,7 +15,7 @@ class RemoteKeyService(ServicePlugin):
         self.url_plugins = {}
 
         urllib.request.urlopen = self.wrap_function(urllib.request.urlopen)
-        requests.request = self.wrap_function(requests.request)
+        requests.request = self.wrap_function(requests.request, arg_index=1)
         requests.get = self.wrap_function(requests.get)
 
     def create_key(self, host: str, path: str) -> str:
@@ -46,7 +46,7 @@ class RemoteKeyService(ServicePlugin):
         def wrapper(*args, **kwargs):
             if len(args) > arg_index:
                 args = list(args)
-                url =args[arg_index]
+                url = args[arg_index]
                 args[arg_index] = self.modify_url(url)
             else:
                 url = kwargs[arg_name]

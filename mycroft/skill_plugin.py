@@ -25,7 +25,7 @@ import atexit
 from os.path import join
 from typing import Callable, Union
 
-from mycroft.base_plugin import BasePlugin
+from mycroft.plugin.base_plugin import BasePlugin
 from mycroft.intent_context import IntentContext
 from mycroft.intent_match import IntentMatch
 from mycroft.package_cls import Package
@@ -43,15 +43,15 @@ def __create_intent_decorator(intent, intent_engine, handler_type):
     return decorator
 
 
-def intent_prehandler(intent, intent_engine='padatious'):
+def intent_prehandler(intent, intent_engine='file'):
     return __create_intent_decorator(intent, intent_engine, 'prehandler')
 
 
-def intent_handler(intent, intent_engine='padatious'):
+def intent_handler(intent, intent_engine='file'):
     return __create_intent_decorator(intent, intent_engine, 'handler')
 
 
-def with_entity(entity, intent_engine='padatious'):
+def with_entity(entity, intent_engine='file'):
     def decorator(func):
         func.entity_params = entity, intent_engine
         return func
@@ -100,7 +100,7 @@ class SkillPlugin(BasePlugin):
         """Create an empty package, with the skill attribute prefilled"""
         return self.rt.package(skill=self.skill_name, **kwargs)
 
-    def intent_context(self, intents: list = None, intent_engine: str = 'padatious'):
+    def intent_context(self, intents: list = None, intent_engine: str = 'file'):
         """Create an IntentContext namespaced to the skill"""
         context = IntentContext(self.rt, self.skill_name)
         for intent in intents or []:

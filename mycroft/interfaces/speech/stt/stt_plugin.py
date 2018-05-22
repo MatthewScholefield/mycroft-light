@@ -23,7 +23,7 @@ from abc import abstractmethod
 
 from speech_recognition import AudioData
 
-from mycroft.base_plugin import BasePlugin
+from mycroft.plugin.base_plugin import BasePlugin
 
 
 class SttPlugin(BasePlugin):

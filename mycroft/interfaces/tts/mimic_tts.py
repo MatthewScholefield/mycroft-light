@@ -9,9 +9,7 @@ from mycroft.util.git_repo import GitRepo
 class MimicTts(TtsPlugin):
     def __init__(self, rt):
         super().__init__(rt)
-
-        self.exe = which('mimic')
-        self.exe = self.exe or self.download_mimic()
+        self.exe = which('mimic') or self.download_mimic()
 
     def download_mimic(self):
         repo = GitRepo(self.rt.paths.mimic, self.config['url'], 'development', update_freq=24 * 7)

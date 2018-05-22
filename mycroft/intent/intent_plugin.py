@@ -19,11 +19,11 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from abc import abstractmethod
 from typing import List, Any
 
-from mycroft.base_plugin import BasePlugin
+from mycroft.plugin.base_plugin import BasePlugin
 from mycroft.intent_match import IntentMatch
+from mycroft.plugin.option_plugin import MustOverride
 
 
 class IntentPlugin(BasePlugin):
@@ -32,7 +32,6 @@ class IntentPlugin(BasePlugin):
     def __init__(self, rt):
         super().__init__(rt)
 
-    @abstractmethod
     def register(self, intent: Any, skill_name: str, intent_id: str):
         """
         Registers a new intent with the intent engine
@@ -42,9 +41,8 @@ class IntentPlugin(BasePlugin):
             skill_name: snake case name of skill without _skill suffix
             intent_id: Unique identifier for the intent
         """
-        pass
+        raise MustOverride
 
-    @abstractmethod
     def register_entity(self, entity: Any, skill_name: str, entity_id: str):
         """
         Registers a new entity with the intent engine
@@ -54,19 +52,16 @@ class IntentPlugin(BasePlugin):
             skill_name: snake case name of skill without _skill suffix
             entity_id: Unique identifier for the intent
         """
-        pass
+        raise MustOverride
 
-    @abstractmethod
     def unregister(self, intent_id: str):
         """Remove the registered intent from the intent engine"""
-        pass
+        raise MustOverride
 
-    @abstractmethod
     def unregister_entity(self, entity_id: str):
         """Remove the registered intent from the intent engine"""
-        pass
+        raise MustOverride
 
-    @abstractmethod
     def calc_intents(self, query: str) -> List[IntentMatch]:
         """
         Run the intent engine to determine the probability of each intent against the query
@@ -75,7 +70,7 @@ class IntentPlugin(BasePlugin):
         Returns:
             intent matches: describes how the intent engine matched each intent with the query
         """
-        pass
+        raise MustOverride
 
     def compile(self):
         """Callback run when all intents have been registered"""
