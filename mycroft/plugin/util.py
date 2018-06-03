@@ -1,6 +1,8 @@
 from importlib import import_module
 from inspect import isclass
+from typing import Type
 
+from mycroft.plugin.base_plugin import BasePlugin
 from mycroft.util import log
 from mycroft.util.text import to_camel, to_snake
 
@@ -14,6 +16,8 @@ def load_class(package: str, suffix: str, module: str, plugin_path: str, attr_na
         cls = getattr(mod, cls_name, '')
         if not isclass(cls):
             log.error('Could not find', cls_name, 'in', package)
+        elif not issubclass(cls, BasePlugin):
+            log.error('{} must inherit BasePlugin to be loaded dynamically'.format(cls.__name__))
         else:
             plugin_path += '.' if plugin_path else ''
             cls._attr_name = to_snake(cls.__name__).replace(suffix, '')
@@ -24,14 +28,15 @@ def load_class(package: str, suffix: str, module: str, plugin_path: str, attr_na
     return None
 
 
-def load_plugin(plugin_cls, args, kwargs):
+def load_plugin(plugin_cls: Type[BasePlugin], args, kwargs):
     if not plugin_cls:
         return None
     try:
-        return plugin_cls(*args, **kwargs)
+        plugin = plugin_cls(*args, **kwargs)
     except Exception:
         log.exception('Loading', plugin_cls.__name__)
-    return None
+        return None
+    return plugin
 
 
 class Empty:

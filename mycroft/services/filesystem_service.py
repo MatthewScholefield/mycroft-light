@@ -29,7 +29,7 @@ class FilesystemService(ServicePlugin):
     def __init__(self, rt, root=None):
         super().__init__(rt)
         self.root = root or expanduser(rt.paths.user_config)
-        if not isdir(''):
+        if not self.isdir(''):
             self.mkdir('')
 
     def path(self, file):

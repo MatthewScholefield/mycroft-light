@@ -19,12 +19,15 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+from copy import deepcopy
+
 import re
 from os.path import expanduser
-
 from pkg_resources import Requirement, resource_filename
+from threading import Lock
 
 from mycroft.services.service_plugin import ServicePlugin
+from mycroft.util import log
 
 
 def find_refs(path):
@@ -89,21 +92,27 @@ class PathsService(ServicePlugin):
     """
 
     def __init__(self, rt):
+        self._config_lock = Lock()
         super().__init__(rt)
-        self.config = self.config.copy()
-        self.config['data'] = resource_filename(Requirement.parse('mycroft-light'), 'mycroft/data')
-        self.config['lang'] = self.rt.config['lang']
+        self.config = deepcopy(self.config)
 
-        resolve_refs(self.config)
+    def on_config_change(self, config: dict):
+        with self._config_lock:
+            self.config = deepcopy(config)
+            self.config['data'] = resource_filename(Requirement.parse('mycroft-light'), 'mycroft/data')
+            self.config['lang'] = self.rt.config['lang']
 
-        for k, v in self.config.items():
-            self.config[k] = v.replace('~', expanduser('~'))
+            resolve_refs(self.config)
 
-        for k, v in self.config.items():
-            if find_refs(v):
-                self.config[k] = StringGetter(v)
+            for k, v in self.config.items():
+                self.config[k] = v.replace('~', expanduser('~'))
+
+            for k, v in self.config.items():
+                if find_refs(v):
+                    self.config[k] = StringGetter(v)
 
     def __getattr__(self, item):
-        if item in self.config:
-            return self.config[item]
+        with self._config_lock:
+            if item in self.config:
+                return self.config[item]
         raise AttributeError("'" + item + "' not in paths config")

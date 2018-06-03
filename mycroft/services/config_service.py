@@ -24,6 +24,7 @@ from os.path import join, expanduser
 
 import yaml
 from pkg_resources import Requirement, resource_filename
+from typing import Callable
 
 from mycroft.api import DeviceApi
 from mycroft.services.service_plugin import ServicePlugin
@@ -46,6 +47,7 @@ class ConfigService(ServicePlugin, dict):
     def __init__(self, rt):
         ServicePlugin.__init__(self, rt)
         dict.__init__(self)
+        self.handlers = {}
         self.load_local()
 
     def load_remote(self, settings=None):
@@ -56,20 +58,35 @@ class ConfigService(ServicePlugin, dict):
         except ConnectionError:
             log.exception('Loading Remote Config')
 
-    @classmethod
-    def _update(cls, out, inp):
-        """Recursive update inp into out"""
+    def _update(self, out, inp, pos):
         for i in inp:
+            new_pos = pos + ('.' if pos else '') + i
             if i in out and isinstance(inp[i], dict) and isinstance(out[i], dict):
-                cls._update(out[i], inp[i])
+                self._update(out[i], inp[i], new_pos)
             else:
                 out[i] = inp[i]
+                if new_pos in self.handlers:
+                    self.handlers[new_pos](out[i])
+        if pos in self.handlers:
+            self.handlers[pos](out)
+
+    def inject(self, config: dict, path: str = ''):
+        """Recursively update with new config"""
+        self._update(self.get_path(path), config, path)
+
+    def get_path(self, path: str):
+        """Recursively gets dot-separated path in config"""
+        config = self
+        if path:
+            for i in path.split('.'):
+                config = config.setdefault(i, {})
+        return config
 
     def load_local(self):
         for file_name in LOAD_ORDER:
             if isfile(file_name):
                 with open(file_name) as f:
-                    self._update(self, yaml.safe_load(f))
+                    self.inject(yaml.safe_load(f))
 
     @staticmethod
     def load_skill_config(conf_file):
@@ -112,3 +129,6 @@ class ConfigService(ServicePlugin, dict):
         self.__conv(config, setting)
         with open(REMOTE_CACHE, 'w') as f:
             yaml.dump(config, f)
+
+    def on_change(self, path: str, handler: Callable):
+        self.handlers[path] = handler

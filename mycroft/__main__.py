@@ -32,7 +32,7 @@ from mycroft.root import Root
 def main():
     rt = Root()
 
-    if rt.config['use_server']:
+    if rt.config['use_server'] and rt.device_info:
         rt.config.load_remote()
 
     rt.intent.context.compile()

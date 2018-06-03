@@ -16,6 +16,8 @@ websocket-client
 pyinotify
 typing  # For Python 3.4
 GitPython
+fitipy
+lazy
 
 fann2==1.0.7
 padatious

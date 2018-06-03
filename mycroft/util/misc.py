@@ -32,18 +32,35 @@ from requests import RequestException
 from mycroft.util import log
 
 
+class MycroftException(Exception):
+    """Exception raised in Mycroft code that controls how it is logged"""
+    def __init__(self, message, stack_trace=True):
+        super().__init__(message)
+        self.stack_trace = stack_trace
+
+
+class _DefaultException(BaseException):
+    pass
+
+
+def _log_exception(label, e, warn, stack_offset):
+    if warn:
+        log.warning(label, '--', e.__class__.__name__ + ':', e, stack_offset=stack_offset + 1)
+    else:
+        log.exception(label, stack_offset=stack_offset + 1)
+
+
 def safe_run(target, args=None, kwargs=None, label='', warn=False,
-             custom_exception=type(None), custom_handler=None, stack_offset=0):
+             custom_exception=_DefaultException, custom_handler=None, stack_offset=0):
     try:
         return target(*(args or []), **(kwargs or {}))
+    except custom_exception as e:
+        return custom_handler(e, label)
+    except MycroftException as e:
+        _log_exception(label, e, warn or not e.stack_trace, stack_offset + 1)
     except Exception as e:
-        if isinstance(e, custom_exception):
-            return custom_handler(e, label)
-        if warn:
-            log.warning(label, '--', e.__class__.__name__ + ':', e, stack_offset=stack_offset + 1)
-        else:
-            log.exception(label, stack_offset=stack_offset + 1)
-        return None
+        _log_exception(label, e, warn, stack_offset + 1)
+    return None
 
 
 def warn_once(key, message, stack_offset=0):

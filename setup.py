@@ -42,7 +42,9 @@ setup(
         'pyinotify',
         'fann2==1.0.7',
         'padatious',
-        'GitPython'
+        'GitPython',
+        'fitipy',
+        'lazy'
     ],
     entry_points={
         'console_scripts': [

@@ -25,5 +25,5 @@ from mycroft.plugin.base_plugin import BasePlugin
 class ServicePlugin(BasePlugin):
     def __init__(self, rt):
         super().__init__(rt)
-        if 'config' in rt:
+        if 'config' in rt and not self.config:
             self.config = rt.config.get(self._attr_name, {})

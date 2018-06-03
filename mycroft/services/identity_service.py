@@ -33,9 +33,9 @@ class IdentityService(ServicePlugin):
         if not rt.config['use_server']:
             raise NotImplementedError('Server Disabled')
 
-        self.identity_file = rt.filesystem.path(rt.paths.identity)
+        self.identity_file = rt.paths.identity
 
-        self.uuid = self.access_token = self.refresh_token = ''
+        self.uuid = self.access_token = self.refresh_token = 'undefined'
         self.expiration = 0
 
         self.load()
@@ -55,7 +55,6 @@ class IdentityService(ServicePlugin):
 
     def register(self, data):
         """Registers new login data from server"""
-        log.debug('REGISTERING TO:', data)
         data = self.translate_from_server(data)
         self.assign(data)
         with open(self.identity_file, 'w') as f:
