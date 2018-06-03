@@ -50,6 +50,8 @@ class SpeechInterface(InterfacePlugin):
     def __init__(self, rt):
         super().__init__(rt)
         self.stt = SttService(rt, self._plugin_path)  # type: SttPlugin
+        RecognizerService._plugin_path = self._plugin_path + '.recognizer'
+        RecognizerService._attr_name = 'recognizer'
         self.recognizer = RecognizerService(rt)
 
     def run(self):

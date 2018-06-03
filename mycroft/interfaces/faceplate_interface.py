@@ -19,12 +19,12 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from queue import Queue
-from threading import Thread
 from time import monotonic
 
 import serial
 from os.path import isfile
+from queue import Queue
+from threading import Thread
 
 from mycroft.interfaces.interface_plugin import InterfacePlugin
 from mycroft.package_cls import Package
@@ -102,6 +102,14 @@ class FaceplateInterface(InterfacePlugin):
                 'color': (int, int, int)
             }
         }
+    }
+
+    _config = {
+        'platform': 'desktop',
+        'platform.options': ['desktop', 'picroft', 'mycroft_mark_1'],
+        'url': '/dev/ttyAMA0',
+        'rate': 9600,
+        'timeout': 5.0
     }
 
     def __init__(self, rt):

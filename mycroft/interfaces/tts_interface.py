@@ -31,6 +31,8 @@ class TtsInterface(
     package='mycroft.interfaces.tts', suffix='_tts', default='mimic'
 ):
     """Speak outputs"""
+    _config = {'module': 'mimic'}
+
     def __init__(self, rt):
         InterfacePlugin.__init__(self, rt)
         OptionPlugin.__init__(self, rt, __module__=self.config['module'])

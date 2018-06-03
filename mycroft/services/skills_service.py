@@ -20,13 +20,13 @@
 # specific language governing permissions and limitations
 # under the License.
 import sys
+
+import pyinotify
 from importlib import import_module, reload
 from inspect import isclass
 from os import listdir
 from os.path import isdir, join, dirname
 from subprocess import call
-
-import pyinotify
 
 from mycroft.plugin.group_plugin import GroupPlugin, GroupMeta
 from mycroft.services.service_plugin import ServicePlugin
@@ -59,6 +59,7 @@ class EventHandler(pyinotify.ProcessEvent):
 class SkillsService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=SkillPlugin,
                     package='', suffix='_skill'):
     """Dynamically loads skills"""
+    _config = {"blacklist": []}
 
     def __init__(self, rt):
         ServicePlugin.__init__(self, rt)

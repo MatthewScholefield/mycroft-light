@@ -23,11 +23,11 @@
 from threading import Event
 
 from mycroft.interfaces.interface_plugin import InterfacePlugin
-from mycroft.util import log
 
 
 class TextInterface(InterfacePlugin):
     """Interact with Mycroft via a terminal"""
+    _config = {'prompt': 'Input: '}
 
     def __init__(self, rt):
         super().__init__(rt)

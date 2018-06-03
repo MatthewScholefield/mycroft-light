@@ -24,33 +24,47 @@ import audioop
 import pyaudio
 from speech_recognition import AudioData
 
-from mycroft.plugin.base_plugin import BasePlugin
 from mycroft.interfaces.speech.wake_word_engines.wake_word_engine_plugin import WakeWordEnginePlugin
 from mycroft.interfaces.speech.wake_word_service import WakeWordService
+from mycroft.plugin.base_plugin import BasePlugin
 from mycroft.util import log
 
 
 class RecognizerService(BasePlugin):
+    _config = {
+        'channels': 1,
+        'chunk_size': 1024,
+        'sample_rate': 16000,
+        'sample_width': 2,
+        'record_wake_words': False,
+        'talking_volume_ratio': 1.2,
+        'ambient_adjust_speed': 0.4,
+        'required_noise_integral': 0.3,
+        'max_di_dt': 0.4,
+        'noise_max_out_sec': 0.2,
+        'sec_between_ww_checks': 0.2,
+        'recording_timeout': 10
+    }
+
     def __init__(self, rt):
         super().__init__(rt)
-        config = rt.config['interfaces']['speech']['recognizer']
-        self.chunk_size = config['chunk_size']
+        self.chunk_size = self.config['chunk_size']
         self.format = pyaudio.paInt16
         self.sample_width = pyaudio.get_sample_size(self.format)
-        self.sample_rate = config['sample_rate']
-        self.channels = config['channels']
+        self.sample_rate = self.config['sample_rate']
+        self.channels = self.config['channels']
 
         self.p = pyaudio.PyAudio()
         self.stream = self.p.open(format=self.format, channels=self.channels,
                                   rate=self.sample_rate, input=True,
                                   frames_per_buffer=self.chunk_size)
 
-        self.talking_volume_ratio = config['talking_volume_ratio']
-        self.required_integral = config['required_noise_integral']
-        self.max_di_dt = config['max_di_dt']
-        self.noise_max_out_sec = config['noise_max_out_sec']
-        self.recording_timeout = config['recording_timeout']
-        self.energy_weight = 1.0 - pow(1.0 - config['ambient_adjust_speed'],
+        self.talking_volume_ratio = self.config['talking_volume_ratio']
+        self.required_integral = self.config['required_noise_integral']
+        self.max_di_dt = self.config['max_di_dt']
+        self.noise_max_out_sec = self.config['noise_max_out_sec']
+        self.recording_timeout = self.config['recording_timeout']
+        self.energy_weight = 1.0 - pow(1.0 - self.config['ambient_adjust_speed'],
                                        self.chunk_size / self.sample_rate)
 
         # For convenience

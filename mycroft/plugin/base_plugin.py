@@ -79,9 +79,7 @@ class BasePlugin(metaclass=ABCMeta):
             if self._root_config:
                 rt.config.inject(self._root_config)
             if self._config:
-                log.debug('INJECTING CONFIG,', self._config, 'AT', self._plugin_path)
                 rt.config.inject(self._config, self._plugin_path)
-                log.debug('NEW CONFIG:', json.dumps(rt.config, indent=4))
 
             self.config = {}
             rt.config.on_change(self._plugin_path, self.on_config_change)

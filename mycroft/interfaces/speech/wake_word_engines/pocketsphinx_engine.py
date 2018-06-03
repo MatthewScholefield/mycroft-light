@@ -23,9 +23,8 @@
 import os
 import tempfile
 from os.path import join
-from typing import Callable
-
 from pocketsphinx import Decoder
+from typing import Callable
 
 from mycroft.interfaces.speech.wake_word_engines.wake_word_engine_plugin import WakeWordEnginePlugin
 from mycroft.util.misc import download_extract_tar
@@ -33,6 +32,12 @@ from mycroft.util.misc import download_extract_tar
 
 class PocketsphinxEngine(WakeWordEnginePlugin):
     # Padding of silence when feeding to pocketsphinx
+    _config = {
+        'phonemes': 'HH EY . M AY K R AO F T',
+        'threshold': '1e-90',
+        'wake_word_length': 1.2
+    }
+
     SILENCE_SEC = 0.01
     url = 'https://github.com/MatthewScholefield/pocketsphinx-models/raw/master/{lang}.tar.gz'
 
