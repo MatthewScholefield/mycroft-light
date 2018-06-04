@@ -66,8 +66,10 @@ class ConfigService(ServicePlugin, dict):
             else:
                 out[i] = inp[i]
                 if new_pos in self.handlers:
+                    log.info('Config has updated for {}...'.format(new_pos))
                     self.handlers[new_pos](out[i])
         if pos in self.handlers:
+            log.info('Config has updated for {}...'.format(pos))
             self.handlers[pos](out)
 
     def inject(self, config: dict, path: str = ''):

@@ -19,7 +19,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from mycroft.plugin.base_plugin import BasePlugin
 from mycroft.plugin.group_plugin import GroupPlugin, GroupMeta
 from mycroft.services.config_service import ConfigService
 from mycroft.services.device_info_service import DeviceInfoService
@@ -47,8 +46,8 @@ class Root(
 
     def __init__(self):
         GroupPlugin.__init__(self, self, gp_order=[
-            'config', 'package', 'scheduler', 'paths', 'filesystem', 'identity',
-            'device_info', 'remote_key', 'query', 'transformers', 'interfaces',
+            'config', 'package', 'scheduler', 'paths', 'filesystem', 'plugin_versions',
+            'identity', 'device_info', 'remote_key', 'query', 'transformers', 'interfaces',
             'intent', '*', 'skills', 'main_thread'
         ], gp_timeout=2.0, gp_daemon=True)
         for name, thread in self._init_threads.items():

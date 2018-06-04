@@ -92,7 +92,11 @@ class BasePlugin(metaclass=ABCMeta):
         if 'plugin_versions' in rt:
             old_version = rt.plugin_versions.get(self._plugin_path)
             if old_version != self.__version__:
-                self.setup(rt)
+                if self.setup.__func__ is not BasePlugin.setup:
+                    log.info('Running {}.setup() to upgrade from {} to {}'.format(
+                        self.__class__.__name__, old_version, self.__version__
+                    ))
+                self.setup()
                 rt.plugin_versions[self._plugin_path] = self.__version__
 
     @lazy
@@ -101,10 +105,11 @@ class BasePlugin(metaclass=ABCMeta):
         subdir = join('config', *self._plugin_path.split('.'))
         return self.rt.filesystem.subdir(subdir)
 
-    @staticmethod
-    def setup(rt):
-        # type: (Root) -> None
-        """Override to provide an installation script. Run once before loading or after updating"""
+    def setup(self):
+        """
+        Override to provide an installation script. Run once before loading or after updating
+        NOTE: Run before class __init__ so no class specific attributes will be defined
+        """
         pass
 
     def on_config_change(self, config: dict):

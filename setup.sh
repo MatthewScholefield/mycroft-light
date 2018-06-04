@@ -106,6 +106,7 @@ create_virtualenv
 if file_has_changed "requirements.txt"; then
     .venv/bin/pip install -r requirements.txt
     .venv/bin/pip install -e .
+    .venv/bin/pip install -e mycroft_core
 fi
 
 hash_dependencies

@@ -59,15 +59,15 @@ class EventHandler(pyinotify.ProcessEvent):
 class SkillsService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=SkillPlugin,
                     package='', suffix='_skill'):
     """Dynamically loads skills"""
-    _config = {"blacklist": []}
+    _config = {
+        'blacklist': [],
+        'url': 'https://github.com/MatthewScholefield/mycroft-light.git',
+        'branch': 'skills',
+        'update_freq': 1
+    }
 
     def __init__(self, rt):
         ServicePlugin.__init__(self, rt)
-
-        self.git_repo = GitRepo(directory=self.rt.paths.skills,
-                                url='https://github.com/MatthewScholefield/mycroft-light.git',
-                                branch='skills',
-                                update_freq=1)
         self.blacklist = self.config['blacklist']
         sys.path.append(self.rt.paths.skills)
 
@@ -88,6 +88,14 @@ class SkillsService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=SkillP
         notifier.daemon = True
         wm.add_watch(skills_dir, mask, rec=True)
         notifier.start()
+        self.git_repo = self.create_git_repo()
+
+    def create_git_repo(self):
+        config = self.rt.config.get_path(self._plugin_path)
+        return GitRepo(directory=self.rt.paths.skills,
+                       url=config['url'],
+                       branch=config['branch'],
+                       update_freq=config['update_freq'])
 
     def reload(self, folder_name):
         log.debug('Reloading', folder_name + '...')
@@ -134,6 +142,12 @@ class SkillsService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=SkillP
 
         return cls
 
+    def setup(self):
+        skills_dir = self.rt.paths.skills
+        if isdir(skills_dir) and not isdir(join(skills_dir, '.git')):
+            call(['mv', skills_dir, join(dirname(skills_dir), 'skills-old')])
+        self.create_git_repo().try_pull()
+
     def _load_classes(self, package, suffix):
         """
         Looks in the skill folder and loads the
@@ -147,13 +161,7 @@ class SkillsService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=SkillP
                 skill.py - class WeatherSkill(MycroftSkill):
         """
         log.info('Loading classes...')
-        # Temporary while skills are monolithic
-        skills_dir = self.rt.paths.skills
-        if isdir(skills_dir) and not isdir(join(skills_dir, '.git')):
-            call(['mv', skills_dir, join(dirname(skills_dir), 'skills-old')])
-
-        self.git_repo.try_pull()
-        # End temporary
+        self.setup()
 
         classes = {}
         folder_names, invalid_names = listdir(self.rt.paths.skills), []

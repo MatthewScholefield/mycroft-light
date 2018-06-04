@@ -1,5 +1,5 @@
 # Core dependencies
-git+https://github.com/MatthewScholefield/pocketsphinx-python@patch-2#egg=pocketsphinx
+pocketsphinx
 
 PyYAML
 pyaml

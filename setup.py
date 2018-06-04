@@ -44,11 +44,13 @@ setup(
         'padatious',
         'GitPython',
         'fitipy',
-        'lazy'
+        'lazy',
+        'padaos',
+        'precise_runner'
     ],
     entry_points={
         'console_scripts': [
-            'mycroft = mycroft.__main__:main'
+            'mycroft-light = mycroft.__main__:main'
         ]
     },
     include_package_data=True,

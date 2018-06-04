@@ -53,7 +53,7 @@ class GitRepo:
 
     def _clone(self):
         if self.tag is None:
-            self.git.clone(self.url, self.dir, branch=self.branch, single_branch=True, depth=1)
+            Git().clone(self.url, self.dir, branch=self.branch, single_branch=True, depth=1)
         else:
             self.git.init()
             self.git.remote('add', 'origin', self.url)

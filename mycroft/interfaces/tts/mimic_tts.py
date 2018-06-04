@@ -1,3 +1,5 @@
+from os.path import isfile
+
 from shutil import which
 from subprocess import call
 
@@ -26,12 +28,16 @@ class MimicTts(TtsPlugin):
     def setup(self):
         if which('mimic'):
             return
-        repo = GitRepo(self.rt.paths.mimic, self.config['url'], 'development', update_freq=24 * 7)
-        if repo.try_pull():
+        repo = GitRepo(
+            self.rt.paths.mimic_dir, self.config['url'], 'development', update_freq=24 * 7
+        )
+        if repo.try_pull() or not isfile(self.rt.paths.mimic_exe):
             repo.run_inside('./dependencies.sh --prefix="/usr/local"')
             repo.run_inside('./autogen.sh')
             repo.run_inside('./configure --prefix=/usr/local')
             repo.run_inside('make -j2')
+            if not isfile(self.rt.paths.mimic_exe):
+                raise RuntimeError('Failed to compile mimic')
         return self.rt.paths.mimic_exe
 
     def read(self, text):
