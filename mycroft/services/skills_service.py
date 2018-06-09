@@ -68,14 +68,13 @@ class SkillsService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=SkillP
 
     def __init__(self, rt):
         ServicePlugin.__init__(self, rt)
-        self.blacklist = self.config['blacklist']
         sys.path.append(self.rt.paths.skills)
 
         def inject_rt(cls):
             cls.rt = rt
 
         log.info('Loading skills...')
-        GroupPlugin.__init__(self, gp_alter_class=inject_rt)
+        GroupPlugin.__init__(self, gp_alter_class=inject_rt, gp_blacklist=self.config['blacklist'])
         log.info('Finished loading skills.')
 
         # The watch manager stores the watches and provides operations on watches
@@ -148,7 +147,7 @@ class SkillsService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=SkillP
             call(['mv', skills_dir, join(dirname(skills_dir), 'skills-old')])
         self.create_git_repo().try_pull()
 
-    def _load_classes(self, package, suffix):
+    def _load_classes(self, package, suffix, blacklist):
         """
         Looks in the skill folder and loads the
         CamelCase equivalent class of the snake case folder
@@ -171,13 +170,16 @@ class SkillsService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=SkillP
                 invalid_names.append(folder_name)
                 continue
 
+            attr_name = folder_name[:-len(suffix)]
+            if attr_name in blacklist:
+                continue
+
             cls = self.load_skill_class(folder_name)
             if not cls:
                 continue
 
-            cls._attr_name = self._make_name(cls)
-            if cls._attr_name not in self.blacklist:
-                classes[cls._attr_name] = cls
+            cls._attr_name = attr_name
+            classes[attr_name] = cls
 
         log.info('Skipped folders:', ', '.join(invalid_names))
         return classes

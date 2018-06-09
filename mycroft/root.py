@@ -23,12 +23,13 @@ from mycroft.plugin.group_plugin import GroupPlugin, GroupMeta
 from mycroft.services.config_service import ConfigService
 from mycroft.services.device_info_service import DeviceInfoService
 from mycroft.services.filesystem_service import FilesystemService
-from mycroft.services.interfaces_service import InterfacesService
 from mycroft.services.identity_service import IdentityService
 from mycroft.services.intent_service import IntentService
+from mycroft.services.interfaces_service import InterfacesService
 from mycroft.services.main_thread_service import MainThreadService
 from mycroft.services.package_service import PackageService
 from mycroft.services.paths_service import PathsService
+from mycroft.services.plugin_versions_service import PluginVersionsService
 from mycroft.services.query_service import QueryService
 from mycroft.services.remote_key_service import RemoteKeyService
 from mycroft.services.scheduler_service import SchedulerService
@@ -44,12 +45,14 @@ class Root(
 ):
     """Class to help autocomplete determine types of dynamic root object"""
 
-    def __init__(self):
-        GroupPlugin.__init__(self, self, gp_order=[
-            'config', 'package', 'scheduler', 'paths', 'filesystem', 'plugin_versions',
-            'identity', 'device_info', 'remote_key', 'query', 'transformers', 'interfaces',
-            'intent', '*', 'skills', 'main_thread'
-        ], gp_timeout=2.0, gp_daemon=True)
+    def __init__(self, timeout=2.0, blacklist=None):
+        GroupPlugin.__init__(
+            self, self, gp_order=[
+                'config', 'package', 'scheduler', 'paths', 'filesystem', 'plugin_versions',
+                'identity', 'device_info', 'remote_key', 'query', 'transformers', 'interfaces',
+                'intent', '*', 'skills', 'main_thread'
+            ], gp_timeout=timeout, gp_daemon=True, gp_blacklist=blacklist
+        )
         for name, thread in self._init_threads.items():
             if thread.is_alive():
                 log.warning('Service init method taking too long for:', name)
@@ -69,3 +72,4 @@ class Root(
         self.package = ''  # type: PackageService
         self.main_thread = ''  # type: MainThreadService
         self.remote_key = ''  # type: RemoteKeyService
+        self.plugin_versions = ''  # type: PluginVersionsService

@@ -110,3 +110,5 @@ if file_has_changed "requirements.txt"; then
 fi
 
 hash_dependencies
+
+./start.sh setup

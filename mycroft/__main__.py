@@ -24,12 +24,28 @@ import sys
 
 sys.path += ['.']  # noqa
 
+from argparse import ArgumentParser
 from time import sleep
-from mycroft.util import log
-from mycroft.root import Root
 
 
 def main():
+    parser = ArgumentParser()
+    subparsers = parser.add_subparsers(dest='action')
+    subparsers.add_parser('setup')
+    args = parser.parse_args()
+    if args.action == 'setup':
+        import mycroft.util
+        from mycroft.util.log import PrintLogger, Level
+        mycroft.util.log = PrintLogger(Level.INFO)
+        mycroft.util.log._get_prefix = lambda level, offset: ''
+
+    from mycroft.util import log
+    from mycroft.root import Root
+
+    if args.action == 'setup':
+        Root(None, blacklist=['skills'])
+        return
+
     rt = Root()
 
     if rt.config['use_server'] and rt.device_info:

@@ -149,4 +149,9 @@ class FileLogger(BaseLogger):
         self.file.flush()
 
 
+class PrintLogger(BaseLogger):
+    def write(self, text):
+        print(text, end='', flush=True)
+
+
 log = FileLogger('/var/tmp/mycroft.log', Level.DEBUG)

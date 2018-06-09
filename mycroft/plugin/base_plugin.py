@@ -68,7 +68,10 @@ class BasePlugin(metaclass=ABCMeta):
         self.rt = rt
 
         if self._package_struct:
-            self.rt.package.add_struct(self._package_struct)
+            if 'package' not in self.rt:
+                log.warning('Package struct for module loaded before package:', self._plugin_path)
+            else:
+                self.rt.package.add_struct(self._package_struct)
 
         if not self._plugin_path and self._config:
             raise RuntimeError('Cannot set _config for non-dynamically loaded class {}'.format(

@@ -61,7 +61,7 @@ class GroupRunner(metaclass=ABCMeta):
 
 
 class GroupPlugin(metaclass=ABCMeta):
-    def __init__(self, *args, gp_order=None, **kwargs):
+    def __init__(self, *args, gp_order=None, gp_blacklist=None, **kwargs):
         """
         Calls __init__ of all plugins, passing arguments to each plugin's __init__
         Args:
@@ -69,13 +69,14 @@ class GroupPlugin(metaclass=ABCMeta):
                     Other attributes will be loaded after or where '*' is in list
             gp_alter_class (Callable):
         """
+        gp_order = [i for i in (gp_order or []) if i not in (gp_blacklist or [])]
         self._plugins = {}
         if not isinstance(type(self), GroupMeta):
             raise RuntimeError('{} must have GroupMeta as a metaclass'.format(
                 self.__class__.__name__
             ))
 
-        self._classes = self._load_classes(self._package_, self._suffix_)
+        self._classes = self._load_classes(self._package_, self._suffix_, gp_blacklist or [])
 
         gp_kwargs = self._extract_gp_kwargs(kwargs)
         alter_class = gp_kwargs.pop('alter_class', None)
@@ -102,14 +103,14 @@ class GroupPlugin(metaclass=ABCMeta):
                 gp_kwargs[name.replace('gp_', '')] = kwargs.pop(name)
         return gp_kwargs
 
-    def _load_classes(self, package, suffix):
+    def _load_classes(self, package, suffix, blacklist):
         classes = (
             load_class(
                 package, suffix, mod_name.replace(suffix, ''), getattr(self, '_plugin_path', '')
             )
             for folder in set(abspath(i) for i in import_module(package).__path__)
             for loader, mod_name, is_pkg in pkgutil.walk_packages([folder])
-            if mod_name.endswith(suffix)
+            if mod_name.endswith(suffix) and mod_name.replace(suffix, '') not in blacklist
         )
         return {
             cls._attr_name: cls for cls in classes if cls
@@ -126,6 +127,8 @@ class GroupPlugin(metaclass=ABCMeta):
 
     def __getattr__(self, item) -> Any:
         if item.startswith('_'):
+            raise AttributeError(item)
+        if '_plugins' not in self.__dict__:
             raise AttributeError(item)
         if item not in self._plugins:
             log.warning(item, 'plugin does not exist.', stack_offset=1)
