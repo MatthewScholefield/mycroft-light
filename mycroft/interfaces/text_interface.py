@@ -19,10 +19,32 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+import sys
 
+from io import StringIO
 from threading import Event
+from typing import Callable
 
 from mycroft.interfaces.interface_plugin import InterfacePlugin
+from mycroft.util import log
+
+
+class StreamHandler(StringIO):
+    def __init__(self, handler: Callable):
+        super().__init__()
+        self.buffer = ''
+        self.handler = handler
+
+    def flush(self):
+        self.buffer = self.buffer.strip()
+        if self.buffer:
+            self.handler(self.buffer)
+            self.buffer = ''
+
+    def write(self, text):
+        self.buffer += text
+        if '\n' in text:
+            self.flush()
 
 
 class TextInterface(InterfacePlugin):
@@ -31,6 +53,8 @@ class TextInterface(InterfacePlugin):
 
     def __init__(self, rt):
         super().__init__(rt)
+        sys.stdout = StreamHandler(log.debug)
+        sys.stderr = StreamHandler(log.warning)
         self.response_event = Event()
         self.response_event.set()
         self.prompt = self.config['prompt']
@@ -39,7 +63,7 @@ class TextInterface(InterfacePlugin):
         return not self.response_event.is_set()
 
     def run(self):
-        print(self.prompt, end='')
+        self.print(self.prompt, end='')
         try:
             while self.rt.main_thread:
                 query = input()
@@ -51,16 +75,19 @@ class TextInterface(InterfacePlugin):
 
     def on_query(self, query):
         if query and not self.owns_response():
-            print(query)
+            self.print(query)
+
+    def print(self, *args, **kwargs):
+        print(*args, file=sys.__stdout__, flush=True, **kwargs)
 
     def on_response(self, package):
         if not self.owns_response():
-            print()
-        print()
-        print("    " + package.text)
-        print()
-        print(self.prompt, end='')
+            self.print()
+        self.print()
+        self.print("    " + package.text)
+        self.print()
+        self.print(self.prompt, end='')
         self.response_event.set()
 
     def on_exit(self):
-        print()
+        self.print()
