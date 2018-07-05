@@ -22,7 +22,7 @@
 from time import monotonic
 
 import serial
-from os.path import isfile
+from os.path import exists
 from queue import Queue
 from threading import Thread
 
@@ -114,7 +114,7 @@ class FaceplateInterface(InterfacePlugin):
 
     def __init__(self, rt):
         super().__init__(rt)
-        if not isfile(self.config['url']):
+        if not exists(self.config['url']):
             raise NotImplementedError
 
         self.serial = serial.serial_for_url(url=self.config['url'], baudrate=self.config['rate'],
