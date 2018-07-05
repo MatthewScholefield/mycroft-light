@@ -20,11 +20,11 @@
 # specific language governing permissions and limitations
 # under the License.
 from os.path import join
+from padaos import IntentContainer
 from typing import Any
 
-from padaos import IntentContainer
-
-from mycroft.intent.intent_plugin import IntentPlugin, IntentMatch
+from mycroft.intent.intent_plugin import IntentPlugin, IntentMatch, DynamicEntity, DynamicIntent
+from mycroft.util import log
 
 
 class PadaosFileIntent(IntentPlugin):
@@ -39,12 +39,16 @@ class PadaosFileIntent(IntentPlugin):
             return [i.strip() for i in f.readlines() if i.strip()]
 
     def register(self, intent: Any, skill_name: str, intent_id: str):
-        file_name = join(self.rt.paths.skill_locale(skill_name), intent + '.intent')
-        self.container.add_intent(intent_id, self._read_file(file_name))
+        if not isinstance(intent, DynamicIntent):
+            file_name = join(self.rt.paths.skill_locale(skill_name), intent + '.intent')
+            intent = DynamicIntent(intent, self._read_file(file_name))
+        self.container.add_intent(intent_id, intent.data)
 
-    def register_entity(self, entity: Any, entity_id: str, skill_name: str):
-        file_name = join(self.rt.paths.skill_locale(skill_name), entity + '.intent')
-        self.container.add_entity(entity_id, self._read_file(file_name))
+    def register_entity(self, entity: Any, skill_name: str, entity_id: str):
+        if not isinstance(entity, DynamicEntity):
+            file_name = join(self.rt.paths.skill_locale(skill_name), entity + '.entity')
+            entity = DynamicEntity(entity, self._read_file(file_name))
+        self.container.add_entity(entity_id, entity.data)
 
     def unregister(self, intent_id: str):
         self.container.remove_intent(intent_id)

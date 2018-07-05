@@ -19,43 +19,76 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from copy import deepcopy
-
 import atexit
-from os.path import join
-from typing import Callable, Union
+from collections import namedtuple
 
-from mycroft.plugin.base_plugin import BasePlugin
+import functools
+from copy import deepcopy
+from functools import partial
+from os.path import join
+from typing import Callable, Union, Any
+
 from mycroft.intent_context import IntentContext
 from mycroft.intent_match import IntentMatch
 from mycroft.package_cls import Package
+from mycroft.plugin.base_plugin import BasePlugin
 from mycroft.services.filesystem_service import FilesystemService
 from mycroft.util import log
 from mycroft.util.misc import safe_run
 
 
-def __create_intent_decorator(intent, intent_engine, handler_type):
+def compose(functions):
+    return functools.reduce(lambda f, g: lambda x: f(g(x)), functions, lambda x: x)
+
+
+def __create_intent_decorator(handler_type, intent, intent_engine='file', merge_func=None):
+    merge_calls = merge_func.intent_calls if merge_func else []
+    entity_calls = merge_func.entity_calls if merge_func else []
+
     def decorator(func):
-        func.handler_type = handler_type
-        func.intent_params = intent, intent_engine
+        func.intent_calls = sum([
+            getattr(func, 'intent_calls', []),
+            merge_calls,
+            [(func, intent, intent_engine, handler_type)]
+        ], [])
+        func.entity_calls = entity_calls
+        merge_calls.clear()
+        func.handler = compose([
+            __create_intent_decorator(
+                'handler', _intent, _intent_engine, merge_func=func
+            )
+            for _func, _intent, _intent_engine, _handler_type in func.intent_calls
+            if _handler_type == 'prehandler'
+        ])
+        func.prehandler = compose([
+            __create_intent_decorator(
+                'prehandler', _intent, _intent_engine, merge_func=func
+            )
+            for _func, _intent, _intent_engine, _handler_type in func.intent_calls
+            if _handler_type == 'handler'
+        ])
         return func
 
     return decorator
 
 
 def intent_prehandler(intent, intent_engine='file'):
-    return __create_intent_decorator(intent, intent_engine, 'prehandler')
+    return __create_intent_decorator('prehandler', intent, intent_engine)
 
 
 def intent_handler(intent, intent_engine='file'):
-    return __create_intent_decorator(intent, intent_engine, 'handler')
+    return __create_intent_decorator('handler', intent, intent_engine)
 
 
 def with_entity(entity, intent_engine='file'):
     def decorator(func):
-        func.entity_params = entity, intent_engine
+        func.entity_calls = getattr(func, 'entity_calls', []) + [(entity, intent_engine)]
         return func
+
     return decorator
+
+
+ResponseConf = namedtuple('ResponseConf', 'repeat_count wait_time')
 
 
 class SkillPlugin(BasePlugin):
@@ -64,8 +97,8 @@ class SkillPlugin(BasePlugin):
     def __init__(self):
         super().__init__(self.rt)
         self.skill_name = self._attr_name
-        self.config = self.rt.config.load_skill_config(self.rt.paths.skill_conf(self.skill_name))
         self.filesystem = FilesystemService(self.rt, self.rt.paths.skill_dir(self.skill_name))
+        self.lang = self.rt.config['lang']
 
         self.__register_intents()
         self.__scheduled_tasks = []
@@ -110,9 +143,11 @@ class SkillPlugin(BasePlugin):
         return context
 
     def get_response(self, p: Package, intent_context: IntentContext = None,
-                     repeat_count=0) -> Union[IntentMatch, None]:
+                     repeat_count=0, ) -> Union[IntentMatch, None]:
         """If intent_context is None, the reply can be anything."""
+        orig_p = p
         p = deepcopy(p)
+        orig_p.action = None
         p.skip_activation = True
         for i in range(1 + repeat_count):
             self.execute(p)
@@ -137,21 +172,41 @@ class SkillPlugin(BasePlugin):
             self.rt.scheduler.cancel(i)
         safe_run(self.shutdown, label=self.skill_name + ' shutdown')
 
+    def register_entity(self, entity: Any, intent_engine: str = 'file'):
+        self.rt.intent.context.register_entity(entity, intent_engine, self.skill_name)
+
+    def register_intent(self, func: Callable, intent: Any,
+                        intent_engine='file', handler_type='handler'):
+        if hasattr(func, '__get__'):  # Bind to self
+            func = func.__get__(self, SkillPlugin)
+        self.rt.intent.register(
+            intent, self.skill_name, intent_engine,
+            func, handler_type
+        )
+
     def __register_intents(self):
         intents = []
+        entities = []
         for name in dir(self):
             item = getattr(self, name)
             if callable(item):
-                handler_type = getattr(item, 'handler_type', None)
-                if handler_type:
-                    intent, intent_engine = getattr(item, 'intent_params')
-                    intents.append(intent)
-                    self.rt.intent.register(intent, self.skill_name, intent_engine,
-                                            item, handler_type)
-                # params = getattr(item, 'entity_params', None)
-                # if params:
-                #     entity, intent_engine = params
-                #     intents.append(entity)
-                #     self.rt.intent.context.register(entity, self.skill_name,
-                #                             intent_engine, item, handler_type)
+                intent_calls = getattr(item, 'intent_calls', None)
+                if intent_calls:
+                    for params in intent_calls:
+                        func, intent, intent_engine, handler_type = params
+                        if not intent:
+                            log.warning('Skipping empty intent from skill:', self.skill_name)
+                            continue
+                        intents.append(intent)
+                        self.register_intent(func, intent, intent_engine, handler_type)
+
+                entity_calls = getattr(item, 'entity_calls', None)
+                if entity_calls:
+                    for params in entity_calls:
+                        entity, intent_engine = params
+                        entities.append(entity)
+                        self.register_entity(entity, intent_engine)
+
         log.debug('Intents for', self.skill_name + ':', intents)
+        if entities:
+            log.debug('Entities for', self.skill_name + ':', entities)

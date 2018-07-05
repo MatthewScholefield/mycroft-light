@@ -24,12 +24,12 @@ from threading import Thread
 from typing import Any, Dict, List, Union, Callable
 
 from mycroft.util import log
-from mycroft.util.misc import safe_run
+from mycroft.util.misc import safe_run, _DefaultException
 
 
 def run_ordered_parallel(items, get_function, args, kwargs,
                          order=None, daemon=False, label='', warn=False,
-                         custom_exception=type(None), custom_handler=None, timeout=None) \
+                         custom_exception=None, custom_handler=None, timeout=None) \
         -> Union[List[Any], Dict[str, Thread]]:
     order = order or []
     if '*' not in order:
@@ -52,7 +52,13 @@ def run_ordered_parallel(items, get_function, args, kwargs,
         if name == '*':
             for i in threads.values():
                 i.start()
-            join_threads(threads.values(), timeout)
+            try:
+                join_threads(threads.values(), timeout)
+            except KeyboardInterrupt:
+                log.error('KeyboardInterrupt joining threads:', [
+                    name for name, t in threads.items() if t.is_alive()
+                ])
+                raise
         elif name in items:
             run_item(items[name], name)
         else:

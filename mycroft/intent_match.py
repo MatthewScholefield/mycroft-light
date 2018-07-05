@@ -34,6 +34,9 @@ class IntentMatch:
         self.matches = matches or {}
         self.query = query
 
+    def get(self, name, default=None):
+        return self.matches.get(name, default)
+
     def __getitem__(self, item):
         try:
             return self.matches[item]
@@ -45,7 +48,7 @@ class IntentMatch:
         return self.matches.__contains__(item)
 
     def __repr__(self):
-        return '<IntentMatch intent_id={} confidence={} matches={} query={}>'.format(
+        return '<IntentMatch intent_id={!r} confidence={!r} matches={!r} query={!r}>'.format(
             self.intent_id, self.confidence, self.matches, self.query
         )
 

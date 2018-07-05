@@ -13,14 +13,17 @@ class RemoteKeyService(ServicePlugin):
     def __init__(self, rt):
         super().__init__(rt)
         self.url_plugins = {}
+        self.custom_urls = {}
 
         urllib.request.urlopen = self.wrap_function(urllib.request.urlopen)
         requests.request = self.wrap_function(requests.request, arg_index=1)
         requests.get = self.wrap_function(requests.get)
 
-    def create_key(self, host: str, path: str) -> str:
+    def create_key(self, host: str, path: str, custom_url=None, use_auth=False) -> str:
         log.debug('Registered remote', path, 'key for', host)
         self.url_plugins[host] = path
+        if custom_url or use_auth:
+            self.custom_urls[path] = (custom_url, use_auth)
         return md5(path.encode()).hexdigest()
 
     def modify_url(self, url: str) -> str:
@@ -32,11 +35,13 @@ class RemoteKeyService(ServicePlugin):
                 plugin_name = self.url_plugins.get(parts[1].replace('www.', ''))
             if not plugin_name:
                 return url
-        server_root = '{}/{}/{}/plugin/{}'.format(
-            self.rt.config['server']['url'],
-            self.rt.identity.uuid,
-            quote(self.rt.identity.access_token),
-            plugin_name
+        custom_url, use_auth = self.custom_urls.get(plugin_name, (None, False))
+        server_root_format = custom_url or '{server_url}/{uuid}/{token}/plugin/{plugin}'
+        server_root = server_root_format.format(
+            server_url=self.rt.config['server_url'],
+            uuid=self.rt.identity.uuid,
+            token=quote(self.rt.identity.access_token),
+            plugin=plugin_name
         )
         log.debug('Injecting key for', plugin_name)
         return url.replace(parts[0] + '://' + parts[1], server_root)
@@ -51,6 +56,6 @@ class RemoteKeyService(ServicePlugin):
             else:
                 url = kwargs[arg_name]
                 kwargs[arg_name] = self.modify_url(url)
-            log.debug('GET {}'.format(url))
+            log.debug('REQ {}...'.format(url))
             return func(*args, **kwargs)
         return wrapper

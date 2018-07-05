@@ -26,6 +26,24 @@ from mycroft.intent_match import IntentMatch
 from mycroft.plugin.option_plugin import MustOverride
 
 
+class DynamicEntity:
+    def __init__(self, name: str, data: List[str]):
+        self.name = name
+        self.data = data
+
+    def __str__(self):
+        return self.name
+
+
+class DynamicIntent:
+    def __init__(self, name: str, data: List[str]):
+        self.name = name
+        self.data = data
+
+    def __str__(self):
+        return self.name
+
+
 class IntentPlugin(BasePlugin):
     """Interface for intent engines"""
 

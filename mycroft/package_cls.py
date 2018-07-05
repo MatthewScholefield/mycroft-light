@@ -19,12 +19,12 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from collections import namedtuple
 from inspect import isclass
+from typing import NamedTuple
 from typing import Union, Any, Callable, Dict
 
-from mycroft.plugin.util import Empty
 from mycroft.intent_match import IntentMatch
+from mycroft.plugin.util import Empty
 from mycroft.util.misc import warn_once, recursive_merge
 
 
@@ -80,7 +80,8 @@ class Package:
         Setting the faceplate text to: hello
         Setting the eye color to: (0, 255, 100)
     """
-    def __init__(self, struct: dict=None):
+
+    def __init__(self, struct: dict = None):
         self._struct = struct or {}
         self._load_struct(self._struct)
 
@@ -92,7 +93,15 @@ class Package:
     def __type_hinting__(self):
         self.action = ''  # type: str
         self.skip_activation = ''  # type: bool
-        self.faceplate = ''  # type: namedtuple('Faceplate', 'eyes mouth')
+        FaceplateType = NamedTuple('Faceplate', [
+            ('eyes', NamedTuple('Eyes', [
+                ('blink', Callable), ('reset', Callable), ('color', tuple)
+            ])),
+            ('mouth', NamedTuple('Mouth', [
+                ('text', str), ('reset', Callable), ('listen', Callable)
+            ]))
+        ])
+        self.faceplate: FaceplateType = ''
         self.data = ''  # type: dict
         self.skill = ''  # type: str
         self.lang = ''  # type: str
@@ -148,7 +157,9 @@ class Package:
         else:
             value_typ = self.get_type(value)
             if desc != value_typ:
-                raise TypeError('Cannot assign value ' + str(value) + ' to type ' + desc.__name__)
+                raise TypeError('Cannot assign value {!r} of type {} to type {}'.format(
+                    value, value_typ, desc
+                ))
 
     def __setattr__(self, key, value):
         if key.startswith('_') or key in ('rt', 'config'):
@@ -173,6 +184,7 @@ class Package:
         if not isinstance(obj, cls):
             def format_iter(x):
                 return ', '.join(formatters.get(type(i), repr)(i) for i in x)
+
             formatters = {
                 tuple: lambda x: '(' + format_iter(x) + ')',
                 set: lambda x: 'set(' + format_iter(x) + ')',
@@ -183,7 +195,9 @@ class Package:
             }
             return formatters.get(type(obj), repr)(obj) + '\n'
         s = '\n'
-        for key, value in sorted(obj.items(), key=lambda k_v: ('zzz' + k_v[0]) if isinstance(k_v[1], cls) else k_v[0]):
+        for key, value in sorted(obj.items(),
+                                 key=lambda k_v: ('zzz' + k_v[0]) if isinstance(k_v[1], cls) else
+                                 k_v[0]):
             if key.startswith('_') or not value:
                 continue
             value_str = Package._to_str(cls, value, indent, indent_level + 1)

@@ -28,6 +28,7 @@ from typing import Any
 
 from mycroft.plugin.util import load_class, Empty
 from mycroft.util import log
+from mycroft.util.misc import safe_run
 from mycroft.util.parallel import run_ordered_parallel
 from mycroft.util.text import to_snake
 
@@ -83,17 +84,32 @@ class GroupPlugin(metaclass=ABCMeta):
 
         def get_function(cls):
             def func(*args, **kwargs):
-                new_cls = (alter_class(cls) or cls) if alter_class else cls
-                self._plugins[self._make_name(new_cls)] = new_cls(*args, **kwargs)
+                def create_plugin(*args, **kwargs):
+                    new_cls = (alter_class(cls) or cls) if alter_class else cls
+                    instance = new_cls(*args, **kwargs)
+                    self._plugins[self._make_name(new_cls)] = instance
+                    return instance
+                plugin = safe_run(
+                    create_plugin, args=args, kwargs=kwargs,
+                    label='Loading ' + cls._attr_name + self._suffix_,
+                    custom_exception=NotImplementedError,
+                    custom_handler=lambda e, l: log.info(l + ': Skipping disabled plugin')
+                )
+                if not plugin:
+                    log.debug('Unloading partially loaded plugin:', cls._attr_name + self._suffix_)
+                    self._on_partial_load(cls._attr_name)
+                return plugin
             return func
 
         self._init_threads = run_ordered_parallel(
             self._classes, get_function, args=args, kwargs=kwargs,
-            label='Loading ' + self._suffix_.strip('_'), custom_exception=NotImplementedError,
-            custom_handler=lambda e, l: log.info(l + ': Skipping disabled plugin'),
             order=gp_order, **gp_kwargs
         )
         self.all = GroupRunner(self._base_, self._plugins)
+
+    def _on_partial_load(self, plugin_name):
+        """Override to specify behavior when a plugin gets partially loaded"""
+        pass
 
     @staticmethod
     def _extract_gp_kwargs(kwargs):
@@ -106,11 +122,11 @@ class GroupPlugin(metaclass=ABCMeta):
     def _load_classes(self, package, suffix, blacklist):
         classes = (
             load_class(
-                package, suffix, mod_name.replace(suffix, ''), getattr(self, '_plugin_path', '')
+                package, suffix, mod_name[:-len(suffix)], getattr(self, '_plugin_path', '')
             )
             for folder in set(abspath(i) for i in import_module(package).__path__)
             for loader, mod_name, is_pkg in pkgutil.walk_packages([folder])
-            if mod_name.endswith(suffix) and mod_name.replace(suffix, '') not in blacklist
+            if mod_name.endswith(suffix) and mod_name[:-len(suffix)] not in blacklist
         )
         return {
             cls._attr_name: cls for cls in classes if cls

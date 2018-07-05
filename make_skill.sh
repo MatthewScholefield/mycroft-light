@@ -27,7 +27,7 @@ mkdir -p "$skill_dir"
 mkdir -p "$skill_dir/$dialog_dir"
 
 cat << EOF > "$skill_dir/skill.py"
-from mycroft import MycroftSkill, Package, intent_handler
+from mycroft_core import MycroftSkill, Package, intent_handler
 
 
 class $class_name(MycroftSkill):

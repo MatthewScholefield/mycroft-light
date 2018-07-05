@@ -21,6 +21,7 @@
 # under the License.
 from mycroft.plugin.group_plugin import GroupPlugin, GroupMeta
 from mycroft.package_cls import Package
+from mycroft.services.intent_service import UNSET_ACTION
 from mycroft.services.service_plugin import ServicePlugin
 from mycroft.transformers.transformer_plugin import TransformerPlugin
 from mycroft.transformers.dialog_transformer import DialogTransformer
@@ -29,9 +30,6 @@ from mycroft.util import log
 
 class TransformersService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=TransformerPlugin,
                           package='mycroft.transformers', suffix='_transformer'):
-    _package_struct = {
-        'action': str
-    }
 
     def __init__(self, rt):
         ServicePlugin.__init__(self, rt)
@@ -42,8 +40,9 @@ class TransformersService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=
 
     def process(self, package: Package):
         """Called to modify attributes within package"""
-        if not package.action:
+        if package.action == UNSET_ACTION:
             package.action = package.match.intent_id.split(':')[1] if package.match else ''
+        package.action = package.action or ''
 
         self.all.process(package, gp_warn=False)  # type: ignore
 

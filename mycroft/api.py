@@ -37,8 +37,7 @@ class Api(metaclass=ABCMeta):
     def __init__(self, rt, path):
         self.rt = rt
         self.path = path
-        server_config = rt.config['server']
-        self.url = server_config['url']
+        self.url = rt.config['server_url']
         self.old_params = None
         self.refresh_lock = Lock()
 

@@ -34,11 +34,18 @@ class IntentContext(GroupPlugin, metaclass=GroupMeta, base=IntentPlugin, package
     def __init__(self, rt, skill_name=None):
         GroupPlugin.__init__(self, rt)
         self.skill_name = skill_name
-        self.id_to_engine = {}
+        self.intent_id_to_engine = {}
+        self.entity_id_to_engine = {}
 
     @staticmethod
     def create_intent_id(intent: Any, skill_name: str):
         return skill_name + ':' + str(intent)
+
+    def _get_skill_name(self, skill_name_param):
+        skill_name = skill_name_param or self.skill_name
+        if not skill_name:
+            raise ValueError('Please provide skill_name in constructor or register()')
+        return skill_name
 
     def register(self, intent: Any, intent_engine: str = 'file', skill_name: str = None) -> str:
         """
@@ -56,17 +63,24 @@ class IntentContext(GroupPlugin, metaclass=GroupMeta, base=IntentPlugin, package
         Raises:
             KeyError: given intent engine does not exist
         """
-        skill_name = skill_name or self.skill_name
-        if not skill_name:
-            raise ValueError('Please provide skill_name in constructor or register()')
-
+        skill_name = self._get_skill_name(skill_name)
         intent_id = self.create_intent_id(intent, skill_name)
         self[intent_engine].register(intent, skill_name, intent_id)
-        self.id_to_engine[intent_id] = intent_engine
+        self.intent_id_to_engine[intent_id] = intent_engine
         return intent_id
 
+    def register_entity(self, entity: Any, intent_engine: str = 'file', skill_name: str = None):
+        skill_name = self._get_skill_name(skill_name)
+        entity_id = self.create_intent_id(entity, skill_name)
+        self[intent_engine].register_entity(entity, skill_name, entity_id)
+        self.entity_id_to_engine[entity_id] = intent_engine
+        return entity_id
+
     def unregister(self, intent_id: str):
-        self[self.id_to_engine[intent_id]].unregister(intent_id)
+        self[self.intent_id_to_engine[intent_id]].unregister(intent_id)
+
+    def unregister_entity(self, entity_id: str):
+        self[self.entity_id_to_engine[entity_id]].unregister(entity_id)
 
     def compile(self):
         """Prepare intents for calculation"""

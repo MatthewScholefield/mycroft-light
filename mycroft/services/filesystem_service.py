@@ -19,33 +19,31 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+from fitipy import Fitipy
 from os import makedirs
 from os.path import join, isfile, isdir, expanduser
 
 from mycroft.services.service_plugin import ServicePlugin
 
 
-class FilesystemService(ServicePlugin):
+class FilesystemService(ServicePlugin, Fitipy):
     def __init__(self, rt, root=None):
-        super().__init__(rt)
-        self.root = root or expanduser(rt.paths.user_config)
+        ServicePlugin.__init__(self, rt)
+        Fitipy.__init__(self, root or expanduser(rt.paths.user_config))
         if not self.isdir(''):
             self.mkdir('')
 
-    def path(self, file):
-        return join(self.root, file)
+    def subdir(self, *path):
+        return FilesystemService(self.rt, join(self.path, *path))
 
-    def subdir(self, subdir):
-        return FilesystemService(self.rt, self.path(subdir))
+    def open(self, *path, mode='r'):
+        return open(join(self.path, *path), mode)
 
-    def open(self, file, mode='r'):
-        return open(self.path(file), mode)
+    def isfile(self, *path):
+        return isfile(join(self.path, *path))
 
-    def isfile(self, file):
-        return isfile(self.path(file))
+    def isdir(self, *path):
+        return isdir(join(self.path, *path))
 
-    def isdir(self, dr):
-        return isdir(self.path(dr))
-
-    def mkdir(self, dr):
-        makedirs(self.path(dr), exist_ok=True)
+    def mkdir(self, *path):
+        makedirs(self.path(join(self.path, *path)), exist_ok=True)

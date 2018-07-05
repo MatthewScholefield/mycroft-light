@@ -19,7 +19,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from contextlib import suppress
 from inspect import signature
 from math import sqrt
 from typing import Callable, List, Union, Any
@@ -30,6 +29,9 @@ from mycroft.package_cls import Package
 from mycroft.services.service_plugin import ServicePlugin
 from mycroft.util import log
 from mycroft.util.parallel import run_parallel
+
+
+UNSET_ACTION = '__unset__'
 
 
 class IntentService(ServicePlugin):
@@ -50,7 +52,7 @@ class IntentService(ServicePlugin):
         self.rt.package.skill = ''
         self.rt.package.lang = self.rt.config['lang']
         self.rt.package.match = IntentMatch()
-        self.rt.package.action = ''
+        self.rt.package.action = UNSET_ACTION
         self.rt.package.confidence = 0.75
 
         self.context = IntentContext(self.rt)
@@ -106,7 +108,7 @@ class IntentService(ServicePlugin):
             handler_type: either 'prehandler' or 'handler'
         """
         if not intent_engine:  # A fallback
-            intent_id = IntentContext.create_intent_id('fallback', skill_name)
+            intent_id = IntentContext.create_intent_id(intent, skill_name)
             self.fallback_intents.add(intent_id)
         else:
             try:
@@ -137,6 +139,7 @@ class IntentService(ServicePlugin):
         Returns:
             package: object containing display data from skill
         """
+        log.info('Query:', query)
         query = query.strip().lower()
 
         matches = self.context.calc_intents(query)
@@ -146,7 +149,7 @@ class IntentService(ServicePlugin):
         result_package = self._try_run_packages([i for i in packages if i.confidence > 0.5])
         if result_package:
             return result_package
-        log.info('Falling back.')
+        log.info('No intents matched. Falling back.')
 
         matches = [
             IntentMatch(intent_id, confidence=None, query=query)
@@ -161,13 +164,15 @@ class IntentService(ServicePlugin):
 
         return self.rt.package()
 
-    @staticmethod
-    def _run_handler(handler: Callable, p: Package) -> Package:
+    def _run_handler(self, handler: Callable, p: Package) -> Package:
         try:
-            if len(signature(handler).parameters) == 0:
+            params = signature(handler).parameters
+            if len(params) == 0:
                 return handler() or p
-            else:
+            elif len(params) == 1:
                 return handler(p) or p
+            else:
+                raise TypeError('Wrong number of arguments: {}'.format(params.keys()))
         except MissingIntentMatch:
             p.confidence = 0.0
             return p

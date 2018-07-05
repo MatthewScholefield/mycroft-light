@@ -55,12 +55,16 @@ class SpeechInterface(InterfacePlugin):
         self.recognizer = RecognizerService(rt)
 
     def run(self):
-        with suppress(SystemExit):
-            while not self.rt.main_thread.quit_event.is_set():
+        while not self.rt.main_thread.quit_event.is_set():
+            try:
                 with suppress(NewQuerySignal):
                     with suppress(SkipActivationSignal):
                         self.recognizer.wait_for_wake_word()
                     self.send_query(self.record_phrase())
+            except (SystemExit, KeyboardInterrupt):
+                raise
+            except Exception:
+                log.exception('In speech interface')
 
     def on_query(self, query):
         self.recognizer.intercept(NewQuerySignal)

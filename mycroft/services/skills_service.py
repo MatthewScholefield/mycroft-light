@@ -25,10 +25,11 @@ import pyinotify
 from importlib import import_module, reload
 from inspect import isclass
 from os import listdir
-from os.path import isdir, join, dirname
+from os.path import isdir, join, dirname, isfile
 from subprocess import call
 
 from mycroft.plugin.group_plugin import GroupPlugin, GroupMeta
+from mycroft.plugin.util import update_dyn_attrs
 from mycroft.services.service_plugin import ServicePlugin
 from mycroft.skill_plugin import SkillPlugin
 from mycroft.util import log
@@ -38,7 +39,7 @@ from mycroft.util.text import to_camel
 
 
 class EventHandler(pyinotify.ProcessEvent):
-    exts = ['.py', '.intent', '.entity']
+    exts = ['.py', '.intent', '.entity', '.txt', '.voc']
 
     def __init__(self, skills, folder):
         super().__init__()
@@ -74,7 +75,11 @@ class SkillsService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=SkillP
             cls.rt = rt
 
         log.info('Loading skills...')
-        GroupPlugin.__init__(self, gp_alter_class=inject_rt, gp_blacklist=self.config['blacklist'])
+        GroupPlugin.__init__(self, gp_alter_class=inject_rt, gp_blacklist=self.config['blacklist'],
+                             gp_timeout=10.0, gp_daemon=True)
+        for name, thread in self._init_threads.items():
+            if thread.is_alive():
+                log.warning('Skill init method taking too long for:', name)
         log.info('Finished loading skills.')
 
         # The watch manager stores the watches and provides operations on watches
@@ -85,7 +90,7 @@ class SkillsService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=SkillP
         handler = EventHandler(self, skills_dir)
         notifier = pyinotify.ThreadedNotifier(wm, handler)
         notifier.daemon = True
-        wm.add_watch(skills_dir, mask, rec=True)
+        wm.add_watch(skills_dir, mask, rec=True, auto_add=True)
         notifier.start()
         self.git_repo = self.create_git_repo()
 
@@ -108,11 +113,13 @@ class SkillsService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=SkillP
             self.rt.intent.remove_skill(skill_name)
             del self._classes[skill_name]
 
+        if not isfile(join(self.rt.paths.skills, folder_name, 'skill.py')):
+            return
+
         cls = self.load_skill_class(folder_name)
         if not cls:
             return
 
-        cls._attr_name = self._make_name(cls)
         cls.rt = self.rt
         self._classes[skill_name] = cls
 
@@ -120,7 +127,10 @@ class SkillsService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=SkillP
             self._plugins[skill_name] = cls()
             return True
 
-        if safe_run(init, label='Reloading ' + skill_name):
+        if safe_run(
+                init, label='Reloading ' + skill_name, custom_exception=NotImplementedError,
+                custom_handler=lambda e, l: log.info(l + ': Skipping disabled plugin')
+        ):
             self.rt.intent.context.compile()
             log.info('Reloaded', folder_name)
 
@@ -139,6 +149,7 @@ class SkillsService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=SkillP
             log.error('Could not find', cls_name, 'in', folder_name)
             return None
 
+        update_dyn_attrs(cls, '_skill', self._plugin_path)
         return cls
 
     def setup(self):
@@ -146,6 +157,9 @@ class SkillsService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=SkillP
         if isdir(skills_dir) and not isdir(join(skills_dir, '.git')):
             call(['mv', skills_dir, join(dirname(skills_dir), 'skills-old')])
         self.create_git_repo().try_pull()
+
+    def _on_partial_load(self, plugin_name):
+        self.rt.intent.remove_skill(plugin_name)
 
     def _load_classes(self, package, suffix, blacklist):
         """
@@ -166,7 +180,8 @@ class SkillsService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=SkillP
         folder_names, invalid_names = listdir(self.rt.paths.skills), []
 
         for folder_name in folder_names:
-            if not folder_name.endswith(suffix):
+            if not folder_name.endswith(suffix) or \
+                    not isfile(join(self.rt.paths.skills, folder_name, 'skill.py')):
                 invalid_names.append(folder_name)
                 continue
 
@@ -178,7 +193,6 @@ class SkillsService(ServicePlugin, GroupPlugin, metaclass=GroupMeta, base=SkillP
             if not cls:
                 continue
 
-            cls._attr_name = attr_name
             classes[attr_name] = cls
 
         log.info('Skipped folders:', ', '.join(invalid_names))

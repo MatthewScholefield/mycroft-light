@@ -103,7 +103,7 @@ class RecognizerService(BasePlugin):
 
     def wait_for_wake_word(self):
         """Listens to the microphone and returns when it hears the wake word"""
-        log.info('Waiting for wake word...')
+        log.debug('Waiting for wake word...')
         self.av_energy = self._calc_energy(self.stream.read(self.chunk_size))
         self.engine.continue_listening()
 

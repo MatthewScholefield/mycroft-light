@@ -74,6 +74,7 @@ class BasePlugin(metaclass=ABCMeta):
                 self.rt.package.add_struct(self._package_struct)
 
         if not self._plugin_path and self._config:
+            print('PLUGIN_PATH:', self._plugin_path, self._attr_name, self._config, self)
             raise RuntimeError('Cannot set _config for non-dynamically loaded class {}'.format(
                 self.__class__.__name__
             ))
@@ -105,7 +106,7 @@ class BasePlugin(metaclass=ABCMeta):
     @lazy
     def filesystem(self):
         # type: () -> FilesystemService
-        subdir = join('config', *self._plugin_path.split('.'))
+        subdir = join(self.rt.filesystem.path, 'config', *self._plugin_path.split('.'))
         return self.rt.filesystem.subdir(subdir)
 
     def setup(self):

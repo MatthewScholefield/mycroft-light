@@ -23,7 +23,6 @@ from abc import ABCMeta
 
 from mycroft.plugin.util import load_class, load_plugin
 from mycroft.util import log
-from mycroft.util.text import to_snake
 
 
 class MustOverride(NotImplementedError):
@@ -31,6 +30,42 @@ class MustOverride(NotImplementedError):
 
 
 class OptionPlugin:
+    """
+    >>> # --- mycroft/fruits/fruit_plugin.py ---
+    >>> from abc import abstractmethod
+    >>> from mycroft.plugin.base_plugin import BasePlugin
+    >>>
+    >>> class FruitPlugin(BasePlugin):
+    ...     def __init__(self, rt, side_dish):
+    ...         super().__init__(rt)
+    ...         self.side_dish = side_dish
+    ...     @abstractmethod
+    ...     def eat(self):
+    ...         pass
+    ...
+    >>> # --- mycroft/fruits/apple.py ---
+    >>> class AppleFruit(FruitPlugin):
+    ...     def eat(self):
+    ...         print('Eating apple with', self.side_dish)
+    ...
+    >>> # --- mycroft/services/fruit_service.py ---
+    >>> from mycroft.services.service_plugin import ServicePlugin
+    >>> class FruitService(
+    ...     ServicePlugin, OptionPlugin, metaclass=OptionMeta, base=FruitPlugin,
+    ...     package='mycroft.fruits', suffix='_fruit', default='apple'
+    ... ):
+    ...     def __init__(self, rt):
+    ...         ServicePlugin.__init__(self, rt)
+    ...         OptionPlugin.__init__(self, rt, 'curry')
+    ...     # Functions are filled in with functions from base class
+    ...
+    >>> # --- ~/.mycroft/skills/eat_fruit_skill.py ---
+    >>> from mycroft_core import MycroftSkill, intent_handler
+    >>> class EatFruitSkill(MycroftSkill):
+    ...     @intent_handler('eat.fruit')
+    ...     def eat_fruit(self):
+    ...         self.rt.fruit.eat()
+    """
     def __init__(self, *args, __module__, **kwargs):
         self._plugin = None
         if not isinstance(type(self), OptionMeta):
@@ -40,7 +75,8 @@ class OptionPlugin:
         self._class, self._plugin = self.__load_plugin(__module__, args, kwargs)
         self.__copy_functions(self._plugin)
 
-        log.info('Loaded {} as {}.'.format(self._class.__name__, self.__class__.__name__))
+        if getattr(self, '_plugin_path', '').count('.') > 1:
+            log.debug('Loaded {} as {}.'.format(self._class.__name__, self.__class__.__name__))
 
     def __load_plugin(self, module, args, kwargs):
         package, suffix, default = self._package_, self._suffix_, self._default_

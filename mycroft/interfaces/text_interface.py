@@ -53,8 +53,8 @@ class TextInterface(InterfacePlugin):
 
     def __init__(self, rt):
         super().__init__(rt)
-        sys.stdout = StreamHandler(log.debug)
-        sys.stderr = StreamHandler(log.warning)
+        sys.stdout = StreamHandler(lambda x: log.info(x, stack_offset=3))
+        sys.stderr = StreamHandler(lambda x: log.error(x, stack_offset=3))
         self.response_event = Event()
         self.response_event.set()
         self.prompt = self.config['prompt']
@@ -74,8 +74,9 @@ class TextInterface(InterfacePlugin):
             self.rt.main_thread.quit()
 
     def on_query(self, query):
-        if query and not self.owns_response():
+        if not self.owns_response():
             self.print(query)
+            self.response_event.clear()
 
     def print(self, *args, **kwargs):
         print(*args, file=sys.__stdout__, flush=True, **kwargs)
@@ -83,9 +84,10 @@ class TextInterface(InterfacePlugin):
     def on_response(self, package):
         if not self.owns_response():
             self.print()
-        self.print()
-        self.print("    " + package.text)
-        self.print()
+        if package.text:
+            self.print()
+            self.print("    " + package.text)
+            self.print()
         self.print(self.prompt, end='')
         self.response_event.set()
 

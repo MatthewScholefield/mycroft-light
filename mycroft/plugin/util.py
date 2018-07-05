@@ -7,6 +7,13 @@ from mycroft.util import log
 from mycroft.util.text import to_camel, to_snake
 
 
+def update_dyn_attrs(cls: Type, suffix: str, base_path: str, custom_attr: str = None):
+    base_path += '.' if base_path else ''
+    cls._attr_name = to_snake(cls.__name__).replace(suffix, '')
+    cls._plugin_path = base_path + (custom_attr or cls._attr_name)
+    return cls
+
+
 def load_class(package: str, suffix: str, module: str, plugin_path: str, attr_name: str = None):
     package = package + '.' + module + suffix
     log.debug('Loading {}{}...'.format(module, suffix))
@@ -19,9 +26,7 @@ def load_class(package: str, suffix: str, module: str, plugin_path: str, attr_na
         elif not issubclass(cls, BasePlugin):
             log.error('{} must inherit BasePlugin to be loaded dynamically'.format(cls.__name__))
         else:
-            plugin_path += '.' if plugin_path else ''
-            cls._attr_name = to_snake(cls.__name__).replace(suffix, '')
-            cls._plugin_path = plugin_path + (attr_name or cls._attr_name)
+            update_dyn_attrs(cls, suffix, plugin_path, attr_name)
             return cls
     except Exception:
         log.exception('Loading Module', package)

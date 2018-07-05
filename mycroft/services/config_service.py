@@ -66,10 +66,10 @@ class ConfigService(ServicePlugin, dict):
             else:
                 out[i] = inp[i]
                 if new_pos in self.handlers:
-                    log.info('Config has updated for {}...'.format(new_pos))
+                    log.debug('Config has updated for {}...'.format(new_pos))
                     self.handlers[new_pos](out[i])
         if pos in self.handlers:
-            log.info('Config has updated for {}...'.format(pos))
+            log.debug('Config has updated for {}...'.format(pos))
             self.handlers[pos](out)
 
     def inject(self, config: dict, path: str = ''):
@@ -89,13 +89,6 @@ class ConfigService(ServicePlugin, dict):
             if isfile(file_name):
                 with open(file_name) as f:
                     self.inject(yaml.safe_load(f))
-
-    @staticmethod
-    def load_skill_config(conf_file):
-        if isfile(conf_file):
-            with open(conf_file, 'r') as f:
-                return yaml.safe_load(f)
-        return {}
 
     def __conv(self, out, inp):
         """

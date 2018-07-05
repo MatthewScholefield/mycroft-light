@@ -19,6 +19,8 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+from difflib import SequenceMatcher
+from typing import Iterable, Tuple
 
 
 def to_camel(snake):
@@ -33,6 +35,14 @@ def to_snake(camel):
     return ''.join('_' + x if 'A' <= x <= 'Z' else x for x in camel).lower()[camel[0].isupper():]
 
 
+def compare(a: str, b: str) -> float:
+    return SequenceMatcher(a=a.lower(), b=b.lower()).ratio()
+
+
+def find_match(query: str, options: Iterable[str]) -> Tuple[str, float]:
+    return max([(option, compare(option, query)) for option in options], key=lambda x: x[1])
+
+
 def split_sentences(text):
     """
     Turns a string of multiple sentences into a list of separate ones
@@ -45,7 +55,7 @@ def split_sentences(text):
     i = 0
     corrected_sents = []
     while i < len(sents):
-        if sents[i][-2] == ' ' and i < len(sents) - 1:
+        if len(sents[i].split()[-1]) <= 3 and i < len(sents) - 1:
             corrected_sents += [sents[i] + '. ' + sents[i + 1]]
             i += 2
         else:

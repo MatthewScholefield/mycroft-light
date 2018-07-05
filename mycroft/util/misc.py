@@ -51,7 +51,8 @@ def _log_exception(label, e, warn, stack_offset):
 
 
 def safe_run(target, args=None, kwargs=None, label='', warn=False,
-             custom_exception=_DefaultException, custom_handler=None, stack_offset=0):
+             custom_exception=None, custom_handler=None, stack_offset=0):
+    custom_exception = custom_exception or _DefaultException
     try:
         return target(*(args or []), **(kwargs or {}))
     except custom_exception as e:

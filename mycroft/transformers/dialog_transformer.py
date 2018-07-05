@@ -24,7 +24,10 @@ import random
 import re
 
 from os.path import isfile, join
+from random import randint
+from typing import Tuple
 
+from mycroft.formatters.formatter_plugin import Format
 from mycroft.package_cls import Package
 from mycroft.transformers.transformer_plugin import TransformerPlugin
 from mycroft.util import log
@@ -39,32 +42,40 @@ class DialogTransformer(TransformerPlugin):
         'text': str
     }
 
+    def __init__(self, rt):
+        super().__init__(rt)
+        self.rt.package.speech = self.rt.package.text = ''
+
     def process(self, p: Package):
+        if not p.action:
+            return
         locale_dir = self.rt.paths.skill_locale(skill_name=p.skill, lang=p.lang)
         file_base = join(locale_dir, p.action)
         speech = file_base + '.speech'
         dialog = file_base + '.dialog'
         text = file_base + '.text'
 
-        if not p.speech and not p.text:
-            p.speech = p.text = ''
-
-            if isfile(speech):
-                p.speech = self.render_file(speech, p)
-            elif isfile(dialog):
-                p.speech = self.render_file(dialog, p)
-            if isfile(text):
-                p.text = self.render_file(text, p)
+        line_id = -1
 
         if not p.speech:
-            p.speech = p.text
+            if isfile(speech):
+                line_id, p.speech = self.render_file(speech, p, Format.speech, line_id)
+            elif isfile(dialog):
+                line_id, p.speech = self.render_file(dialog, p, Format.speech, line_id)
+            else:
+                p.speech = p.text
         if not p.text:
-            p.text = p.speech
+            if isfile(text):
+                line_id, p.text = self.render_file(text, p, Format.text, line_id)
+            elif isfile(dialog):
+                line_id, p.text = self.render_file(dialog, p, Format.text, line_id)
+            else:
+                p.text = p.speech
 
         if not p.speech and not p.text:
             log.warning('No dialog at:', dialog)
 
-    def render_file(self, filename: str, p: Package) -> str:
+    def render_file(self, filename: str, p: Package, fmt: Format, line_id = -1) -> Tuple[int, str]:
         best_lines, best_score = [], 0
         with open(filename) as f:
             lines = f.read().split('\n')
@@ -73,11 +84,13 @@ class DialogTransformer(TransformerPlugin):
             if not line or line.isspace():
                 continue
 
-            line_score = 0
-            for key in p.data:
+            line_score = 1
+            for key, value in p.data.items():
+                if value is None:
+                    continue
                 token = '{' + key + '}'
                 if token in line:
-                    line = line.replace(token, str(p.data[key]))
+                    line = line.replace(token, self.rt.formatter.format(value, fmt))
                     line_score += 1
 
             if re.search('{[a-zA-Z_]*}', line):
@@ -88,4 +101,8 @@ class DialogTransformer(TransformerPlugin):
             elif line_score == best_score:
                 best_lines.append(line)
 
-        return random.choice(best_lines)
+        if 0 <= line_id < len(best_lines):
+            choice_id = line_id
+        else:
+            choice_id = randint(0, len(best_lines) - 1)
+        return choice_id, best_lines[choice_id]
