@@ -83,6 +83,16 @@ install_deps() {
     fi
 }
 
+install_piwheels() {
+    echo "Installing piwheels..."
+    echo "
+[global]
+extra-index-url=https://www.piwheels.org/simple
+" | sudo tee -a /etc/pip.conf
+}
+
+has_piwheels() { cat /etc/pip.conf 2>/dev/null | grep -qF 'piwheels'; }
+
 hash_dependencies() {
     md5sum requirements.txt packages.txt > .installed
 }
@@ -107,6 +117,11 @@ if file_has_changed "requirements.txt"; then
     .venv/bin/pip install -r requirements.txt
     .venv/bin/pip install -e .
     .venv/bin/pip install -e mycroft_core
+fi
+
+arch="$(python -c 'import platform; print(platform.machine())')"
+if [ "$arch" = "armv7l" ] && ! has_piwheels; then
+    install_piwheels
 fi
 
 hash_dependencies
