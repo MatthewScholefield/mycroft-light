@@ -238,7 +238,7 @@ class Package:
 
         results = {}
 
-        for key, value in data:
+        for key, value in data.items():
             if key not in handlers or not value:
                 continue
             results[key] = cls.execute_data(value, handlers[key])

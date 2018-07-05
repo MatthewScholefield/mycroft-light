@@ -52,3 +52,7 @@ class InterfacePlugin(BasePlugin):
 
     def on_exit(self):
         pass
+
+    def _unload_plugin(self):
+        self.rt.query.remove_on_response(self.on_response)
+        self.rt.query.remove_on_query(self.on_query)

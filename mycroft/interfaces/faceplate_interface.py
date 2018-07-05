@@ -19,7 +19,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from time import monotonic
+from time import monotonic, sleep
 
 import serial
 from os.path import exists
@@ -115,6 +115,7 @@ class FaceplateInterface(InterfacePlugin):
     def __init__(self, rt):
         super().__init__(rt)
         if not exists(self.config['url']):
+            self._unload_plugin()
             raise NotImplementedError
 
         self.serial = serial.serial_for_url(url=self.config['url'], baudrate=self.config['rate'],
@@ -160,7 +161,7 @@ class FaceplateInterface(InterfacePlugin):
             cur_delta = monotonic() - begin_time
             sleep_time = desired_delta - cur_delta
             if sleep_time > 0:
-                sleep_time(sleep_time)
+                sleep(sleep_time)
 
     def execute(self, p: Package):
         handlers = {
@@ -179,6 +180,9 @@ class FaceplateInterface(InterfacePlugin):
         }
 
         p.execute(handlers)
+
+    def on_response(self, package: Package):
+        self.execute(package)
 
     ################################
 

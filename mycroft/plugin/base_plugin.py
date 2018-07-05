@@ -106,7 +106,7 @@ class BasePlugin(metaclass=ABCMeta):
     @lazy
     def filesystem(self):
         # type: () -> FilesystemService
-        subdir = join(self.rt.filesystem.path, 'config', *self._plugin_path.split('.'))
+        subdir = join(self.rt.filesystem.root, 'config', *self._plugin_path.split('.'))
         return self.rt.filesystem.subdir(subdir)
 
     def setup(self):
@@ -118,3 +118,7 @@ class BasePlugin(metaclass=ABCMeta):
 
     def on_config_change(self, config: dict):
         self.config = dict(recursive_merge(self.config, config))
+
+    def _unload_plugin(self):
+        """Override to specify shutdown behavior"""
+        pass

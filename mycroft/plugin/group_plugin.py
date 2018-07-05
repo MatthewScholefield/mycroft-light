@@ -24,8 +24,9 @@ from abc import ABCMeta
 from functools import wraps
 from importlib import import_module
 from os.path import abspath
-from typing import Any
+from typing import Any, Type
 
+from mycroft.plugin.base_plugin import BasePlugin
 from mycroft.plugin.util import load_class, Empty
 from mycroft.util import log
 from mycroft.util.misc import safe_run
@@ -82,7 +83,7 @@ class GroupPlugin(metaclass=ABCMeta):
         gp_kwargs = self._extract_gp_kwargs(kwargs)
         alter_class = gp_kwargs.pop('alter_class', None)
 
-        def get_function(cls):
+        def get_function(cls: Type[BasePlugin]):
             def func(*args, **kwargs):
                 def create_plugin(*args, **kwargs):
                     new_cls = (alter_class(cls) or cls) if alter_class else cls
