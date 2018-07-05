@@ -46,4 +46,4 @@ class FilesystemService(ServicePlugin, Fitipy):
         return isdir(join(self.path, *path))
 
     def mkdir(self, *path):
-        makedirs(self.path(join(self.path, *path)), exist_ok=True)
+        makedirs(join(self.path, *path), exist_ok=True)
