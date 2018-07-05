@@ -90,10 +90,10 @@ class PairingSkill(MycroftSkill):
         self.create_activator()
 
         code = self.data['code']
-
+        p.faceplate.mouth.text = code
         return p.add(
             action='pair', confidence=0.85,
-            data=dict(code=code, spelt_code=self.spell_code(code)),
+            data=dict(code=code, spelt_code=self.spell_code(code))
         )
 
     @intent_handler('stop.pairing')
