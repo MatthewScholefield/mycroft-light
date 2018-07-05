@@ -33,7 +33,7 @@ class VolumeSkill(MycroftSkill):
     def set_volume(self, volume):
         volume = min(max(volume, 0), self.steps)
         Mixer().setvolume(round(100 * volume / self.steps))
-        self.rt.formats.faceplate.command('eyes.volume=' + str(round(volume)))
+        self.rt.interfaces.faceplate.command('eyes.volume={}'.format(round(volume)))
         play_audio(self.change_volume_wav)
 
     @intent_handler('increase.volume')
