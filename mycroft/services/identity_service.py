@@ -19,8 +19,10 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+from os import makedirs
+
 import json
-from os.path import isfile
+from os.path import isfile, dirname
 from time import time as get_time
 
 from mycroft.services.service_plugin import ServicePlugin
@@ -57,6 +59,7 @@ class IdentityService(ServicePlugin):
         """Registers new login data from server"""
         data = self.translate_from_server(data)
         self.assign(data)
+        makedirs(dirname(self.identity_file), exist_ok=True)
         with open(self.identity_file, 'w') as f:
             json.dump(data, f)
 
