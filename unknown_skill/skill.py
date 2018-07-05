@@ -7,4 +7,6 @@ class UnknownSkill(MycroftSkill):
 
     @intent_prehandler('fallback', '')
     def fallback(self, p: Package):
+        if not p.match.query:
+            p.action = None
         return p.add(confidence=0.5)

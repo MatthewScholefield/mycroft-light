@@ -49,6 +49,7 @@ class PairingSkill(MycroftSkill):
 
     def __init__(self):
         super().__init__()
+        self.activator = None
 
         if not self.rt.identity:
             raise NotImplementedError('Server Disabled')
@@ -95,6 +96,13 @@ class PairingSkill(MycroftSkill):
             data=dict(code=code, spelt_code=self.spell_code(code)),
         )
 
+    @intent_handler('stop.pairing')
+    def stop_pairing(self, p: Package):
+        if self.activator:
+            self.activator.cancel()
+        else:
+            p.action = 'not.pairing'
+
     @intent_handler('unpair.device')
     def unpair_device(self, p: Package):
         if not self.rt.identity:
@@ -131,6 +139,10 @@ class PairingSkill(MycroftSkill):
         self.execute(self.package(action='pair.complete'))
 
     def create_activator(self):
-        activator = Timer(self.DELAY, self.check_activate)
-        activator.daemon = True
-        activator.start()
+        self.activator = Timer(self.DELAY, self.check_activate)
+        self.activator.daemon = True
+        self.activator.start()
+
+    def shutdown(self):
+        if self.activator:
+            self.activator.cancel()

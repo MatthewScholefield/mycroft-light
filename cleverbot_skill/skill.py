@@ -4,6 +4,7 @@ from mycroft_core import MycroftSkill, Package, intent_handler, intent_prehandle
 class CleverbotSkill(MycroftSkill):
     def __init__(self):
         super().__init__()
+        raise NotImplementedError
         from cleverwrap import CleverWrap
         self.cl = CleverWrap(self.rt.remote_key.create_key('cleverbot.com', 'cleverbot'))
 
