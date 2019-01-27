@@ -1,8 +1,8 @@
-from typing import List
+from typing import List, TYPE_CHECKING
+from .mycroft_owm import MycroftOWM
 
-from pyowm.webapi25 import weatherutils
-from pyowm.webapi25.configuration25 import weather_code_registry
-from pyowm.webapi25.weather import Weather
+if TYPE_CHECKING:  # noqa
+    from pyowm.webapi25.weather import Weather
 
 from mycroft_core import MycroftSkill, intent_handler, Package, intent_prehandler
 from mycroft.intent_match import MissingIntentMatch
@@ -11,9 +11,7 @@ from mycroft.intent_match import MissingIntentMatch
 class WeatherSkill(MycroftSkill):
     def __init__(self):
         super().__init__()
-        from pyowm import OWM
-        key = self.rt.remote_key.create_key('api.openweathermap.org', 'weather')
-        self.owm = OWM(key)
+        self.owm = MycroftOWM(self.rt)
         coord_conf = self.rt.config['location']['coordinate']
         self.coord = (coord_conf['latitude'], coord_conf['longitude'])
 
@@ -34,6 +32,8 @@ class WeatherSkill(MycroftSkill):
         })
 
     def when_condition(self, condition_name):
+        from pyowm.webapi25 import weatherutils
+        from pyowm.webapi25.configuration25 import weather_code_registry
         return weatherutils.filter_by_status(
             self.get_weathers(), condition_name, weather_code_registry
         )
@@ -41,7 +41,7 @@ class WeatherSkill(MycroftSkill):
     @intent_prehandler('when.will.condition')
     def when_will_condition(self, p: Package):
         cond = p.match['condition']
-        if cond not in {'rain', 'sun', 'fog', 'snow',  'storn', 'hurricane', 'tornado'}:
+        if cond not in {'rain', 'sun', 'fog', 'snow',  'storm', 'hurricane', 'tornado'}:
             raise MissingIntentMatch('condition')
         p.data['condition'] = p.match['condition']
 
