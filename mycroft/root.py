@@ -21,6 +21,7 @@
 # under the License.
 from mycroft.plugin.group_plugin import GroupPlugin, GroupMeta
 from mycroft.services.config_service import ConfigService
+from mycroft.services.contexts_service import ContextsService
 from mycroft.services.device_info_service import DeviceInfoService
 from mycroft.services.filesystem_service import FilesystemService
 from mycroft.services.identity_service import IdentityService
@@ -73,3 +74,4 @@ class Root(
         self.main_thread = ''  # type: MainThreadService
         self.remote_key = ''  # type: RemoteKeyService
         self.plugin_versions = ''  # type: PluginVersionsService
+        self.contexts = ''  # type: ContextsService

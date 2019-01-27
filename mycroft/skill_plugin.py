@@ -143,7 +143,7 @@ class SkillPlugin(BasePlugin):
         return context
 
     def get_response(self, p: Package, intent_context: IntentContext = None,
-                     repeat_count=0, ) -> Union[IntentMatch, None]:
+                     repeat_count=0, ) -> IntentMatch:
         """If intent_context is None, the reply can be anything."""
         orig_p = p
         p = deepcopy(p)
@@ -161,6 +161,12 @@ class SkillPlugin(BasePlugin):
                     match.intent_id = match.intent_id.split(':')[-1]
                     return match
         return IntentMatch(confidence=0.0, query='', intent_id='')
+
+    def confirm(self, action: str, p: Package = None) -> bool:
+        p = deepcopy(p) if p else self.package()
+        p.action = action
+        confirm_context = self.rt.contexts.get('confirm', ['yes', 'no'])
+        return self.get_response(p, confirm_context).intent_id == 'yes'
 
     def shutdown(self):
         """Called when quitting the program or unloading the skill"""
