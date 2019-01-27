@@ -4,8 +4,8 @@ from mycroft_core import MycroftSkill, Package, intent_handler
 class RepeatInteractionsSkill(MycroftSkill):
     def __init__(self):
         super().__init__()
-        self.last_stts = []
-        self.last_ttss = []
+        self.last_stts = [None]
+        self.last_ttss = [None]
         self.rt.query.on_query(self.on_query)
         self.rt.query.on_response(self.on_response)
         self.owns_response = False
@@ -33,7 +33,7 @@ class RepeatInteractionsSkill(MycroftSkill):
     def what_did_i_say(self, p: Package):
         self.on_handler()
         p.data.update({
-            'text': self.last_stts[-1] if len(self.last_stts) > 0 else 'nothing'
+            'text': self.last_stts[-1]
         })
 
     @intent_handler('before.that')
@@ -45,5 +45,5 @@ class RepeatInteractionsSkill(MycroftSkill):
     def what_did_you_say(self, p: Package):
         self.on_handler()
         p.data.update({
-            'text': self.last_stts[-1]
+            'text': self.last_ttss[-1]
         })
