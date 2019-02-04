@@ -1,4 +1,5 @@
 import re
+import requests
 
 from mycroft_core import MycroftSkill, Package, intent_handler
 from subprocess import check_output
@@ -28,3 +29,24 @@ class IpSkill(MycroftSkill):
         elif len(ips) == 1:
             p.data.update(ip=ips[0])
             p.data.update(spoken_ip=spoken_ips[0])
+
+    def get_public_ip_info(self, p: Package):
+        data = requests.get('https://ipinfo.io').json()
+        return p.add(data={
+            'ip': data['ip'],
+            'hostname': data['hostname'],
+            'city': data['city'],
+            'region': data['region'],
+            'country': data['country'],
+            'loc': data['loc'],
+            'postal': data['postal'],
+            'org': data['org']
+        })
+
+    @intent_handler('public.ip')
+    def handle_public_ip(self, p: Package):
+        return self.get_public_ip_info(p)
+
+    @intent_handler('ip.location')
+    def handle_public_ip(self, p: Package):
+        return self.get_public_ip_info(p)
