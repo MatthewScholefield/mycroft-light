@@ -7,6 +7,8 @@ from mycroft.skill_plugin import intent_prehandler
 
 
 class SkillEditorSkill(MycroftSkill):
+    _required_attributes = ['desktop-interface']
+
     def edit_or_open_prehandler(self, p: Package):
         skill_query = p.match['skill']
         skills = list(self.rt.skills)

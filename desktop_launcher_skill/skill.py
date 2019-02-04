@@ -11,6 +11,7 @@ from mycroft.util.text import find_match
 
 class DesktopLauncherSkill(MycroftSkill):
     valid_command_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_0123456789 %'
+    _required_attributes = ['desktop-interface']
 
     def __init__(self):
         super().__init__()

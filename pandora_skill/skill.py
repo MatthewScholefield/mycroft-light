@@ -41,6 +41,7 @@ class PandoraSkill(MycroftSkill):
     _config = {
         'pandora_conf': '~/.mycroft/pandora.conf'
     }
+    _required_attributes = ['audio-output']
 
     def __init__(self):
         super().__init__()
