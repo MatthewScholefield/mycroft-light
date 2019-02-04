@@ -63,6 +63,10 @@ class BasePlugin(metaclass=ABCMeta):
     #: ie. {'val': 'hi'} == self.rt.config['val']
     _root_config = {}
 
+    #: A list of required platform attributes in mycroft.config at platform.attributes
+    #: Known options listed in config file
+    _required_attributes = []
+
     def __init__(self, rt):
         # type: (Root) -> None
         self.rt = rt
@@ -92,6 +96,11 @@ class BasePlugin(metaclass=ABCMeta):
 
         else:
             self.config = {}
+
+        if 'config' in rt and self._required_attributes:
+            for required_attribute in self._required_attributes:
+                if required_attribute not in self.rt.config['platform']['attributes']:
+                    raise NotImplementedError('Missing attribute: ' + required_attribute)
 
         if 'plugin_versions' in rt:
             old_version = rt.plugin_versions.get(self._plugin_path)
