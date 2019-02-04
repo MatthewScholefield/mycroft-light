@@ -32,6 +32,7 @@ class TtsInterface(
 ):
     """Speak outputs"""
     _config = {'module': 'mimic'}
+    _required_attributes = ['audio-output']
 
     def __init__(self, rt):
         InterfacePlugin.__init__(self, rt)

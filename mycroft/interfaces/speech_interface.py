@@ -46,6 +46,7 @@ class SpeechInterface(InterfacePlugin):
     _package_struct = {
         'skip_activation': bool
     }
+    _required_attributes = ['audio-input', 'audio-output']
 
     def __init__(self, rt):
         super().__init__(rt)

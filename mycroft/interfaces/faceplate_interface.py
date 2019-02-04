@@ -112,6 +112,8 @@ class FaceplateInterface(InterfacePlugin):
         'timeout': 5.0
     }
 
+    _required_attributes = ['faceplate']
+
     def __init__(self, rt):
         super().__init__(rt)
         if not exists(self.config['url']):
