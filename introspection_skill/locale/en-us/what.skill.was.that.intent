@@ -1,2 +1,3 @@
 (Analysis,|) (Why did you (say|do) that|What skill (was that|did you use)) ?
-(Perform|) Introspection
+(Perform|) Introspection (on {phrase}).
+Introspect {phrase}.
