@@ -19,16 +19,19 @@ class FormatterPlugin(BasePlugin):
         self.formatters = {
             str: str,
             int: str,
-            float: str,
+            float: lambda x: '{:.2f}'.format(x),
             list: self.format_list
         }
 
-    def format_list(self, obj):
+    def format_list(self, obj, fmt):
         if len(obj) == 0:
             return ''
         if len(obj) == 1:
-            return obj[0]
-        return ', '.join(obj[:-1]) + ', ' + self.and_ + ' ' + obj[-1]
+            return self.format(obj[0], fmt)
+        return '{}, {} {}'.format(
+            ', '.join(self.format(obj[:-1], fmt)), self.and_,
+            self.format(obj[-1], fmt)
+        )
 
     def add(self, cls, formatter):
         self.formatters[cls] = formatter

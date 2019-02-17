@@ -75,7 +75,7 @@ class DialogTransformer(TransformerPlugin):
         if not p.speech and not p.text:
             log.warning('No dialog at:', dialog)
 
-    def render_file(self, filename: str, p: Package, fmt: Format, line_id = -1) -> Tuple[int, str]:
+    def render_file(self, filename: str, p: Package, fmt: Format, line_id=-1) -> Tuple[int, str]:
         best_lines, best_score = [], 0
         with open(filename) as f:
             lines = f.read().split('\n')

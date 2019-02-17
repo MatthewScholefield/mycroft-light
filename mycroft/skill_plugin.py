@@ -24,10 +24,12 @@ from collections import namedtuple
 
 import functools
 from copy import deepcopy
-from functools import partial
 from os.path import join
-from typing import Callable, Union, Any
+from threading import Thread
+from typing import Callable, Any
+from uuid import uuid4
 
+from mycroft.formatters.formatter_plugin import Format
 from mycroft.intent_context import IntentContext
 from mycroft.intent_match import IntentMatch
 from mycroft.package_cls import Package
@@ -104,24 +106,44 @@ class SkillPlugin(BasePlugin):
         self.__scheduled_tasks = []
         atexit.register(self._unload)
 
-    def locale(self, file_name):
+    def locale(self, file_name) -> list:
         """Returns lines of file in skill's locale/<lang> folder"""
         locale_folder = self.rt.paths.skill_locale(self.skill_name)
         with open(join(locale_folder, file_name), 'r') as f:
             return f.read().strip().split('\n')
 
+    def dialog(self, dialog: str, fmt: Format = Format.speech, **kwargs) -> str:
+        local_dir = self.rt.paths.skill_locale(skill_name=self.skill_name, lang=self.lang)
+        dialog_file = join(local_dir, dialog + '.dialog')
+        p = self.package(data=kwargs)
+        _, txt = self.rt.transformers.dialog.render_file(dialog_file, p, fmt)
+        return txt
+
     def create_thread(self, target, *args, **kwargs):
-        safe_run(target, args=args, kwargs=kwargs, label=self.skill_name + ' thread')
+        t = Thread(target=safe_run, args=[target], kwargs=dict(args=args, kwargs=kwargs,
+                                                               label=self.skill_name + ' thread'),
+                   daemon=True)
+        t.start()
+        return t
 
-    def schedule_repeating(self, function: Callable, delay: int, name='', args=None, kwargs=None):
-        identifier = self.skill_name + ':' + repr(function)
-        self.rt.scheduler.repeating(function, delay, name, args, kwargs, identifier)
-        self.__scheduled_tasks.append(identifier)
+    def _create_schedule_id(self, func: Callable) -> str:
+        return '{}:{}-{}'.format(self.skill_name, func, str(uuid4())[:8])
 
-    def schedule_once(self, function: Callable, delay: int, name='', args=None, kwargs=None):
-        identifier = self.skill_name + ':' + repr(function)
-        self.rt.scheduler.once(function, delay, name, args, kwargs, identifier)
+    def schedule_repeating(self, func: Callable, delay: int,
+                           name='', args=None, kwargs=None) -> str:
+        identifier = self._create_schedule_id(func)
+        self.rt.scheduler.repeating(func, delay, name, args, kwargs, identifier)
         self.__scheduled_tasks.append(identifier)
+        return identifier
+
+    def schedule_once(self, func: Callable, delay: int, name='', args=None, kwargs=None) -> str:
+        identifier = self._create_schedule_id(func)
+        self.rt.scheduler.once(func, delay, name, args, kwargs, identifier)
+        self.__scheduled_tasks.append(identifier)
+        return identifier
+
+    def cancel_task(self, identifier: str) -> bool:
+        return self.rt.scheduler.cancel(identifier)
 
     def execute(self, p: Package):
         if not isinstance(p, Package):
