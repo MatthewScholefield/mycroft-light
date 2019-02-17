@@ -1,2 +1,1 @@
-Stop
-Stop timers
+(Stop|Cancel) (all|) (timer|timers|)

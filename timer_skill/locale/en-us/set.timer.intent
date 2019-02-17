@@ -1,2 +1,3 @@
 (Set|Create|Make|) (a|an|) {number} {unit} ({timer_type}|) timer ((called|named) {timer_label} |).
 (Set|Create|Make|) (a|an|) ({timer_type}|) timer (for|) {number} {unit}.
+Remind me to {timer_label} in {number} {unit}

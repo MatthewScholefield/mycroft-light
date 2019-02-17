@@ -1,8 +1,7 @@
+import time
 from collections import namedtuple
 
-import time
 from mycroft_core import MycroftSkill, Package, intent_handler
-from threading import Timer
 
 from mycroft.skill_plugin import with_entity, intent_prehandler
 
@@ -23,15 +22,13 @@ class TimerSkill(MycroftSkill):
     def reschedule(self):
         self.unschedule()
         self.alarm_timers = [
-            Timer(alarm.time - time.time(), self.notify, args=[alarm])
+            self.schedule_once(self.notify, delay=alarm.time - time.time(), args=[alarm])
             for alarm in self.alarms
         ]
-        for i in self.alarm_timers:
-            i.start()
 
     def unschedule(self):
         for i in self.alarm_timers:
-            i.cancel()
+            self.cancel_task(i)
 
     def shutdown(self):
         self.unschedule()
@@ -46,8 +43,7 @@ class TimerSkill(MycroftSkill):
         self.execute(self.package(action='alarm.notify', data=dict(
             name=alarm.name,
         )))
-        self.notifiers[alarm] = Timer(self.NOTIFY_DELAY, self.notify, args=[alarm])
-        self.notifiers[alarm].start()
+        self.notifiers[alarm] = self.schedule_once(self.notify, self.NOTIFY_DELAY, args=[alarm])
 
     @intent_prehandler('stop')
     def stop(self, p: Package):
@@ -57,8 +53,8 @@ class TimerSkill(MycroftSkill):
 
     @stop.handler
     def stop(self):
-        for alarm, timer_thread in self.notifiers.items():
-            timer_thread.cancel()
+        for alarm, task in self.notifiers.items():
+            self.cancel_task(task)
             if alarm in self.alarms:
                 self.alarms.remove(alarm)
         self.notifiers = {}
@@ -86,4 +82,16 @@ class TimerSkill(MycroftSkill):
             'number': p.match['number'],
             'unit': p.match['unit'],
             'name': name
+        }
+
+    @intent_prehandler('list.timers')
+    def handle_list_timers(self, p: Package):
+        p.data = {
+            'timers': [
+                self.dialog(
+                    'timer_list', type=alarm.name,
+                    duration=self.dialog('duration', minutes=int(alarm.time - time.time()) // 60)
+                )
+                for alarm in self.alarms
+            ]
         }
