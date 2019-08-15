@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Mycroft AI, Inc.
+# Copyright (c) 2019 Mycroft AI, Inc. and Matthew Scholefield
 #
 # This file is part of Mycroft Simple
 # (see https://github.com/MatthewScholefield/mycroft-simple).
