@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2017 Mycroft AI, Inc.
+# Copyright (c) 2019 Mycroft AI, Inc. and Matthew Scholefield
 #
 # This file is part of Mycroft Light
 # (see https://github.com/MatthewScholefield/mycroft-light).
