@@ -32,7 +32,7 @@ from mycroft.util import log
 from mycroft.util.text import to_snake
 
 SYSTEM_CONFIG = '/etc/mycroft/mycroft.conf'
-USER_CONFIG = join(expanduser('~'), '.mycroft/mycroft.conf')
+USER_CONFIG = join(expanduser('~'), '.mycroft-light/mycroft.conf')
 
 REMOTE_CONFIG = 'mycroft.ai'
 REMOTE_CACHE = join(expanduser('~'), '.mycroft/web_config_cache.yaml')
