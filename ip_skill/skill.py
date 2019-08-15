@@ -21,9 +21,9 @@
 # under the License.
 import re
 import requests
+from subprocess import check_output
 
 from mycroft_core import MycroftSkill, Package, intent_handler
-from subprocess import check_output
 
 
 class IpSkill(MycroftSkill):

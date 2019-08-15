@@ -20,6 +20,7 @@
 # specific language governing permissions and limitations
 # under the License.
 from typing import List, TYPE_CHECKING
+
 from .mycroft_owm import MycroftOWM
 
 if TYPE_CHECKING:  # noqa
@@ -62,7 +63,7 @@ class WeatherSkill(MycroftSkill):
     @intent_prehandler('when.will.condition')
     def when_will_condition(self, p: Package):
         cond = p.match['condition']
-        if cond not in {'rain', 'sun', 'fog', 'snow',  'storm', 'hurricane', 'tornado'}:
+        if cond not in {'rain', 'sun', 'fog', 'snow', 'storm', 'hurricane', 'tornado'}:
             raise MissingIntentMatch('condition')
         p.data['condition'] = p.match['condition']
 

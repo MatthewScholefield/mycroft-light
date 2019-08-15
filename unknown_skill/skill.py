@@ -19,7 +19,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from mycroft_core import MycroftSkill, intent_handler, Package, intent_prehandler
+from mycroft_core import MycroftSkill, Package, intent_prehandler
 
 
 class UnknownSkill(MycroftSkill):

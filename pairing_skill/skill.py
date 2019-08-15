@@ -20,11 +20,12 @@
 # specific language governing permissions and limitations
 # under the License.
 import time
+
 from threading import Timer
 from uuid import uuid4
 
-from mycroft_core import MycroftSkill, Package, intent_handler
 from mycroft.api import DeviceApi
+from mycroft_core import MycroftSkill, Package, intent_handler
 
 
 class PairingSkill(MycroftSkill):

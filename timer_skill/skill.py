@@ -22,9 +22,8 @@
 import time
 from collections import namedtuple
 
-from mycroft_core import MycroftSkill, Package, intent_handler
-
 from mycroft.skill_plugin import with_entity, intent_prehandler
+from mycroft_core import MycroftSkill, Package, intent_handler
 
 Alarm = namedtuple('Alarm', 'time name')
 

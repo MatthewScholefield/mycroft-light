@@ -19,14 +19,14 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from difflib import SequenceMatcher
 from time import sleep
 
 import psutil
-
-from mycroft_core import MycroftSkill, Package, intent_prehandler
+from difflib import SequenceMatcher
 from psutil import Process
 from typing import Tuple, Optional
+
+from mycroft_core import MycroftSkill, Package, intent_prehandler
 
 
 class SystemStatusSkill(MycroftSkill):
@@ -35,7 +35,8 @@ class SystemStatusSkill(MycroftSkill):
 
         def mkmethod(i):
             return lambda self, p: self.add_memory_result(p, i, getattr(psutil.virtual_memory(), i))
-        for i in ['free',  'used', 'total']:
+
+        for i in ['free', 'used', 'total']:
             self.register_intent(mkmethod(i), 'mem.' + i)
 
     @staticmethod

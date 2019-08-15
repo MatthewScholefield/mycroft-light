@@ -20,9 +20,9 @@
 # specific language governing permissions and limitations
 # under the License.
 from copy import deepcopy
-from mycroft_core import MycroftSkill, Package, intent_prehandler
 
 from mycroft.util.text import compare
+from mycroft_core import MycroftSkill, Package, intent_prehandler
 
 
 class IntrospectionSkill(MycroftSkill):

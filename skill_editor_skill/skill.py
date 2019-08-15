@@ -20,11 +20,11 @@
 # specific language governing permissions and limitations
 # under the License.
 from difflib import SequenceMatcher
-from mycroft_core import MycroftSkill, Package
 from os.path import join
 from subprocess import call
 
 from mycroft.skill_plugin import intent_prehandler
+from mycroft_core import MycroftSkill, Package
 
 
 class SkillEditorSkill(MycroftSkill):

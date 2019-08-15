@@ -21,13 +21,13 @@
 # under the License.
 import re
 from glob import glob
-from mycroft_core import MycroftSkill, Package, intent_handler
 from random import shuffle
 from subprocess import TimeoutExpired, Popen
 from typing import Tuple, Iterator
 
 from mycroft.skill_plugin import intent_prehandler
 from mycroft.util.text import find_match
+from mycroft_core import MycroftSkill, Package, intent_handler
 
 
 class DesktopLauncherSkill(MycroftSkill):

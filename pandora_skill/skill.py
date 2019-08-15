@@ -19,21 +19,19 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-import os
 from builtins import StopIteration
-from io import StringIO
 
+import os
+from io import StringIO
 from pandora import clientbuilder
 from pydora.audio_backend import VLCPlayer, PlayerUnusable, MPG123Player, \
     UnsupportedEncoding
-
 from pydora.utils import iterate_forever
-
-from mycroft_core import MycroftSkill
 
 from mycroft.package_cls import Package
 from mycroft.skill_plugin import intent_handler, intent_prehandler
 from mycroft.util import log
+from mycroft_core import MycroftSkill
 
 
 class PandoraSkill(MycroftSkill):

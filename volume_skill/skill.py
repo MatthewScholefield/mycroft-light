@@ -21,12 +21,11 @@
 # under the License.
 from alsaaudio import Mixer
 
-from mycroft_core import MycroftSkill
-
 from mycroft.package_cls import Package
 from mycroft.skill_plugin import intent_handler, intent_prehandler
 from mycroft.util import log
 from mycroft.util.audio import play_audio
+from mycroft_core import MycroftSkill
 
 
 class VolumeSkill(MycroftSkill):

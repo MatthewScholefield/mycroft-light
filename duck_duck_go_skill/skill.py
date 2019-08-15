@@ -20,16 +20,17 @@
 # specific language governing permissions and limitations
 # under the License.
 import ddg3
-
-from mycroft_core import MycroftSkill, intent_prehandler, Package
-from mycroft.util import log
-from mycroft.util.text import split_sentences, compare
 import re
+
+from mycroft.util import log
+from mycroft.util.text import split_sentences
+from mycroft_core import MycroftSkill, intent_prehandler, Package
 
 
 class DuckDuckGoSkill(MycroftSkill):
     """Fallback skill that queries DuckDuckGo's instant answer API"""
     articles = ['a', 'an', 'the', 'any']  # Should not be localized since they are used to parse
+
     # English API response
 
     def __init__(self):

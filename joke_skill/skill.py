@@ -20,11 +20,10 @@
 # specific language governing permissions and limitations
 # under the License.
 import pyjokes
-
-from mycroft_core import MycroftSkill, Package, intent_handler
+import re
 
 from mycroft.skill_plugin import with_entity
-import re
+from mycroft_core import MycroftSkill, Package, intent_handler
 
 
 def find_entity_line(word, lines):

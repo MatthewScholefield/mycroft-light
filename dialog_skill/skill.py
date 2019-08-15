@@ -22,9 +22,9 @@
 from time import monotonic
 
 import random
-from mycroft_core import MycroftSkill, Package, intent_prehandler, intent_handler
 
 from mycroft.util import log
+from mycroft_core import MycroftSkill, Package, intent_prehandler, intent_handler
 
 
 class DialogSelector:
