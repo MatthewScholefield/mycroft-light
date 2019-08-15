@@ -29,7 +29,7 @@ class FormatterPlugin(BasePlugin):
         if len(obj) == 1:
             return self.format(obj[0], fmt)
         return '{}, {} {}'.format(
-            ', '.join(self.format(obj[:-1], fmt)), self.and_,
+            ', '.join(self.format(i, fmt) for i in obj[:-1]), self.and_,
             self.format(obj[-1], fmt)
         )
 
